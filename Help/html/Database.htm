@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<TITLE>Database</TITLE>
+<link rel="stylesheet" type="text/css" href="../theme.css">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<H4><A NAME="Database"></A>Database</H4>
+
+<P>The program uses 3 disparate Microsoft Jet (tm) 2.X compatible databases:</P>
+<ul>
+<li>Slotdata.s$t contains all input and <A HREF="Profile Configuration.htm">Profile Configuration</A> data and is critical for the game to run. When a new <A HREF="Profile Configuration.htm">Profile Configuration</A> is created in a different directory to the install directory, a new Slotdata.s$t is created in that directory.</li>
+<li>Hallfame.s$t is a non critical <A HREF="Hall_of_Fame.htm">Hall Of Fame</A> database file and it is possible to have more than the recommended one copy on a drive accessible to your device.</li>
+<li>Quotes.s$t is a non-critical <A HREF="Quotes.htm">Quotes</A> database file. When a new <A HREF="Profile Configuration.htm">Profile Configuration</A> is created in a different directory to the install directory, a new Quotes.s$t is created in that directory.</li>
+</ul>
+<dl>
+<dt>Notes:</dt>
+<dd>All databases are compacted as a function of usage, but large <A HREF="Quotes.htm">Quotes</A> files benefit from manual intervention.</dd>
+<dd>The Database DLL this program used under construction was DAO350.DLL. There are newer versions available in the form DA03**.DLL, and shouldn't adversely affect the <A HREF="Installation.htm">Installation</A> or performance of this program.</dd>
+</dl>
+</BODY>
+</HTML>
