@@ -1,0 +1,471 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="General Topics">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Welcome!">
+			<param name="Local" value="html/Welcome!.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Disclaimer">
+			<param name="Local" value="html/Disclaimer.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Future Improvements">
+			<param name="Local" value="html/Future Improvements.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Credits">
+			<param name="Local" value="html\Credits.htm">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="MyReels Screens">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Game Screen">
+			<param name="Local" value="html/Game Screen.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Picture Info">
+			<param name="Local" value="html/Picture Info.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="About Screen">
+			<param name="Local" value="html/About Screen.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Hall_of_Fame Screen">
+			<param name="Local" value="html/Hall_of_Fame Screen.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Device Info Screen">
+			<param name="Local" value="html/Device Info Screen.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Profile Configuration Manager Screen">
+			<param name="Local" value="html/Profile Configuration Manager Screen.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Edit Reels Configuration Screen">
+			<param name="Local" value="html/Edit Reels Configuration Screen.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Configure New Pictures Screen">
+			<param name="Local" value="html/Configure New Pictures Screen.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Picture Properties Screen">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="General">
+				<param name="Local" value="html/GeneralPP.htm">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Free Games">
+				<param name="Local" value="html/Free Games.htm">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Free Spins (1)">
+				<param name="Local" value="html/Free Spins (1).htm">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Free Spins (2)">
+				<param name="Local" value="html/Free Spins (2).htm">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="General Options Screen">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="General">
+				<param name="Local" value="html/General.htm">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Sounds">
+				<param name="Local" value="html/Sounds.htm">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text">
+				<param name="Local" value="html/Text.htm">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Appearance">
+				<param name="Local" value="html/Appearance.htm">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Thumbnails">
+				</OBJECT>
+			<UL>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Configure Thumbnails Screen">
+					<param name="Local" value="html/Configure Thumbnails Screen.htm">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Bitmap Finder Screen">
+					<param name="Local" value="html/Bitmap Finder Screen.htm">
+					</OBJECT>
+			</UL>
+		</UL>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Game">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Reels">
+			<param name="Local" value="html/Reels.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Spin">
+			<param name="Local" value="html/Spin.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Money On Hand">
+			<param name="Local" value="html/Money On Hand.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Prize Amount">
+			<param name="Local" value="html/Prize Amount.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Prize Level">
+			<param name="Local" value="html/Prize Level.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Payline">
+			<param name="Local" value="html/Payline.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Multiline">
+			<param name="Local" value="html/Multiline.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Bet Multiplier">
+			<param name="Local" value="html/Bet Multiplier.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Cheat">
+			<param name="Local" value="html/Cheat.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Feature">
+			<param name="Local" value="html/Feature.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Feature Multiplier">
+			<param name="Local" value="html/Feature Multiplier.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="No Win Bonus">
+			<param name="Local" value="html/No Win Bonus.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="New Game">
+			<param name="Local" value="html/New Game.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Free Game">
+			<param name="Local" value="html/Free Game.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Free Spin">
+			<param name="Local" value="html/Free Spin.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Free Game &amp; Free Spin Contentions">
+			<param name="Local" value="html/Free Game & Free Spin Contentions.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Pay Method">
+			<param name="Local" value="html/Pay Method.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Bonus Multiplier">
+			<param name="Local" value="html/Bonus Multiplier.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Scatter">
+			<param name="Local" value="html/Scatter.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Left To Right">
+			<param name="Local" value="html/Left To Right.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Right To Left">
+			<param name="Local" value="html/Right To Left.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Middle Threes">
+			<param name="Local" value="html/Middle Threes.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Any">
+			<param name="Local" value="html/Any.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Substituter">
+			<param name="Local" value="html/Substituter.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Substituted">
+			<param name="Local" value="html/Substituted.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Naturals">
+			<param name="Local" value="html/Naturals.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Substituter Rules">
+			<param name="Local" value="html/Substituter Rules.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Feature-Reset">
+			<param name="Local" value="html/Feature-Reset.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Prize Categories">
+			<param name="Local" value="html/Prize Categories.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Rank">
+			<param name="Local" value="html/Rank.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Lit">
+			<param name="Local" value="html/Lit.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Picture Multiplier Labels">
+			<param name="Local" value="html/Picture Multiplier Labels.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Picture">
+			<param name="Local" value="html/Picture.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Big Pictures">
+			<param name="Local" value="html/Big Pictures.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Picture Properties">
+			<param name="Local" value="html/Picture Properties.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Profile Configuration">
+			<param name="Local" value="html/Profile Configuration.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="General Options">
+			<param name="Local" value="html/General Options.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Generic">
+			<param name="Local" value="html/Generic.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Game Limit">
+			<param name="Local" value="html/Game Limit.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Stored">
+			<param name="Local" value="html/Stored.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Default">
+			<param name="Local" value="html/Default.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Random Jackpot">
+			<param name="Local" value="html/Random Jackpot.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Pot">
+			<param name="Local" value="html/Pot.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Money Back">
+			<param name="Local" value="html/Money Back.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Optimal Money Back Strategy">
+			<param name="Local" value="html/Optimal Money Back Strategy.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Effective Bet">
+			<param name="Local" value="html/Effective Bet.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Random Seed">
+			<param name="Local" value="html/Random Seed.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Probability Of No Prizes">
+			<param name="Local" value="html/Probability Of No Prizes.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Monte Carlo">
+			<param name="Local" value="html/Monte Carlo.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Value Of Game">
+			<param name="Local" value="html/Value Of Game.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Sampled Value of Game">
+			<param name="Local" value="html/Sampled Value of Game.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Estimate">
+			<param name="Local" value="html/Estimate.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Background">
+			<param name="Local" value="html/Background.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Game Title">
+			<param name="Local" value="html/Game Title.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Game Messages Area">
+			<param name="Local" value="html/Game Messages Area.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Game Fonts">
+			<param name="Local" value="html\Game Fonts.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Spin Box">
+			<param name="Local" value="html\SpinBox.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Value Range">
+			<param name="Local" value="html/Value Range.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Hall_of_Fame">
+			<param name="Local" value="html/Hall_of_Fame.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Database">
+			<param name="Local" value="html/Database.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Quotes">
+			<param name="Local" value="html/Quotes.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Sources">
+			<param name="Local" value="html/Sources.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Quote Thumbnails">
+			<param name="Local" value="html/Quote Thumbnails.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Thumbnail Indexing">
+			<param name="Local" value="html/Thumbnail Indexing.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Statistics">
+			<param name="Local" value="html/Statistics.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Random Sequence">
+			<param name="Local" value="html/Random Sequence.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Sounds &amp; Music">
+			<param name="Local" value="html/Sounds & Music.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Midi">
+			<param name="Local" value="html\Midi.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Cropping">
+			<param name="Local" value="html/Cropping.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="OpenError">
+			<param name="Local" value="html/OpenError.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Active Candy">
+			<param name="Local" value="html/Active Candy.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Tooltip">
+			<param name="Local" value="html/Tooltip.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Resolution">
+			<param name="Local" value="html/Resolution.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Shortcut">
+			<param name="Local" value="html/Shortcut.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Filesizes">
+			<param name="Local" value="html/Filesizes.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Installation">
+			<param name="Local" value="html/Installation.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Issues">
+			<param name="Local" value="html\Issues.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ActiveX Maintenance">
+			<param name="Local" value="html\ActiveX Maintenance.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Updater">
+			<param name="Local" value="html\Updater.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="The Author">
+			<param name="Local" value="html/The Author.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Coat Of Arms">
+			<param name="Local" value="html/Coat Of Arms.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="DisAssociates">
+			<param name="Local" value="html/DisAssociates.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Version">
+			<param name="Local" value="html/Version.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Version History">
+			<param name="Local" value="html/Version History.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="More Version History">
+			<param name="Local" value="html/More Version History.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Even More Version History">
+			<param name="Local" value="html/Even More Version History.htm">
+			</OBJECT>
+	</UL>
+</UL>
+</BODY></HTML>

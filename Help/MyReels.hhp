@@ -1,0 +1,134 @@
+[OPTIONS]
+Auto Index=Yes
+Compatibility=1.1 or later
+Compiled file=MyReels.chm
+Contents file=myreels.hhc
+Default Window=$global_MyReels
+Default topic=html\Welcome!.htm
+Display compile progress=No
+Full text search stop list file=MyReels.stp
+Full-text search=Yes
+Index file=MyReels.hhk
+Language=0xc09 English (Australia)
+
+[WINDOWS]
+$global_MyReels=,"MyReels.hhc","MyReels.hhk","html\Welcome!.htm",,,,,,0x2520,,0x103c,,,,,,,,0
+
+
+[FILES]
+MyReels.jpg
+theme.css
+html\Game Screen.htm
+html\About Screen.htm
+html\Hall_of_Fame Screen.htm
+html\Device Info Screen.htm
+html\Profile Configuration Manager Screen.htm
+html\GeneralPP.htm
+html\Free Games.htm
+html\Free Spins (1).htm
+html\Free Spins (2).htm
+html\Edit Reels Configuration Screen.htm
+html\Configure New Pictures Screen.htm
+html\General.htm
+html\Sounds.htm
+html\Text.htm
+html\Appearance.htm
+html\Prize Amount.htm
+html\Rank.htm
+html\Picture.htm
+html\Reels.htm
+html\Bet Multiplier.htm
+html\Picture Multiplier Labels.htm
+html\Game Title.htm
+html\Default.htm
+html\Picture Properties.htm
+html\Generic.htm
+html\Profile Configuration.htm
+html\General Options.htm
+html\Scatter.htm
+html\Payline.htm
+html\Version History.htm
+html\Future Improvements.htm
+html\Substituter Rules.htm
+html\Random Jackpot.htm
+html\Value Of Game.htm
+html\Spin.htm
+html\Pot.htm
+html\Money Back.htm
+html\Free Spin.htm
+html\Free Game.htm
+html\Prize Level.htm
+html\Lit.htm
+html\Naturals.htm
+html\Money On Hand.htm
+html\New Game.htm
+html\Game Limit.htm
+html\Statistics.htm
+html\Hall_of_Fame.htm
+html\Pay Method.htm
+html\Left To Right.htm
+html\Right To Left.htm
+html\Middle Threes.htm
+html\Any.htm
+html\Substituted.htm
+html\Substituter.htm
+html\Probability Of No Prizes.htm
+html\Optimal Money Back Strategy.htm
+html\Installation.htm
+html\Disclaimer.htm
+html\Free Game & Free Spin Contentions.htm
+html\Feature.htm
+html\Stored.htm
+html\Feature Multiplier.htm
+html\Game Messages Area.htm
+html\Random Seed.htm
+html\Coat Of Arms.htm
+html\Quotes.htm
+html\Database.htm
+html\Filesizes.htm
+html\Tooltip.htm
+html\Sampled Value of Game.htm
+html\Effective Bet.htm
+html\Prize Categories.htm
+html\No Win Bonus.htm
+html\Cropping.htm
+html\Value Range.htm
+html\Random Sequence.htm
+html\Sounds & Music.htm
+html\The Author.htm
+html\Big Pictures.htm
+html\DisAssociates.htm
+html\Resolution.htm
+html\Welcome!.htm
+html\Background.htm
+html\Multiline.htm
+html\Monte Carlo.htm
+html\Version.htm
+html\Feature-Reset.htm
+html\Active Candy.htm
+html\Estimate.htm
+html\More Version History.htm
+html\Bonus Multiplier.htm
+html\ActiveX Maintenance.htm
+html\Shortcut.htm
+html\Sources.htm
+html\Configure Thumbnails Screen.htm
+html\Quote Thumbnails.htm
+html\Thumbnail Indexing.htm
+html\Even More Version History.htm
+html\Cheat.htm
+html\Picture Info.htm
+html\Bitmap Finder Screen.htm
+html\OpenError.htm
+html\Credits.htm
+html\Updater.htm
+html\Issues.htm
+
+[ALIAS]
+#include NewAliases.h
+
+[MAP]
+#include NewMap.h
+
+[INFOTYPES]
+

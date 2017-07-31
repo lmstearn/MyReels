@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<TITLE>Random Jackpot</TITLE>
+<link rel="stylesheet" type="text/css" href="../theme.css">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<H4><A NAME="Random Jackpot"></A>Random Jackpot</H4>
+
+<P>A Random Jackpot <A HREF="Feature.htm">Feature</A> is configurable from the <U><A HREF="Profile Configuration Manager Screen.htm">Profile Configuration Manager Screen</A></U>.The % add on to the <A HREF="Value Of Game.htm">Value Of Game</A> is exactly 5%. For a Jackpot of 1 calculate a random between 1 &amp; 20. For a Jackpot of 1.1 calculate a random between 1 &amp; 22. For a Jackpot of J calculate a random between 1 &amp; 20 * J. So the 5% <A HREF="Value Of Game.htm">Value Of Game</A> is calculated as 1 / (20 * J) * (20 * J) / 20 = 1/20 or 5%.</P>
+
+<P>In practice a "Secret" value is calculated &amp; stored on Game generation. At each <A HREF="Spin.htm">Spin</A> the value J is incremented and a new Random number is generated in <A HREF="Random Sequence.htm">sequence</A>. If it is equivalent to the "Secret" number, the Jackpot J is won.</P>
+
+<P>It should be noted that if a Jackpot value of 345.5 is won, for example, another random test is performed to determine whether 345 or 346 should be payed. 345.4 is rounded down to 345 and 345.6. is rounded up to 346.</P>
+
+<P>Disabling and then re-enabling the <A HREF="Feature.htm">Feature</A> will reset the Jackpot values to those displayed on the <U><A HREF="Profile Configuration Manager Screen.htm">Profile Configuration Manager Screen</A></U>.</P>
+
+</BODY>
+</HTML>
