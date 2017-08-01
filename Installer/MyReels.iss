@@ -61,13 +61,13 @@ Source: "{#MyAppSysExeName}"; DestDir: {tmp}; Flags: deleteafterinstall
 
 
 Source: "..\{#MyAppExeName}"; DestDir: "{app}"; Flags: touch; Components: program
-Source: "..\configuration\slotdata.s$t"; DestDir: "{app}"; Flags: touch; Components: program\configuration
+Source: "Configuration\slotdata.s$t"; DestDir: "{app}"; Flags: touch; Components: program\configuration
 Source: "{#MyAppUpdaterExeName}"; DestDir: "{app}"; Flags: touch; Components: program
 ;ignore ignoreversion flag for the time being
 Source: "..\{#MyAppName}.chm"; DestDir: "{app}"; Flags: touch; Components: help
 Source: "Readme.txt"; DestDir: "{app}"; Flags: isreadme;  Components: Readme
-Source: "..\Default\*.mid"; DestDir: "{app}"; Components: midi\default
-Source: "..\Originals\*.mid"; DestDir: "{app}"; Components: midi\original
+Source: "Default\*.mid"; DestDir: "{app}"; Components: midi\default
+Source: "Originals\*.mid"; DestDir: "{app}"; Components: midi\original
 Source: "..\*"; DestDir: "{app}"; Flags: touch
 
 [Dirs]

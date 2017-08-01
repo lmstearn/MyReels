@@ -55,7 +55,7 @@ Source: "SapphireKamri.vsf"; DestDir: "{app}"; Flags: dontcopy
 Source: "{tmp}\New{#MyAppUpdaterExeName}"; DestDir: "{app}"; DestName: "{#MyAppUpdaterExeName}"; Flags: external skipifsourcedoesntexist ignoreversion replacesameversion restartreplace; Check: IsrunningNew
 
 Source: "..\{#MyAppExeName}"; DestDir: "{app}"; Flags: touch ignoreversion replacesameversion; Components: program
-Source: "..\configuration\slotdata.s$t"; DestDir: "{app}"; Flags: touch ignoreversion replacesameversion; Components: quotes\configuration
+Source: "Configuration\slotdata.s$t"; DestDir: "{app}"; Flags: touch ignoreversion replacesameversion; Components: quotes\configuration
 Source: "..\{#MyAppName}.chm"; DestDir: "{app}"; Flags: touch ignoreversion replacesameversion; Components: help
 Source: "..\Quotes.s$t"; DestDir: "{app}"; Flags: touch ignoreversion replacesameversion; Components: quotes
 
