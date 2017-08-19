@@ -158,8 +158,7 @@ Private midirc As Long, oldsndfname As String, CanPlayWaves As Boolean, hmidi(5)
 
 ' Picnames
 Private picnames(450) As String, picnamesort(450) As String
-
-Private Function FindWindowPartial() As Long
+Private Function FindWindowPartial(Optional InstallUpdate As Boolean = False) As Long
 Dim TitleTmp As String
 
 ct = 0
@@ -174,31 +173,37 @@ ct = 0
 
     If GetParent(hWnd) = 0 Then
 
-       ' Retrieve caption text from current window.
+      ' Retrieve caption text from current window.
 
-       TitleTmp = Space(256)
-       nRet = GetWindowText(hWnd, TitleTmp, Len(TitleTmp))
-       If nRet Then
+      TitleTmp = Space(256)
+      nRet = GetWindowText(hWnd, TitleTmp, Len(TitleTmp))
+      If nRet Then
 
-          ' Clean up return string, prepare for case-insensitive comparison.
+        ' Clean up return string, prepare for case-insensitive comparison.
 
-          TitleTmp = UCase(Left(TitleTmp, nRet))
+        TitleTmp = UCase(Left(TitleTmp, nRet))
+        If InstallUpdate = True Then
+          'Don't worry about partials
+                  If InStr(TitleTmp, UCase("SetupMyReels")) Or InStr(TitleTmp, UCase("UpdateMyReels")) Then
+                  FindWindowPartial = 1
+                  Exit Function
+                  End If
 
-          ' Use appropriate method to determine if current window's caption either starts with or contains passed string.
+        ' Use appropriate method to determine if current window's caption either starts with or contains passed string.
 
-              If InStr(TitleTmp, UCase("MyReels")) Then
-              If InStr(TitleTmp, UCase("microsoft visual basic")) > 0 Then
-              ct = ct - 1
-              ElseIf InStr(TitleTmp, UCase("explor")) = 0 Or InStr(TitleTmp, UCase("\")) = 0 Or InStr(TitleTmp, UCase("/")) = 0 Then
-              ct = ct + 2
-              End If
-              FindWindowPartial = ct
-              End If
-       End If
+        ElseIf InStr(TitleTmp, UCase("MyReels")) Then
+          If InStr(TitleTmp, UCase("microsoft visual basic")) > 0 Then
+          ct = ct - 1
+          ElseIf Not (InStr(TitleTmp, UCase("WinDbg")) > 0 Or InStr(TitleTmp, UCase("explor")) > 0 Or InStr(TitleTmp, UCase("\")) > 0 Or InStr(TitleTmp, UCase("/")) > 0) Then
+          ct = ct + 2
+          End If
+        FindWindowPartial = ct
+        End If
+      End If
     End If
 
     ' Get next window in master window list & continue.
-      hWnd = GetWindow(hWnd, GW_HWNDNEXT)
+    hWnd = GetWindow(hWnd, GW_HWNDNEXT)
   Loop
 End Function
 Public Sub setformpos(objform As Object, Optional ByVal noVert As Boolean = False)
@@ -480,7 +485,6 @@ End If
 
 fixpw = intct * fixpw
 End Function
-
 Private Sub Main()
 Dim c As New cRegistry, dt As Date
 
@@ -492,18 +496,26 @@ genoptsgen = False  ' can't obviously do this in PokeLoad
 
 
 ' Check for previous instance app.previnstance not working
-If c.AppPrevInstance() Then
+If c.MutexChk() Then
   MsgBox "Sorry, only 1 copy of MyReels allowed"
   Unload frmSplsh
   c.CloseMutexhandle
   Exit Sub
-ElseIf c.mch2000nt = True And FindWindowPartial > 2 Then
-response = MsgBox("Only 1 copy of MyReels should run. If there is an explorer folder or a task containing the words ""MyReels"" currently open, click ""OK"", close it and retry the game from a shortcut. Else click ""Cancel"" for possible errors.", vbOKCancel)
-If response = vbOKCancel Then
+Else
+  If FindWindowPartial(True) <> 0 Then
+  response = MsgBox("MyReels cannot run with the Installer or Updater open." & vbNewLine & "If the Updater or Installer is running, click ""OK"", close it and retry the game from a shortcut." & vbNewLine & "Else click ""Cancel"" for possible errors.", vbOKCancel)
+  If response = vbOKCancel Then
+  Unload frmSplsh
+  Exit Sub
+  End If
+  ElseIf c.mch2000nt = True And FindWindowPartial > 2 Then
+  response = MsgBox("Only 1 copy of MyReels should run." & vbNewLine & "If there is an explorer folder or a task containing the words ""MyReels"" currently open," & vbNewLine & "click ""OK"", close it and retry the game from a shortcut." & vbNewLine & "Else click ""Cancel"" for possible errors.", vbOKCancel)
+  If response = vbOKCancel Then
   Unload frmSplsh
   c.CloseMutexhandle
-Exit Sub
-End If
+  Exit Sub
+  End If
+  End If
 End If
 
 ' Init quotes db pics
@@ -1274,23 +1286,24 @@ For ct = 0 To midiDevTot - 1
 hmidi(ct) = 0
 hmsmidi(ct) = 0
 Next
-Midichg 'just check midi
+If gt(185) = 0 Then Midichg 'not on chgdir
 If CanPlayWaves = False Then MsgBox "Couldn't open wave device"
 End Sub
-Private Function ZapMidihWnd(Optional hWndIndex As Long = -1) As Boolean
+Private Function ZapMidihWnd(Optional ByVal hWndIndex As Long = -1) As Boolean
 Dim mhWnd As Long, mshWnd As Long, noErr As Boolean, tmp As String, c As New cRegistry
 DoEvents
-' may need midiOutReset but this doe not send EOX byte. midiStreamStop may be buggy clearing handle prematurely
+' may need midiOutReset but this does not send EOX byte. midiStreamStop may be buggy clearing handle prematurely
 
- noErr = c.VistaorLater And c.XP
+ noErr = Not c.VistaorLater And Not c.XP
  tmp = ""
 
 If hWndIndex = -1 Then
  For ct = 0 To midiDevTot - 1
  mhWnd = hmidi(ct)
  mshWnd = hmsmidi(ct)
+ On Error Resume Next
  If mshWnd > 0 And VMSynth = True Then
-  If midiStreamStop(mshWnd) = 0 And midiStreamClose(mshWnd) = 0 Then
+  If midiStreamStop(mshWnd) = 0 Then  ' And midiStreamClose(mshWnd) = 0 ' crashes
   hmsmidi(ct) = 0
   mshWnd = 0
   Else
@@ -1312,8 +1325,10 @@ If hWndIndex = -1 Then
  Next
 Else
  mshWnd = hmsmidi(hWndIndex)
+'MsgBox "before mshWnd: " & mshWnd & " gt(185): " & gt(185)
  If mshWnd > 0 And VMSynth = True Then
-  If midiStreamStop(mshWnd) = 0 And midiStreamClose(mshWnd) = 0 Then
+  If midiStreamStop(mshWnd) = 0 Then ' And midiStreamClose(mshWnd) = 0 Then 'crashes
+'MsgBox "after mshWnd: " & mshWnd & " gt(185): " & gt(185)
   hmsmidi(hWndIndex) = 0
   mshWnd = 0
   End If
@@ -1349,7 +1364,6 @@ Else
 MsgBox "There was a problem closing " & tmp & ". Restart MyReels recommended."
 ZapMidihWnd = True
 End If
-curmididev = 0
 DoEvents
 End Function
 Public Sub REORGSLOT()
@@ -1542,26 +1556,33 @@ If midirc <> 0 Or FileName = "" Then Exit Function  ' Not valid midi device
 
 ' Parse filename (or use GetShortPathName)
 
-If c.XP Or c.VistaorLater Then
-f = c.GetShortFileName(FileName)
-Else
-f = c.GetShortName(FileName)
-End If
+  If c.XP Or c.VistaorLater Then
+  f = c.GetShortFileName(FileName)
+  Else
+  f = c.GetShortName(FileName)
+  End If
 'MCI_DEVTYPE_SEQUENCER = 523 ;
 nRet = mciSendString("status " & strPlaying & " mode", reply, 255, 0)
 DoEvents
-If Left$(reply, 7) = "playing" And interupt = False Then Exit Function
 
-strPlaying = f
-If f = "" Then
-nRet = 1
-Else
-StopMidiFile
-If VMSynth = False Then ZapMidihWnd(curmididev) 'just Roland GSW
-DoEvents
-nRet = mciSendString("Open " & strPlaying, vbNullString, 0, 0)
-nRet = mciSendString("Play " & strPlaying & " from 0", vbNullString, 0, 0)
-End If
+  If interupt = False Then
+  If Left$(reply, 7) = "playing" Then Exit Function
+  strPlaying = f
+  End If
+
+  If f = "" Then
+  nRet = 1
+  Else
+  StopMidiFile
+  strPlaying = f 'when interupt = True
+  If VMSynth = False Then
+     'just Roland GSW
+    If ZapMidihWnd(curmididev) Then Exit Function
+    End If
+  DoEvents
+  nRet = mciSendString("Open " & strPlaying, vbNullString, 0, 0)
+  nRet = mciSendString("Play " & strPlaying & " from 0", vbNullString, 0, 0)
+  End If
 
 PlayMidiFile = (nRet = 0)
 
@@ -1582,7 +1603,7 @@ nRet = mciSendString("Seek " & strPlaying & " to 0", vbNullString, 0, 0)
 nRet = mciSendString("Close " & strPlaying, vbNullString, 0, 0)
 DoEvents
 End Sub
-Public Function Midichg(Optional inputDev As Long = -1)
+Public Function Midichg(Optional ByVal inputDev As Long = -1)
 Dim caps As MIDIOUTCAPS
 
 Select Case inputDev
@@ -1591,7 +1612,10 @@ Case -1
  If gt(185) > 0 Then
  If strPlaying <> "" Then StopMidiFile
   If ZapMidihWnd(curmididev) Then
-  If OpenmidiDev <> 0 Then gt(185) = 0
+    If OpenmidiDev <> 0 Then
+    gt(185) = 0
+    curmididev = 0
+    End If
   Else
   Midichg = gt(185)
   gt(185) = 0
@@ -1620,15 +1644,15 @@ Case -1
   End If
 Case 0
 ' close
-  If strPlaying <> "" Then
-  StopMidiFile
-  strPlaying = ""
-  End If
+    If strPlaying <> "" Then
+    StopMidiFile
+    strPlaying = ""
+    End If
   gt(185) = 0
-  If Not ZapMidihWnd(curmididev) Then
-  Midichg = 1
-  Exit Function
-  End If
+    If ZapMidihWnd(curmididev) Then
+    Midichg = 1
+    Exit Function
+    End If
 Case Else
   If (inputDev > midiDevTot) Then
   Midichg = 0
@@ -1727,15 +1751,22 @@ Private Function OpenmidiDev()
 
 OpenmidiDev = midirc
 End Function
-Public Sub Stopnoise(Optional GametypeLoad As Boolean = False)
+Public Function Stopnoise(Optional LoadNext As Integer = 0) As Boolean
 If strPlaying <> "" Then StopMidiFile
 PlaySndF "", True
 DoEvents
-If gt(185) > 0 And GametypeLoad = False Then
+If gt(185) > 0 Then
+Select Case LoadNext 'ChgDir is 2
+Case 0
 gt(185) = 0
-ZapMidihWnd
+Stopnoise = ZapMidihWnd
+Case 1
+Stopnoise = ZapMidihWnd
+Case 2
+Stopnoise = ZapMidihWnd(gt(185) - 1)
+End Select
 End If
-End Sub
+End Function
 Public Sub PlaySndF(ByVal FileName As String, Optional stopnow As Boolean = False)
 
 If CanPlayWaves = False Or gt(186) < 2 Then Exit Sub

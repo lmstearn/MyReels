@@ -1203,6 +1203,7 @@ Regen(intreel).Visible = False
 Next
 End If
 If gt(0) = 5 Then       'precludes wiping settings when coming back in on gt(6)
+    Stopnoise 1
     Cancel.Enabled = False
     'Eliminate previous scatter, substitute settings, set default prizes for old scatters
     If piccount < 14 Then   'get rid of all irrelevant settings
@@ -1255,6 +1256,8 @@ If gt(0) = 5 Then       'precludes wiping settings when coming back in on gt(6)
     'And some startup defaults
         
     Restoredefaults True
+    If gt(185) > 0 Then SndMidInit
+    
     genrandomseed True
     VOGchg = 0
     gt(2) = CLng(Right(CStr(gt(155)), 3))

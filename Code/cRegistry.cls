@@ -103,8 +103,9 @@ Const MUTANT_QUERY_STATE                    As Long = &H1
 Const MUTANT_ALL_ACCESS                     As Long = (STANDARD_RIGHTS_REQUIRED Or SYNCHRONIZE Or MUTANT_QUERY_STATE)
 Const SECURITY_DESCRIPTOR_REVISION          As Long = 1
 Const DACL_SECURITY_INFORMATION             As Long = 4
-Const MUTEX_NAME                            As String = "Global\20b70e57-1c2e-4de9-99e5-20f3961e6912" '20b70e57-1c2e-4de9-99e5-20f3961e6812'
-Private m_hCurrentMutex                             As Long
+Const App_GUID                              As String = "Global\20b70e57-1c2e-4de9-99e5-20f3961e6912" '20b70e57-1c2e-4de9-99e5-20f3961e6812'
+
+Private m_hCurrentMutex                     As Long
 
 
 Private Type SECURITY_DESCRIPTOR
@@ -441,14 +442,14 @@ s = "\.Default"
 DefaultValue = GetVal()
 End Property
 Private Function GetVal() As Variant
-Dim vValue As Variant, bufflen As Long, vkey As String, ordType As Long, sBuffer As String, e As Long, hKey As Long, accessMode as Long
+Dim vValue As Variant, bufflen As Long, vkey As String, ordType As Long, sBuffer As String, e As Long, hKey As Long, accessMode As Long
 GetVal = ""
 
 If VistaorLater Then
 accessMode = KEY_EXECUTE
-else
+Else
 accessMode = KEY_ALL_ACCESS
-end if
+End If
 If s = "*" Then
 e = RegOpenKeyEx(m_hClassKey, m_sSectionKey, 0&, accessMode, hKey)
 vkey = m_sValueKey
@@ -775,7 +776,7 @@ CreateEXEAssociation = True
       pSetClassValue sExePath & "," & CStr(lDefaultIconIndex)
    End If
 
-if (XP or VistaOrLater) then SHChangeNotify SHCNE_ASSOCCHANGED, SHCNF_IDLIST, vbNullString, vbNullString
+If (XP Or VistaorLater) Then SHChangeNotify SHCNE_ASSOCCHANGED, SHCNF_IDLIST, vbNullString, vbNullString
 
 Exit Function
 EXEAssocerror:
@@ -1149,21 +1150,21 @@ Public Function IsUserAnAdministrator() As Boolean
 NoCanDo:
 response = MsgBox("IsUserAnAdministrator encountered a problem!", vbOKOnly)
 End Function
-Public Function AppPrevInstance()
+Public Function MutexChk(Optional MutexInst As Boolean = False)
 
-    Dim hMutex          As Long
-    Dim uSec            As SECURITY_DESCRIPTOR
+Dim hMutex As Long, MUTEX_NAME As String, uSec As SECURITY_DESCRIPTOR
 
-    AppPrevInstance = False
-    hMutex = OpenMutex(MUTANT_ALL_ACCESS, 0, MUTEX_NAME)
-    If hMutex <> 0 Then
-        AppPrevInstance = True
-        Exit Function
-    End If
-    m_hCurrentMutex = CreateMutex(ByVal 0&, 1, MUTEX_NAME)
-    Call InitializeSecurityDescriptor(uSec, SECURITY_DESCRIPTOR_REVISION)
-    Call SetSecurityDescriptorDacl(uSec, 1, ByVal 0, 0)
-    Call SetKernelObjectSecurity(m_hCurrentMutex, DACL_SECURITY_INFORMATION, uSec)
+  MUTEX_NAME = App_GUID
+  MutexChk = False
+  hMutex = OpenMutex(MUTANT_ALL_ACCESS, 0, MUTEX_NAME)
+  If hMutex <> 0 Then
+    MutexChk = True
+    Exit Function
+  End If
+  m_hCurrentMutex = CreateMutex(ByVal 0&, 1, MUTEX_NAME)
+  Call InitializeSecurityDescriptor(uSec, SECURITY_DESCRIPTOR_REVISION)
+  Call SetSecurityDescriptorDacl(uSec, 1, ByVal 0, 0)
+  Call SetKernelObjectSecurity(m_hCurrentMutex, DACL_SECURITY_INFORMATION, uSec)
 End Function
 Public Sub CloseMutexhandle()
     If m_hCurrentMutex <> 0 Then

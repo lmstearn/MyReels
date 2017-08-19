@@ -2838,7 +2838,7 @@ Dim intreel As Long, ct As Long, ct1 As Long, ct2 As Long, ct3 As Long
 'ct3: Jack & Monback flash
 Dim reelmin As Long, reelmax As Long, oldspecial As Long, special As Long, oldMidiNo As Long
 Dim spinstop As Boolean, spinzstart As Long, piccount As Long, currold As Long, currline As Long, lnbet As Long
-Dim gt80 As Boolean, gt76 As Boolean, gt72 As Boolean, gt132 As Boolean
+Dim gt80 As Boolean, gt76 As Boolean, gt72 As Boolean, gt132 As Boolean, keyPrsd As Boolean
 Dim ydispmin As Long, ydispmax As Long, cumpzzeros As String, pzzeros As String
 Dim mt As Long, degreeoftitle As Long, prizecount(2) As Long, prizeaccold As Long
 Dim spincount As Long, freegamecount As Long, kept1or2 As Long, gamespintot As Long, lbloffset As Long, wid As Long, hgt As Long
@@ -2884,35 +2884,34 @@ gamestartup = 3
 End Select
 
 
-        If gamestartup = 1 Then
-               
-                
-                'Slotdata.s$t exists in curdir?
-                If gt(0) = 0 Then loadnow = findafile(CurDir, "Slotdata.s$t")
+    If gamestartup = 1 Then
 
-                If loadnow = 0 Then
-                CommonDialog1.InitDir = CurDir
-                CommonDialog1.Filter = "MyReels (Slotdata.s$t)|Slotdata.s$t|All Files (*.*)|*.*"
-                ' Specify default filter
-                CommonDialog1.FilterIndex = 1
-                ' Set CancelError is True
-                CommonDialog1.CancelError = True
-                On Error GoTo Errcancel
-                CommonDialog1.ShowOpen
-                If CommonDialog1.FileTitle <> "Slotdata.s$t" Then
-                response = MsgBox("Please respecify Slotdata.s$t!", vbOKOnly)
-                Unload frmSplsh
-                Stopnoise
-                Exit Sub
-                End If
-                If gt(0) = -1 Then
-                LoadFrmSplsh 440
-                Else
-                frmSplsh.Refresh
-                End If
-                End If
+       'Slotdata.s$t exists in curdir?
+       If gt(0) = 0 Then loadnow = findafile(CurDir, "Slotdata.s$t")
 
-        End If  'gamestartup condition
+       If loadnow = 0 Then
+       CommonDialog1.InitDir = CurDir
+         CommonDialog1.Filter = "MyReels (Slotdata.s$t)|Slotdata.s$t|All Files (*.*)|*.*"
+         ' Specify default filter
+         CommonDialog1.FilterIndex = 1
+         ' Set CancelError is True
+         CommonDialog1.CancelError = True
+         On Error GoTo Errcancel
+         CommonDialog1.ShowOpen
+           If CommonDialog1.FileTitle <> "Slotdata.s$t" Then
+           response = MsgBox("Please respecify Slotdata.s$t!", vbOKOnly)
+           Unload frmSplsh
+           Stopnoise
+           Exit Sub
+           End If
+        If gt(0) = -1 Then
+        LoadFrmSplsh 440
+        Else
+        frmSplsh.Refresh
+        End If
+      End If
+
+    End If  'gamestartup condition
 
 loaddirectory = CurDir & "\"
 
@@ -3004,7 +3003,7 @@ randomspinvec pw, medfastslowmove, special, spinzstart
 
 If gt(185) > 0 Then
 playsuccess = PlayMidiFile(Stringvars(39), True)
-midiplay.Enabled = playsuccess
+MidiPlay.Enabled = playsuccess
 If gt(187) > 0 Then medfastslowmove(0, 5) = 44
 Else
 playsuccess = False
@@ -3599,19 +3598,21 @@ Next
 lnbet = betqut * (gt(153) + 1)
 End Sub
 Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
+keyPrsd = True
 If zhiddnstatus > 9 Then
 Zhidden.Show
 Else
 If Prizemeter.Enabled = True Then
-        If KeyCode = vbKeyEscape Then
-        lblprizemeter(0).Caption = cumpzzeros & CStr(prizeaccum - mt)
-        Vanishlines.Enabled = True
-        End If
+  If KeyCode = vbKeyEscape Then
+  lblprizemeter(0).Caption = cumpzzeros & CStr(prizeaccum - mt)
+  DoPrz
+  LinesBegone
+  End If
 Exit Sub
 ElseIf timoneyback.Enabled = True Or jackpot.Enabled = True Then
-        If KeyCode = vbKeyEscape Then
-        ct3 = 14
-        End If
+  If KeyCode = vbKeyEscape Then
+  ct3 = 14
+  End If
 Exit Sub
 End If
 
@@ -3673,12 +3674,18 @@ activatectrls
 End Select
 End Sub
 Private Sub Form_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+keyPrsd = False
 If zhiddnstatus > 9 Then
 If Button = 2 Then Exit Sub
 Zhidden.Show
 Else
 If Button = 2 Then
 gt(0) = 0
+ If Prizemeter.Enabled = True Then
+ lblprizemeter(0).Caption = cumpzzeros & CStr(prizeaccum - mt)
+ DoPrz
+ LinesBegone
+ End If
 Prizeflash.Enabled = False
 PopupMenu Zhidden!OptionZ, 2
 End If
@@ -3693,7 +3700,7 @@ Set Zhidden = Nothing
 zhiddnstatus = 10 + Index
 Load Zhidden
 End Sub
-Private Sub midiplay_Timer()
+Private Sub MidiPlay_Timer()
 
 If medfastslowmove(0, 5) > 0 And waitimmarker <> 1 Then playsuccess = PlayMidiFile(Stringvars(medfastslowmove(0, 5)), False)
 If playsuccess = True Then
@@ -4128,6 +4135,9 @@ End If
 reachedlimit Spnlim
 End Sub
 Private Sub Vanishlines_Timer()
+LinesBegone
+End Sub
+Private Sub LinesBegone()
 If Quotez.Picture.Handle <> 0 Then
 For ct1 = 0 To 47
 liwnf(ct1).Visible = False
@@ -4156,7 +4166,7 @@ End If
 Case 1
 waitimer.Enabled = False
 
-spindereels     'Called from here or Preparetospin ... set up pay & show prize
+spindereels  'Called from here or Preparetospin ... set up pay & show prize
 
 'Snapshot reels for holdqfreegame purpose
 For currline = 0 To gt(153)
@@ -4958,7 +4968,9 @@ gt(2) = gt(47)
 reachedlimit Cashlim
 End Sub
 Private Sub Prizemeter_Timer()
-
+DoPrz
+End Sub
+Private Sub DoPrz()
 Dim temp As String
 
 If Prizemeter.Interval = 1000 Then
@@ -5523,12 +5535,11 @@ If zhiddnstatus > 9 Then Exit Sub
 LoadFrmSplsh 460
 setthumbspiccount thumbs, piccount, wheelvec, wheelorder
 cleanup
-Unload Pokemach
-Set Pokemach = Nothing
+UnloadForms
 If outputvars = True Then
 Load gametype
 gametype.Show
-Stopnoise True
+Stopnoise 3
 Else
 Quitt
 End If
@@ -5541,8 +5552,7 @@ Dim c As New cRegistry
 'gt(56) = 0
 
 cleanup
-Unload Pokemach
-Set Pokemach = Nothing
+UnloadForms
 If outputvars = False Then Exit Sub
 If gt(46) = 1 Then
 gt(0) = -2
@@ -5555,10 +5565,9 @@ End Sub
 Public Sub Changedir()
 If zhiddnstatus > 9 Then Exit Sub
 gt(0) = -1
-Stopnoise
 cleanup
-Unload Pokemach
-Set Pokemach = Nothing
+Stopnoise 1
+UnloadForms
 procend = False
 If outputvars = True Then
 Load Pokemach
@@ -5571,9 +5580,19 @@ Set Pokemach = Nothing
 End If
 End If
 End Sub
-Private Sub cleanup()
+Private Sub UnloadForms()
+If keyPrsd = True Then
 Unload Zhidden
 Set Zhidden = Nothing
+End If
+Unload Pokemach
+Set Pokemach = Nothing
+End Sub
+Private Sub cleanup()
+Dim ctl As VB.Control
+ For Each ctl In Me.Controls
+  If TypeOf ctl Is VB.Timer Then ctl.Interval = 0
+ Next ctl
 If gt(156) = 0 Then gt(2) = prizeaccum
 If Dir(loaddirectory & "q0.bmp") <> "" Then Kill (loaddirectory & "q0.bmp")
 End Sub

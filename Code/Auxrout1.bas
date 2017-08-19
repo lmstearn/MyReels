@@ -1109,6 +1109,8 @@ Case 430
 .lblconfigload.Caption = Space(10) & "Loading Thumbnail DB ......"
 Case 440
 .lblconfigload.Caption = Space(19) & "Loading Game ......"
+Case 450
+.lblconfigload.Caption = Space(20) & "Please Wait ......"
 Case 460
 Unload Zhidden
 Set Zhidden = Nothing

@@ -1089,7 +1089,7 @@ Private Sub Form_Load()
 'gt(182)= Bet button style
 'gt(183)= 1 to List only currently assigned sounds
 'gt(184)= FSFG bonuses restricted to payline where feature is awarded.
-'gt(185)= Midi port if >= 0; < 0 midi disabled
+'gt(185)= Midi port if > 0, 0 midi disabled
 'gt(186)= 0 All Sound off, 1 Sound no Thumbnail, 2 No Sound but keep Thumbnail setting, 3 All sound
 'gt(187)= {-1 to -8} to Randomise order of midi playback, {1 to 8}: current midi position
 'gt(188)= current quote position (gt(195) = 0))
@@ -1676,8 +1676,12 @@ cmdgametype(6).ToolTipText = ""
 cmdgametype(6).Caption = captval
 confirmnewgame = False
 End If
+LoadFrmSplsh 450
 Load Genopts
+Genopts.Show
 gametype.Enabled = False
+Unload frmSplsh
+
 Case 6
 If confirmnewgame = False Then
 cmdgametype(6).Caption = "Sure ?"

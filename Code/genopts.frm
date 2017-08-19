@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "comdlg32.ocx"
+Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "Comdlg32.ocx"
 Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "TabCtl32.ocx"
 Object = "{C3CBD80D-C8D1-11D2-9F8E-0080C7CE5CDC}#4.1#0"; "ActCndy2.ocx"
 Begin VB.Form Genopts 
@@ -31,6 +31,12 @@ Begin VB.Form Genopts
    ScaleHeight     =   6945
    ScaleWidth      =   8070
    Visible         =   0   'False
+   Begin VB.Timer MidiPlay 
+      Enabled         =   0   'False
+      Interval        =   18
+      Left            =   6240
+      Top             =   5160
+   End
    Begin VB.CommandButton cmdgenopts 
       Cancel          =   -1  'True
       Caption         =   "&Accept"
@@ -1779,7 +1785,7 @@ Attribute VB_Exposed = False
 Option Explicit
 Private Declare Function GetWindowsDirectory Lib "kernel32" Alias "GetWindowsDirectoryA" (ByVal lpBuffer As String, ByVal nSize As Long) As Long
 
-Dim numdevices As Long, m_MidiFile1 As String, m_Media As String, m_WaveFile As String, col() As String
+Dim numdevices As Long, m_Media As String, m_WaveFile As String, col() As String
 Dim ct As Long, ct1 As Long, response As Long, gt152 As Long, listcomb As Long, m_SysSnds() As SystemSoundDefinitions
 Dim setbackbmpdir As Boolean, Spinbuttonsel As Boolean, booRestoredefaults As Boolean, boosavedefaults As Boolean, procchk As Boolean
 'listcomb = 0 to 8
@@ -1973,6 +1979,7 @@ Next
 TTDefault
 PCspeed
 
+Cmbgenopts(12).ToolTipText = ""
 If gt(185) = 0 Then
 labgenopts(54).Caption = "Midi Unused"
 Else
@@ -1985,11 +1992,11 @@ Cmbgenopts(4).Enabled = False
 cmdgenopts(27).Enabled = False
 End If
 
-Genopts.Show
 procend = True
 End Sub
 Private Sub Cmbgenopts_Click(Index As Integer)
 Dim teststring As String
+
 If procend = False Then Exit Sub
 procend = False
 Select Case Index
@@ -2067,11 +2074,11 @@ gt(194) = CLng(Cmbgenopts(11).Text)
 PCspeed
 Case 12
 'Always turn off sound before changing
+Cmbgenopts(12).ToolTipText = ""
 
 If Cmbgenopts(12).ListIndex = 0 Then
-ct = 0
-  Call StopMidiFile
-  cmdgenopts(32).Caption = "Test"
+  ct = 0
+  stopsound
   If Midichg(ct) = gt(185) Then
   labgenopts(54).Caption = "Midi Unused"
   Else
@@ -2081,15 +2088,16 @@ ct = 0
   EnableNoise False
 Else
  If gt(185) = 0 Then 'initialise
-  If Midichg = gt(185) Then 'Midichg changes gt(185)!
+  If Midichg = gt(185) Then 'Midichg changes gt(185) on success!
    If gt(185) = 0 Then
    labgenopts(54).Caption = "Midi Error"
    EnableNoise False
    Else
-   'might be greater than 1
+   'success: greater than 1
    If Midichg(Cmbgenopts(12).ListIndex) = 0 Then
    gt(185) = 0
    labgenopts(54).Caption = "Midi Unused"
+   Cmbgenopts(12).ListIndex = 0
    Else
    labgenopts(54).Caption = "Midi Device"
    EnableNoise True
@@ -2098,11 +2106,27 @@ Else
   Else
   labgenopts(54).Caption = "Midi Error"
   gt(185) = 0 ' just in case
+  Cmbgenopts(12).ListIndex = 0
   EnableNoise False
   End If
   Cmbgenopts(12).ListIndex = gt(185)
  Else
-  If Midichg(Cmbgenopts(12).ListIndex) = 0 Then Cmbgenopts(12).ListIndex = gt(185)
+ stopsound
+ Stopnoise 2
+   If Stopnoise(2) Then
+   Cmbgenopts(12).ToolTipText = "Handle for " & gt(185) & " did not close!"
+   EnableNoise False
+   Cmbgenopts(12).ListIndex = 0
+   Else
+     If Midichg(Cmbgenopts(12).ListIndex) = 0 Then
+       If gt(185) = 0 Then
+       Cmbgenopts(12).ListIndex = 0
+       EnableNoise False
+       Else
+       Cmbgenopts(12).ListIndex = gt(185)
+       End If
+     End If
+   End If
  End If
 End If
 Case 13
@@ -2553,8 +2577,10 @@ Else
  resetdefaultbutton
  Else
  'Restore from scratch if we havn't started spinning
+ Stopnoise 1
  Restoredefaults (gt(150) = 0 And gt(49) + gt(50) + gt(51) = 0)
  Loadinvals
+ If gt(185) > 0 Then SndMidInit
  gametype.loaddefaultz
  cmdgenopts(27).Caption = "Defaults Restored"
  End If
@@ -2607,19 +2633,12 @@ gametextvars(9).Text = CStr(.FileName)
 End With
 Case 32
    If gametextvars(10).Text <> "none" Then
-   m_MidiFile1 = gametextvars(10).Text
-   With cmdgenopts(32)
-      .Enabled = False
-      If .Caption = "Test" Then
-         If PlayMidiFile(m_MidiFile1, True) Then
-            .Caption = "Stop"
-         End If
+      If cmdgenopts(32).Caption = "Test" Then
+         MidiPlay.Enabled = True
       Else
-         Call StopMidiFile
-         .Caption = "Test"
+         MidiPlay.Interval = 1
+         DoMidiPlay
       End If
-      .Enabled = True
-   End With
    End If
 Case 33
 With Lstgenopts(3)
@@ -2761,13 +2780,33 @@ NoAction:
 procend = True
 If Err.Number <> 32755 Then ShowError
 End Sub
+Private Sub MidiPlay_Timer()
+DoMidiPlay
+End Sub
+Private Sub DoMidiPlay()
+With cmdgenopts(32)
+If MidiPlay.Interval = 1 Then
+  Call StopMidiFile
+  MidiPlay.Enabled = False
+  MidiPlay.Interval = 18
+  .Caption = "Test"
+Else
+  If .Caption = "Stop" Then Exit Sub
+  If PlayMidiFile(gametextvars(10).Text, False) Then
+  .Caption = "Stop"
+  Else
+  MidiPlay.Enabled = False
+  End If
+End If
+End With
+End Sub
 Private Sub stopsound()
 Call PlaySndF("", True)
 
-If cmdgenopts(32).Caption = "Stop" Then
-Call StopMidiFile
-cmdgenopts(32).Caption = "Test"
-End If
+  If cmdgenopts(32).Caption = "Stop" Then
+  MidiPlay.Interval = 1
+  DoMidiPlay
+  End If
 End Sub
 Private Sub gametextvars_Change(Index As Integer)
 If procend = False Then Exit Sub
@@ -2814,7 +2853,7 @@ End With
 procend = True
 End Sub
 Private Sub Randomcmbselect(Index As Long)
-Dim c1 As Long, tmp As Long
+Dim c1 As Long, tmp As Long, errno As Long
 With Cmbgenopts(Index)
 Select Case Index
 Case 0
@@ -2886,14 +2925,37 @@ End Select
 
 Case 12
 
+errno = 0
 .List(0) = 0
+
 If gt(185) > 0 Then
-tmp = gt(185)
-' Midichg changes gt(185)!
-For c1 = 1 To midiDevTot
-If Midichg(c1) = False Then .List(c1) = c1
-Next
-gt(185) = tmp
+  tmp = gt(185)
+  If Stopnoise(2) Then
+  gt(185) = 0
+  labgenopts(54).Caption = "Midi Error"
+  Cmbgenopts(12).ListIndex = 0
+  Cmbgenopts(12).ToolTipText = "Handle for " & c1 & " did not close!"
+  EnableNoise False
+  Else
+  ' Midichg changes gt(185)!
+  For c1 = 1 To midiDevTot
+    If Midichg(c1) > 0 Then
+    .List(c1 - errno) = c1
+      If c1 <> tmp Then
+        If Stopnoise(2) Then Cmbgenopts(12).ToolTipText = "Handle for " & c1 & " did not close!"
+      End If
+    Else
+      errno = errno + 1
+    End If
+  Next
+  
+  gt(185) = tmp
+
+  If Midichg(tmp) = 0 Then
+  labgenopts(54).Caption = "Midi Error"
+  Cmbgenopts(12).ListIndex = 0
+  End If
+  End If
 End If
 .Text = .List(gt(185))
 

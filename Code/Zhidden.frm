@@ -2501,14 +2501,19 @@ chgchtr True
 End With
 End Sub
 Private Sub Configurationn_Click()
+DoEvents
 Pokemach.Configurationn
+Unload Zhidden
+Set Zhidden = Nothing
 End Sub
 Private Sub ChangeDirectory_Click()
+DoEvents
 Pokemach.Changedir
 Unload Zhidden
 Set Zhidden = Nothing
 End Sub
 Private Sub Quitt_Click()
+DoEvents
 Pokemach.Quitt
 Unload Zhidden
 Set Zhidden = Nothing
