@@ -26,7 +26,10 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 ;AppMutex=20b70e57-1c2e-4de9-99e5-20f3961e6912
-AppMutex=20b70e57-1c2e-4de9-99e5-20f3961e6812
+AppMutex=20b70e57-1c2e-4de9-99e5-20f3961e6812,Global\20b70e57-1c2e-4de9-99e5-20f3961e6912
+;https://stackoverflow.com/questions/28628699/inno-setup-prevent-executing-the-installer-multiple-times-simultaneosly
+SetupMutex=SetupMutex{#SetupSetting("AppId")}
+
 ;The following setting may change see repair/modify section below
 AppModifyPath="{app}\{#MyAppUpdaterExeName}" /modify=1
 
@@ -111,6 +114,8 @@ Name: "deu"; MessagesFile: "compiler:Languages\German.isl"
 Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
 
 [Messages]
+SetupAppTitle=Setup{#MyAppName}
+SetupAppRunningError=Setup has detected that %1 is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 SelectStartMenuFolderBrowseLabel=To continue, click Next.%nModifying the {#MyAppName} folder will break custom shortcuts for new Profile Configs.%nThus clicking Browse to select a different folder is not recommended!
 DirExists=The folder:%n%n%1%n%nalready exists. If another user has installed {#MyAppName} there,%nsharing this folder is recommended for advanced users only.%nAlso refer to the Installation section in the help file.%n%nWould you like to install to that folder anyway?
 
@@ -146,6 +151,8 @@ procedure UnLoadVCLStyles; external 'UnLoadVCLStyles@files:VclStylesInno.dll std
 function ShellExecute(hwnd: HWND; lpOperation: string; lpFile: string;
   lpParameters: string; lpDirectory: string; nShowCmd: Integer): THandle;
   external 'ShellExecuteW@shell32.dll stdcall';
+
+
 
 // https://stackoverflow.com/questions/41021292/inno-setup-language-selector-with-vcl-styles/41021514#comment76511928_41021514
 procedure SelectLanguage();
@@ -342,6 +349,7 @@ begin
   end;
 end;
 //The above from https://stackoverflow.com/a/2099805/850848
+
 
 
 //*********************************************************************************
@@ -681,10 +689,7 @@ sPatternPath:= ExtractFilePath(sPattern); // + Str('\') not req'd
 
 
 
-
-
-
-
+ 
 
 
 
@@ -784,12 +789,10 @@ begin
       repeat
         if (FindRec.Name <> '.') And (FindRec.Name <> '..') And (FindRec.Attributes > 0) then
         begin
- //MsgBox('FindRec.Name: ' + FindRec.Name + 'FindRec.Attributes: ' + FindRec.Attributes + 'FILE_ATTRIBUTE_DIRECTORY: ' + FILE_ATTRIBUTE_DIRECTORY, mbError, MB_OK);
          if DoDir = True Then
           begin
           if FILE_ATTRIBUTE_DIRECTORY <> 0 then
           begin
-MsgBox('Yay: ' + FindRec.Name, mbError, MB_OK);
           DirStat:= True;
           break;
           end;
@@ -799,7 +802,6 @@ MsgBox('Yay: ' + FindRec.Name, mbError, MB_OK);
           if FILE_ATTRIBUTE_DIRECTORY = 0 then
           //we found one file that matches our wildcards
           begin
-MsgBox('Yay: ' + FindRec.Name, mbError, MB_OK);
           FileStat:= True;
           break;
           end;
@@ -808,7 +810,10 @@ MsgBox('Yay: ' + FindRec.Name, mbError, MB_OK);
       until not FindNext(FindRec);
     finally
       FindClose(FindRec);
-      if (FileStat = False) And (DirStat = False) then Result:= True;
+      if (FileStat = False) And (DirStat = False) then
+      Result:= True
+      else
+      Result:= False;
     end;
 end;
 end;
@@ -863,8 +868,7 @@ var
  //Any Subfolders in MyApp?
  if isEmptyDir(FileG, True) = False Then
  Begin
- MsgBox('Not isEmptyDir', mbError, MB_OK);
- DeleteManyFiles(FileF, True);
+  DeleteManyFiles(FileF, True);
  end;
 end;
 
