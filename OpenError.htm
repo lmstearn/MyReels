@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<TITLE>OpenError</TITLE>
+<link rel="stylesheet" type="text/css" href="../theme.css">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<H4><A NAME="OpenError"></A>OpenError</H4>
+<ul>
+<li>The <A HREF="issues.htm#Missing Bitmap Error">issue</A> is reproduced  by first dragging <A HREF="Picture.htm">Pictures</A> into some of the RHS boxes in the <U><A HREF="Configure New Pictures Screen.htm">Configure New Pictures Screen</A></U>.</li>
+<li>Click "Allocate" to assign those <A HREF="Picture.htm">Pictures</A> to the current directory, let's call it <B>A</B>.</li>
+<li>Then click "Open &amp; Create a new Save Directory," and save the new <A HREF="Profile Configuration.htm">Profile Configuration</A> to Directory <B>B</B>.</li>
+<li>An error is generated when Directory <B>A</B> is later accessed either by double-clicking slotdata.s$t in an explorer window, a directory change from the Game Screen, or clicking the profile name through the Start Menu.</li>
+</ul>
+
+<P>The problem is because "Allocate" does not update the current <A HREF="Picture.htm">Picture</A> count to Slotdata.s$t in Directory <B>A</B>, so a smaller selection count is not compatible.</P>
+
+<P>A user resolution to the issue can be any combination of the following:</P>
+<ul>
+<li>Having chosen the required number of <A HREF="Picture.htm">Pictures</A>, click "Open &amp; Create a new Save Directory," for Directory <B>B</B>, and <I>then</I> click the "Allocate" button.</li>
+<li>Use as many <A HREF="Picture.htm">Pictures</A> as there were in the current (Directory <B>A</B>) <A HREF="Profile Configuration.htm">Profile Configuration</A>.</li>
+<li>Before running the game, use Windows Explorer to manually create or copy, then rename, the missing "nn.bmp"s in Directory <B>A</B>.</li>
+<li>Click "Allocate" or "Next"  to overwrite the current (Directory <B>A</B>) <A HREF="Profile Configuration.htm">Profile Configuration</A> without  creating a new save Directory <B>B</B>. This, of course, will overwrite the current <A HREF="Profile Configuration.htm">Profile Configuration</A> if that was the intention.</li>
+</ul>
+<dl>
+<dt>Notes:</dt>
+<dd>There is never any issue with Directory <B>B</B>.</dd>
+<dd>There is a tooltip on the "Open &amp; Create a new Save Directory" button as a reminder.</dd>
+<dd>This is a little awkward to address programatically. The original intention of the "Allocate" button was to anneal the antedeluvian navigation provided by the LH directory tree.</dd>
+</dl>
+</BODY>
+</HTML>
