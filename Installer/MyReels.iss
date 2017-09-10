@@ -58,20 +58,20 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 ;Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "VclStylesinno.dll"; DestDir: {app}; Flags: dontcopy
-Source: "SapphireKamri.vsf"; DestDir: {app}; Flags: dontcopy
-Source: "{#MyAppSysExeName}"; DestDir: {tmp}; Flags: deleteafterinstall
+Source: "VclStylesinno.dll"; DestDir: "{app}"; Flags: dontcopy
+Source: "SapphireKamri.vsf"; DestDir: "{app}"; Flags: dontcopy
+Source: "{#MyAppSysExeName}"; DestDir: "{tmp}"; Flags: deleteafterinstall
 
 
-Source: "..\{#MyAppExeName}"; DestDir: "{app}"; Flags: touch; Components: program
+Source: "..\{#MyAppExeName}"; DestDir: "{app}"; Flags: touch promptifolder replacesameversion; Components: program
 Source: "Configuration\slotdata.s$t"; DestDir: "{app}"; Flags: touch; Components: program\configuration
 Source: "{#MyAppUpdaterExeName}"; DestDir: "{app}"; Flags: touch; Components: program
 ;ignore ignoreversion flag for the time being
 Source: "..\{#MyAppName}.chm"; DestDir: "{app}"; Flags: touch; Components: help
-Source: "Readme.txt"; DestDir: "{app}"; Flags: isreadme;  Components: Readme
-Source: "Default\*.mid"; DestDir: "{app}"; Components: midi\default
-Source: "Originals\*.mid"; DestDir: "{app}"; Components: midi\original
-Source: "..\*"; DestDir: "{app}"; Flags: touch
+Source: "Readme.txt"; DestDir: "{app}"; Flags: isreadme; Components: Readme
+Source: "Default\*.mid"; DestDir: "{app}"; Flags: touch; Components: midi\default
+Source: "Originals\*.mid"; DestDir: "{app}"; Flags: touch; Components: midi\original
+Source: "..\*"; DestDir: "{app}"; Flags: touch; Excludes: "slotdata.s$t"
 
 [Dirs]
 ;Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"
