@@ -158,6 +158,7 @@ Private midirc As Long, oldsndfname As String, CanPlayWaves As Boolean, hmidi(5)
 
 ' Picnames
 Private picnames(450) As String, picnamesort(450) As String
+Dim c As New cRegistry
 Private Function FindWindowPartial(Optional InstallUpdate As Boolean = False) As Long
 Dim TitleTmp As String
 
@@ -194,7 +195,7 @@ ct = 0
         ElseIf InStr(TitleTmp, UCase("MyReels")) Then
           If InStr(TitleTmp, UCase("microsoft visual basic")) > 0 Then
           ct = ct - 1
-          ElseIf Not (InStr(TitleTmp, UCase("WinDbg")) > 0 Or InStr(TitleTmp, UCase("explor")) > 0 Or InStr(TitleTmp, UCase("\")) > 0 Or InStr(TitleTmp, UCase("/")) > 0) Then
+          ElseIf Not (InStr(TitleTmp, UCase("SetupMyReels")) > 0 Or InStr(TitleTmp, UCase("UpdateMyReels")) > 0 Or InStr(TitleTmp, UCase("WinDbg")) > 0 Or InStr(TitleTmp, UCase("explor")) > 0 Or InStr(TitleTmp, UCase("\")) > 0 Or InStr(TitleTmp, UCase("/")) > 0) Then
           ct = ct + 2
           End If
         FindWindowPartial = ct
@@ -207,44 +208,39 @@ ct = 0
   Loop
 End Function
 Public Sub setformpos(objform As Object, Optional ByVal noVert As Boolean = False)
-Dim Mon As New cRegistry
-Mon.hDC = objform.hDC
+c.hDC = objform.hDC
 
 With objform
-.Left = (Mon.DCWidthTwips - .Width) / 2
+.Left = (c.DCWidthTwips - .Width) / 2
 
-If (Mon.DCHeightTwips - .Height > 225 * resY) Then
- If noVert = False Then .Top = (Mon.DCHeightTwips - .Height) / 2
+If (c.DCHeightTwips - .Height > 225 * resY) Then
+ If noVert = False Then .Top = (c.DCHeightTwips - .Height) / 2
+ct = .Top
 End If
 
 End With
 
 End Sub
 Public Sub PokeResolution(objform As Object)
-Dim intreel As Long, Mon As New cRegistry, resTmp As Integer
+Dim intreel As Long, resTmp As Integer
 
 
-Mon.hWnd = objform.hWnd
-Mon.hDC = objform.hDC
+c.hWnd = objform.hWnd
+c.hDC = objform.hDC
 
 
 ' Is taskbar showing?
-hWnd = FindShellTaskBar()
-If hWnd = 0 Then
-TaskbarVisible = False
-Else
-TaskbarVisible = True
-End If
+TaskbarVisible = FindShellTaskBar()
 
 With objform
 
 
 
-If (Mon.VistaorLater() = True) Then
-resX = Mon.WWidth * Screen.TwipsPerPixelX / .Width
-resY = Mon.WHeight * Screen.TwipsPerPixelY / .Height
+If (c.VistaorLater() = True) Then
+resX = c.WWidth * Screen.TwipsPerPixelX / .Width
+resY = c.WHeight * Screen.TwipsPerPixelY / .Height
 Else
-Select Case Mon.DCWidth
+Select Case c.DCWidth
 Case Is < 1023
 
 resX = 1
@@ -270,33 +266,33 @@ End If
 
 ' fix TaskbarVisible logic
 If TaskbarVisible Then
-  If (Mon.IsWin2000NT = True) Then
+  If (c.IsWin2000NT = True) Or (c.XP = False) Or (c.VistaorLater() = False) Then
  .Width = resX * .Width
  .Height = resY * .Height
   Dotaskwindow objform, True
   Else
-   If (Mon.Width - Mon.WWidth) < (Mon.Height - Mon.WHeight) Then
+   If (c.Width - c.WWidth) < (c.Height - c.WHeight) Then
 
-     If Mon.WTop = Mon.Top Then
-     .Top = Mon.Top * Screen.TwipsPerPixelY
+     If c.WTop = c.Top Then
+     .Top = c.Top * Screen.TwipsPerPixelY
      Else
-     .Top = Mon.WTop * Screen.TwipsPerPixelY
+     .Top = c.WTop * Screen.TwipsPerPixelY
      End If
-    .Left = Mon.Left * Screen.TwipsPerPixelX
+    .Left = c.Left * Screen.TwipsPerPixelX
 
    Else ' Vertical Taskbar
 
 
-     If Mon.WLeft = Mon.Left Then
-     .Left = Mon.Left * Screen.TwipsPerPixelX
+     If c.WLeft = c.Left Then
+     .Left = c.Left * Screen.TwipsPerPixelX
      Else
-     .Left = Mon.WLeft * Screen.TwipsPerPixelX
+     .Left = c.WLeft * Screen.TwipsPerPixelX
      End If
-   .Top = Mon.Top * Screen.TwipsPerPixelY
+   .Top = c.Top * Screen.TwipsPerPixelY
 
    End If
-   .Height = Mon.WHeight * Screen.TwipsPerPixelY
-   .Width = Mon.WWidth * Screen.TwipsPerPixelX
+   .Height = c.WHeight * Screen.TwipsPerPixelY
+   .Width = c.WWidth * Screen.TwipsPerPixelX
   End If
   Else
  .Width = resX * .Width
@@ -305,7 +301,7 @@ End If
 
 
 .lblmisc(1).Move resX * .lblmisc(1).Left, resY * .lblmisc(1).Top
-If (Mon.XP Or Mon.VistaorLater) Then
+If (c.XP Or c.VistaorLater) Then
 resTmp = 0
 Else
 resTmp = 30
@@ -380,7 +376,7 @@ End If
 
 Else    ' gt(159)=0
 
-If (Mon.VistaorLater() = False) Then
+If (c.VistaorLater() = False) Then
 Select Case resX
 Case Is <= 32 / 25
 resTmp = 0
@@ -438,12 +434,12 @@ End If
 End If
 End With
 
-setformpos objform, Mon.VistaorLater
+setformpos objform, c.VistaorLater
 
 End Sub
 Public Function fixpw(intct As Long, pw As Long) As Long
-Dim res As Single, Mon As New cRegistry
-If (Mon.VistaorLater() = True) Then
+Dim res As Single
+If (c.VistaorLater() = True) Then
 res = resY
 Else
 res = resX
@@ -486,7 +482,7 @@ End If
 fixpw = intct * fixpw
 End Function
 Private Sub Main()
-Dim c As New cRegistry, dt As Date
+Dim dt As Date
 
 VOGchg = -1
 gt(0) = -4
@@ -502,13 +498,7 @@ If c.MutexChk() Then
   c.CloseMutexhandle
   Exit Sub
 Else
-  If FindWindowPartial(True) <> 0 Then
-  response = MsgBox("MyReels cannot run with the Installer or Updater open." & vbNewLine & "If the Updater or Installer is running, click ""OK"", close it and retry the game from a shortcut." & vbNewLine & "Else click ""Cancel"" for possible errors.", vbOKCancel)
-  If response = vbOKCancel Then
-  Unload frmSplsh
-  Exit Sub
-  End If
-  ElseIf c.mch2000nt = True And FindWindowPartial > 2 Then
+  If c.mch2000nt = True And FindWindowPartial > 2 Then
   response = MsgBox("Only 1 copy of MyReels should run." & vbNewLine & "If there is an explorer folder or a task containing the words ""MyReels"" currently open," & vbNewLine & "click ""OK"", close it and retry the game from a shortcut." & vbNewLine & "Else click ""Cancel"" for possible errors.", vbOKCancel)
   If response = vbOKCancel Then
   Unload frmSplsh
@@ -1202,9 +1192,15 @@ picnames(ct) = "fate"
 Case 438
 picnames(ct) = "influence"
 Case 439
-picnames(ct) = "drunk"
+picnames(ct) = "stupor"
 Case 440
-picnames(ct) = "balloon"
+picnames(ct) = "gas"
+Case 441
+picnames(ct) = "armour"
+Case 442
+picnames(ct) = "attitude"
+Case 443
+picnames(ct) = "suspicion"
 End Select
 Next
 
@@ -1220,15 +1216,26 @@ Load Pokemach
 If procend = True Then
 procend = False
  If resCheck = False Then
- Unload frmSplsh
- c.CloseMutexhandle
+ QuitNow
  Exit Sub
+ ElseIf gt(200) <> 1 Then 'Avoids warning on setup/update launch- but excludes rare case of new config while installer running!
+  If FindWindowPartial(True) <> 0 Then
+  Pokemach.waitimer.Enabled = False
+  response = MsgBox("MyReels cannot run with the Installer or Updater open." & vbNewLine & "If the Updater or Installer is running, click ""OK"", close it and retry the game from a shortcut." & vbNewLine & "Else click ""Cancel"" for possible errors.", vbSystemModal Or vbOKCancel)
+   If response = vbOKCancel Then
+   QuitNow
+   Exit Sub
+   Else
+   Pokemach.waitimer.Enabled = True
+   End If
+  End If
  End If
+
 Pokemach.Show
 
 On Error Resume Next
 
-If TaskbarVisible Then Dotaskwindow Pokemach
+If FindShellTaskBar Then Dotaskwindow Pokemach
 
 ' Must close handles if midi off!
 If gt(185) = 0 Then ZapMidihWnd
@@ -1255,12 +1262,7 @@ End If
 ' gt(200) = 1 'can set trigger here
 
 Else
-Dotaskwindow , , True
-Unload Pokemach
-Set Pokemach = Nothing
-Unload frmSplsh
-Set frmSplsh = Nothing
-c.CloseMutexhandle
+QuitNow
 If runAdmin = True Then
  DoEvents
  c.RunElevated App.Path & "\" & App.EXEName
@@ -1270,7 +1272,12 @@ End If
 Exit Sub
 Filedeleteerror:
 ShowError
-MsgBox "Please check file permissions in the selected directory and restart program!"
+MsgBox "Please check file permissions in the selected directory and restart program!", vbExclamation
+QuitNow
+End Sub
+Private Sub QuitNow()
+Stopnoise 2
+TaskbarVisible = FindShellTaskBar()
 Dotaskwindow , , True
 Unload Pokemach
 Set Pokemach = Nothing
@@ -1290,7 +1297,7 @@ If gt(185) = 0 Then Midichg 'not on chgdir
 If CanPlayWaves = False Then MsgBox "Couldn't open wave device"
 End Sub
 Private Function ZapMidihWnd(Optional ByVal hWndIndex As Long = -1) As Boolean
-Dim mhWnd As Long, mshWnd As Long, noErr As Boolean, tmp As String, c As New cRegistry
+Dim mhWnd As Long, mshWnd As Long, noErr As Boolean, tmp As String
 DoEvents
 ' may need midiOutReset but this does not send EOX byte. midiStreamStop may be buggy clearing handle prematurely
 
@@ -1549,7 +1556,7 @@ ShowError
 
 End Sub
 Public Function PlayMidiFile(ByVal FileName As String, interupt As Boolean) As Boolean
-Dim c As New cRegistry, reply As String * 255, f As String
+Dim reply As String * 255, f As String
 PlayMidiFile = False
 
 If midirc <> 0 Or FileName = "" Then Exit Function  ' Not valid midi device
@@ -1588,7 +1595,7 @@ PlayMidiFile = (nRet = 0)
 
 End Function
 Private Function CSFT()
-Dim c As New cRegistry, MMPW As String, MMP As String
+Dim MMPW As String, MMP As String
 MMPW = c.SysDir & "SysWOW64\" & "MIDIMapper\"
 MMP = c.SysDir & "MIDIMapper\"
 CSFT = True
@@ -1803,7 +1810,7 @@ End If
 oldsndfname = FileName
 End Sub
 Public Function SystemSoundNames(Snds() As SystemSoundDefinitions) As Long
-Dim i As Long, j As Long, Ndx As Long, c As New cRegistry
+Dim i As Long, j As Long, Ndx As Long
 Dim subsectkeys() As String, sectkeys() As String, SKeys() As String, sectCount As Long, subsectct As Long
 
 ct = 0
@@ -1838,13 +1845,13 @@ If .EnumerateValues(SKeys(), Ndx) = True Then
 
 ReDim Preserve Snds(0 To ct) As SystemSoundDefinitions
 
-        With Snds(ct)
-        .GroupName = c.SectionKey
-        .SoundName = c.ValueKey
-        .RegKey = c.SectionKey & "\" & subsectkeys(j)
-        .Current = c.CurrentValue
-        .Default = c.DefaultValue
-        End With
+  With Snds(ct)
+  .GroupName = c.SectionKey
+  .SoundName = c.ValueKey
+  .RegKey = c.SectionKey & "\" & subsectkeys(j)
+  .Current = c.CurrentValue
+  .Default = c.DefaultValue
+  End With
 
 ct = 1 + ct
 
@@ -1859,30 +1866,31 @@ Next
 
 
 
-
-
 End If
 End With
 SystemSoundNames = ct
 End Function
-Private Function FindShellTaskBar() As Long
+Private Function FindShellTaskBar() As Boolean
 
 On Error Resume Next
 
 hWnd = FindWindowEx(0&, 0&, g_cstrShellTaskBarWnd, vbNullString)
 
-If hWnd <> 0 Then FindShellTaskBar = hWnd
-
+If hWnd = 0 Then
+FindShellTaskBar = False
+Else
+FindShellTaskBar = True
+End If
     
 End Function
 Private Function FindShellWindow() As Long
+'not used
 
 On Error Resume Next
 
 hWnd = FindWindowEx(0&, 0&, g_cstrShellViewWnd, vbNullString)
 
-If hWnd <> 0 Then FindShellWindow = hWnd
-
+FindShellWindow = hWnd
     
 End Function
 Private Sub HideShowWindow(ByVal hWnd As Long, Optional ByVal Hide As Boolean = False)
@@ -1905,7 +1913,6 @@ Call ShowWindow(hWnd, lngShowCmd)
 End Sub
 Public Sub Dotaskwindow(Optional objform As Object, Optional ByVal Hidenow As Boolean = False, Optional noobjekt As Boolean)
 On Error Resume Next
-Dim c As New cRegistry
 If noobjekt = False Then
 If resX > 1 Then objform.Top = 0
 End If
@@ -1920,7 +1927,6 @@ End If
 
 End Sub
 Public Function Docaptions(numb As Long, Optional sortpicnamesnow As Boolean, Optional sortpicnames As Boolean) As String
-Dim c As New cRegistry
 If sortpicnamesnow = True Then
     For ct = 1 To 450
     picnamesort(ct) = picnames(ct)
@@ -2026,28 +2032,28 @@ Next
 
 
 
-   If ct1 > 0 Then ' Last of its type
-   .MoveFirst
+  If ct1 > 0 Then ' Last of its type
+  .MoveFirst
 
-   For ct = 0 To gt(191) - 1
-      If ![Bmpindex] > ct1 Then
-      .Edit
-      ![Bmpindex] = ![Bmpindex] - 1
-      .Update
-      End If
+  For ct = 0 To gt(191) - 1
+    If ![Bmpindex] > ct1 Then
+    .Edit
+    ![Bmpindex] = ![Bmpindex] - 1
+    .Update
+    End If
    .MoveNext
-   Next
-   Else
+  Next
+  Else
 
 
 
-' Is there a bmp really here?
-.MoveFirst
-.Move LHSpoz
+  ' Is there a bmp really here?
+  .MoveFirst
+  .Move LHSpoz
 
 
-   If IZempty = False Then
-   response = MsgBox("Other assignments to this thumbnail will be deleted. OK?", vbYesNo)
+    If IZempty = False Then
+    response = MsgBox("Other assignments to this thumbnail will be deleted. OK?", vbYesNo)
       If response = vbNo Then
       .Close
       GoTo Quotezerr
@@ -2068,16 +2074,16 @@ Next
 
       Next
       End If
-   End If
+    End If
 
-   End If
+  End If
 
-' Now decrement apt bmpindex
-gt(191) = gt(191) - 1
+  ' Now decrement apt bmpindex
+  gt(191) = gt(191) - 1
 
-' And current position
-If gt(195) = 0 Then
-If gt(188) >= LHSpoz Then gt(188) = gt(188) - 1
+  ' And current position
+  If gt(195) = 0 Then
+  If gt(188) >= LHSpoz Then gt(188) = gt(188) - 1
 End If
 
 ' Now delete
@@ -2090,33 +2096,29 @@ If LHSpoz > 0 Then LHSpoz = LHSpoz - 1
 
 
 
-
-
 Case 0  ' Fill images on RH screen
 
-    If zhiddnstatus < 0 Then ' find real RHSoffset to match passed RHSoffset
-    zhiddnstatus = -zhiddnstatus
-    .MoveFirst
-    For ct = 0 To gt(191) - 1
-    If ![Bmpindex] = 0 Then
-    DoEvents
-    End If
+  If zhiddnstatus < 0 Then ' find real RHSoffset to match passed RHSoffset
+  zhiddnstatus = -zhiddnstatus
+  .MoveFirst
+  For ct = 0 To gt(191) - 1
+  If ![Bmpindex] = 0 Then DoEvents
     If ![Bmpindex] = zhiddnstatus Then
     RHSoffset = ct
     Exit For
-    Else
+  Else
     .MoveNext
-    End If
-    Next
-    End If
+  End If
+  Next
+  End If
 
-For ct = 0 To 8
+  For ct = 0 To 8
 
-If ct + RHSoffset < gt(191) Then
-Quotebrs.RHSquote(ct).Visible = True
-Quotebrs.Spinimage(ct).Visible = True
-.MoveFirst
-.Move RHSoffset + ct
+  If ct + RHSoffset < gt(191) Then
+  Quotebrs.RHSquote(ct).Visible = True
+  Quotebrs.Spinimage(ct).Visible = True
+  .MoveFirst
+  .Move RHSoffset + ct
 
     If Len(![Quotestr]) > 90 * resX Then
     Quotebrs.RHSquote(ct) = Left(![Quotestr], 90 * resX) & " ..."
@@ -2126,26 +2128,26 @@ Quotebrs.Spinimage(ct).Visible = True
 
     i = ![Bmpindex]
     If i > 0 Then
-            Quotebrs.lblindex(ct).Caption = i
-            If IZempty = True Then
-            Quotebrs.lblindex(ct).ForeColor = &H80FF&
-            .MoveFirst
-            For ct1 = 0 To gt(191) - 1
-            If ![Bmpindex] = i And IZempty = False Then Exit For
-            .MoveNext
-            Next
-            Quotebrs.lblindex(ct).ToolTipText = "Thumbnail located at: " & CStr(ct1 + 1)
-            Else
-            Quotebrs.lblindex(ct).ForeColor = &HFFFF00
-            Quotebrs.lblindex(ct).ToolTipText = ""
-            End If
+       Quotebrs.lblindex(ct).Caption = i
+       If IZempty = True Then
+         Quotebrs.lblindex(ct).ForeColor = &H80FF&
+         .MoveFirst
+         For ct1 = 0 To gt(191) - 1
+         If ![Bmpindex] = i And IZempty = False Then Exit For
+         .MoveNext
+         Next
+         Quotebrs.lblindex(ct).ToolTipText = "Thumbnail located at: " & CStr(ct1 + 1)
+       Else
+         Quotebrs.lblindex(ct).ForeColor = &HFFFF00
+         Quotebrs.lblindex(ct).ToolTipText = ""
+       End If
 
-            If Chunker(rectemp, False, ct) = False Then GoTo Quotezerr
-            Set Quotebrs.Spinimage(ct).Picture = LoadPicture(loaddirectory & "q" & ct & ".bmp")
+    If Chunker(rectemp, False, ct) = False Then GoTo Quotezerr
+       Set Quotebrs.Spinimage(ct).Picture = LoadPicture(loaddirectory & "q" & ct & ".bmp")
     Else
     ' blank pic
-    Set Quotebrs.Spinimage(ct).Picture = LoadPicture(App.Path & "\blank.bmp")
-    Quotebrs.lblindex(ct).Caption = ""
+      Set Quotebrs.Spinimage(ct).Picture = LoadPicture(App.Path & "\blank.bmp")
+      Quotebrs.lblindex(ct).Caption = ""
     End If
 Else
 Quotebrs.RHSquote(ct).Visible = False

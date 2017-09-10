@@ -1341,9 +1341,26 @@ lblgametype(2).ForeColor = zcolour
 End If
 procend = True
 End Sub
+Private Function GenoptsQuotebrs() As Boolean
+Dim f As Form
+
+GenoptsQuotebrs = False
+For Each f In Forms
+If f.Name = "Quotebrs" Then
+GenoptsQuotebrs = True
+Quotebrs.Show
+Exit Function
+ElseIf f.Name = "Genopts" Then
+GenoptsQuotebrs = True
+Genopts.Show
+Exit Function
+End If
+Next
+End Function
 Private Sub Form_Activate()
 Dim limit1 As Long, limit2 As Long, gamespinvec(4) As Long, oldgamespinkeep(4) As Long, oldgamespintot As Long, zmatch As Boolean
 
+If GenoptsQuotebrs Then Exit Sub
 
 If Not ((gamespinsymbol(0) = tgamespinsymbol(0) And gamespinsymbol(1) = tgamespinsymbol(1) Or gamespinsymbol(0) = tgamespinsymbol(1) And gamespinsymbol(1) = tgamespinsymbol(0)) And (gamespinsymbol(2) = tgamespinsymbol(2) And gamespinsymbol(3) = tgamespinsymbol(3) Or gamespinsymbol(2) = tgamespinsymbol(3) And gamespinsymbol(3) = tgamespinsymbol(2)) And gamespintot > 1) Then
 
@@ -1475,6 +1492,8 @@ gamespinkeep(gamespintot - 1) = temp
 End If
 End Sub
 Private Sub imgsymbolsel_Click(Index As Integer)
+
+If GenoptsQuotebrs Then Exit Sub
 
 If confirmnewgame = True Then
 cmdgametype(6).ToolTipText = ""
@@ -1679,7 +1698,6 @@ End If
 LoadFrmSplsh 450
 Load Genopts
 Genopts.Show
-gametype.Enabled = False
 Unload frmSplsh
 
 Case 6
@@ -1937,6 +1955,9 @@ lblgametype(5).Caption = "1"
 End Select
 End Sub
 Private Sub spngametype_SpinUp(Index As Integer)
+
+If GenoptsQuotebrs Then Exit Sub
+
 temp = CLng(lblgametype(Index).Caption)
 If newpiccalcreturn = 1 Then newpiccalcreturn = 2
 
@@ -2028,6 +2049,9 @@ End If
 End Select
 End Sub
 Private Sub spngametype_SpinDown(Index As Integer)
+
+If GenoptsQuotebrs Then Exit Sub
+
 temp = CLng(lblgametype(Index).Caption)
 If newpiccalcreturn = 1 Then newpiccalcreturn = 2
 

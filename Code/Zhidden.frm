@@ -1460,8 +1460,13 @@ End With
 With cmdok
 .FontBold = True
 .Fontsize = 18
+
+If gt(196) < 71 Then
+.Caption = "Back to Quote Thumbnails"
+Else
 .Caption = "Previous"
-If gt(196) < 71 Then Caption = "Back to Quote Thumbnails"
+End If
+
 .Width = Cellz.Width - 120
 .Cancel = False
 .Top = Zhidden.Height - .Height - 350
@@ -2531,6 +2536,13 @@ End Sub
 Private Sub Cellz_Click()
 If zhiddnstatus < 0 Then
 If Cellz.ToolTipText = "sorted" Then Exit Sub
+
+  If gt(196) < 71 Then
+  cmdok.Caption = "Back to Quote Thumbnails"
+  Else
+  cmdok.Caption = "Previous"
+  End If
+
 lblDoffset = gt(196) - 70
 If lblDoffset < 0 Then lblDoffset = 0
 Cellz.ToolTipText = "sorted"

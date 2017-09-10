@@ -701,7 +701,7 @@ CreateEXEAssociation = True
 
     If VistaorLater() Then
         If Not IsUserAnAdministrator() Then
-            MsgBox "MyReels has to be run as administrator on first run. Click OK to Continue", vbInformation, "First Time Run"
+            MsgBox "MyReels has to be run as administrator on new config. Click OK to Continue", vbInformation, "New Config Run"
             CreateEXEAssociation = False
             Exit Function
         End If

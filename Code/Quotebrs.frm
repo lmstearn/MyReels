@@ -1843,12 +1843,16 @@ End Function
 Private Sub ProcessQuotez(Optional Dizable As Boolean = False)
 cmmd(3).Caption = "&Delete Quote"
 If Dizable = True Then
+Genopts.enabled = false
+Gametype.enabled = false
 quotetext.Visible = False
 quotelist.Visible = False
 Quotebrs.Refresh
 Quotebrs.Enabled = False
 Quotebrs.MousePointer = vbHourglass
 Else
+Genopts.MidiPlay.Interval = 18
+Genopts.MidiPlay.Enabled = True
 Quotebrs.MousePointer = vbDefault
 Quotebrs.Enabled = True
 quotetext.Visible = True

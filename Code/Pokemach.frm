@@ -3003,7 +3003,7 @@ randomspinvec pw, medfastslowmove, special, spinzstart
 
 If gt(185) > 0 Then
 playsuccess = PlayMidiFile(Stringvars(39), True)
-MidiPlay.Enabled = playsuccess
+midiplay.Enabled = playsuccess
 If gt(187) > 0 Then medfastslowmove(0, 5) = 44
 Else
 playsuccess = False
@@ -3519,22 +3519,22 @@ If gt(14) = 0 And gt(10) = 0 Then .Top = resY * 1050
 End If
 'OPTION OF ANOTHER BITMAP HERE
 If gt(162) = -1 Then
-        If Stringvars(1) = Stringvars(2) Then
-        .Visible = False
-        procend = True
-        Unload frmSplsh
-        waitimmarker = 5
-        waitimer.Enabled = True
-        Exit Sub
-        Else
-        If loadbackbitmap("Title", 2) = True Then paintitlearea
-        Unload frmSplsh
-        procend = True
-        End If
+  If Stringvars(1) = Stringvars(2) Then
+  .Visible = False
+  procend = True
+  Unload frmSplsh
+  waitimmarker = 5
+  waitimer.Enabled = True
+  Exit Sub
+  Else
+  If loadbackbitmap("Title", 2) = True Then paintitlearea
+  procend = True
+  Unload frmSplsh
+  End If
 Else
-procend = True
-Unload frmSplsh
-.BackColor = gt(162)
+  procend = True
+  Unload frmSplsh
+  .BackColor = gt(162)
 End If
 TextCircle TA, Stringvars(5), .ScaleWidth / 2, .ScaleHeight, .ScaleHeight, degreeoftitle, .Fontsize
 End With

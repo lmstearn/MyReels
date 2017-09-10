@@ -1788,12 +1788,27 @@ Private Declare Function GetWindowsDirectory Lib "kernel32" Alias "GetWindowsDir
 Dim numdevices As Long, m_Media As String, m_WaveFile As String, col() As String
 Dim ct As Long, ct1 As Long, response As Long, gt152 As Long, listcomb As Long, m_SysSnds() As SystemSoundDefinitions
 Dim setbackbmpdir As Boolean, Spinbuttonsel As Boolean, booRestoredefaults As Boolean, boosavedefaults As Boolean, procchk As Boolean
+
 'listcomb = 0 to 8
 Private Sub Form_Load()
 
 setformpos Me
 
 Loadinvals      'needed for default refresh
+End Sub
+Private Function QuotebrsShow() As Boolean
+Dim f As Form 'For DB reference
+QuotebrsShow = False
+For Each f In Forms
+If f.Name = "Quotebrs" Then
+Quotebrs.Show
+QuotebrsShow = True
+Exit Function
+End If
+Next
+End Function
+Private Sub Form_Activate()
+QuotebrsShow
 End Sub
 Private Sub Loadinvals()
 procend = False
@@ -2382,7 +2397,6 @@ Stringvars(ct) = Lstgenopts(3).List(ct - 39)
 Next
 stopsound
 Unload Me
-gametype.Enabled = True
 Set Genopts = Nothing
 Case 1, 2
 If Index = 1 Then
@@ -2424,7 +2438,6 @@ End With
 Case 5
 'Quote thumbnails
 LoadFrmSplsh 430
-Genopts.Enabled = False
 Load Quotebrs
 Quotebrs.Show
 Unload frmSplsh
@@ -2781,7 +2794,15 @@ procend = True
 If Err.Number <> 32755 Then ShowError
 End Sub
 Private Sub MidiPlay_Timer()
+' Share timer regarding Quotebrs show issue
+If QuotebrsShow Then
+  Gametype.enabled = true
+  Genopts.enabled = true
+  MidiPlay.Enabled = False
+  MidiPlay.Interval = 18
+Else
 DoMidiPlay
+End If
 End Sub
 Private Sub DoMidiPlay()
 With cmdgenopts(32)
