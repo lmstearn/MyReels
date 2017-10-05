@@ -1733,6 +1733,14 @@ Stringvars(22) = "Award of Abundance!"
 Stringvars(23) = "Award of Great Abundance!"
 Stringvars(24) = "Jackpot Awarded!"
 Stringvars(25) = "Grand Bonanza!"
+SetSndDef
+SetMusDef
+ElseIf gt(192) < 3 Then
+Stringvars(3) = ""
+End If
+End Select
+End Sub
+Public Function SetSndDef() As Boolean
 Stringvars(26) = App.Path & "\spin.wav" 'Spin
 Stringvars(27) = App.Path & "\chgbet.wav"  'Change bet
 Stringvars(28) = App.Path & "\MB.wav"  'MB
@@ -1746,6 +1754,9 @@ Stringvars(35) = App.Path & "\100to249.wav"  '100  - 249
 Stringvars(36) = App.Path & "\250to999.wav"  '250 - 999
 Stringvars(37) = App.Path & "\1000to4999.wav"  '1000 - 4999
 Stringvars(38) = App.Path & "\5000.wav"  '5000 +
+SetSndDef = FileExists(Stringvars(26))
+End Function
+Public Function SetMusDef() As Boolean
 Stringvars(39) = App.Path & "\intro.mid"    'intro
 Stringvars(40) = App.Path & "\win1.mid"     'pz 25 - 99
 Stringvars(41) = App.Path & "\win2.mid"     'pz 100 - 249
@@ -1758,12 +1769,13 @@ Stringvars(47) = App.Path & "\bkgd4.mid"
 Stringvars(48) = App.Path & "\bkgd5.mid"
 Stringvars(49) = App.Path & "\bkgd6.mid"
 Stringvars(50) = App.Path & "\bkgd7.mid"
-ElseIf gt(192) < 3 Then
-Stringvars(3) = ""
-End If
-End Select
-
-End Sub
+SetMusDef = FileExists(Stringvars(39))
+End Function
+Public Function FileExists(ByVal sFileName As String) As Boolean
+On Error Resume Next
+FileExists = (GetAttr(sFileName) And vbDirectory) <> vbDirectory
+On Error GoTo 0
+End Function
 Public Sub cashup(ztemp As Long, zcolour As Long, captval As String)
 captval = ""
 Select Case ztemp
@@ -2032,88 +2044,88 @@ If OpenDb(sDatabaseName, 2) = False Then Exit Function
 
 Set dbsCurrent = gdbCurrentDB
 
-    If opennow = True Then
-    Set rectemp = dbsCurrent.OpenRecordset("Quotez")
-    Else
-    Set rectemp = dbsCurrent.OpenRecordset("Quotez", dbOpenForwardOnly)
-    End If
+  If opennow = True Then
+  Set rectemp = dbsCurrent.OpenRecordset("Quotez")
+  Else
+  Set rectemp = dbsCurrent.OpenRecordset("Quotez", dbOpenForwardOnly)
+  End If
 
 
 
 If opennow = True Then 'empty Quotes.s$t
-    If textfiletoopen = "Dummy.txt" Then    'basedir option
-    
-        With rectemp
-        ct = 0
-        On Error GoTo NillRecordz
-        .MoveFirst
-        
-        Do Until .EOF
-        ct = ct + 1
-        .MoveNext
-        Loop
-        gt(191) = ct
-        gt(188) = ct - 1
-   
-        End With
-    
+  If textfiletoopen = "Dummy.txt" Then    'basedir option
+
+    With rectemp
+    ct = 0
+    On Error GoTo NillRecordz
+    .MoveFirst
+
+    Do Until .EOF
+    ct = ct + 1
+    .MoveNext
+    Loop
+    gt(191) = ct
+    gt(188) = ct - 1
+
+    End With
+
     Else
-    
-        With rectemp
-            If Not (.EOF And .BOF) Then
-            .MoveLast
-            .MoveFirst
-            Do Until .EOF
-            .DELETE
-            .MoveNext
-            Loop
+
+    With rectemp
+      If Not (.EOF And .BOF) Then
+      .MoveLast
+      .MoveFirst
+      Do Until .EOF
+      .DELETE
+      .MoveNext
+      Loop
+      End If
+    .Close
+    End With
+    Set rectemp = Nothing
+    Set dbsCurrent = Nothing
+    killdb sDatabaseName
+    sDatabaseName = loaddirectory & "Quotes.s$t"
+
+    'Now compact it
+    If compactdb(2) = False Then Exit Function
+
+      If OpenDb(sDatabaseName, 2) = False Then Exit Function
+      Set dbsCurrent = gdbCurrentDB
+      Set rectemp = dbsCurrent.OpenRecordset("Quotez")
+      With rectemp
+      .Index = "Qorder"
+
+        If justdelete = False Then
+        hfile = FreeFile
+        Open textfiletoopen For Input As #hfile
+        ct = 0
+          If LOF(hfile) > 0 Then
+
+          Do Until EOF(hfile)
+          Line Input #hfile, nextline
+
+          If Len(nextline) > 172 Then nextline = Left(nextline, 172)
+            If nextline <> "" Then
+            If ct > 32767 Then Exit Do
+            ct = ct + 1
+            .AddNew
+            ![Bmpindex] = 0
+            ![Quotestr] = nextline
+            ![Bmpfile] = Null
+            .Update
             End If
-        .Close
-        End With
-        Set rectemp = Nothing
-        Set dbsCurrent = Nothing
-        killdb sDatabaseName
-        sDatabaseName = loaddirectory & "Quotes.s$t"
-        
-        'Now compact it
-        If compactdb(2) = False Then Exit Function
-        
-        If OpenDb(sDatabaseName, 2) = False Then Exit Function
-        Set dbsCurrent = gdbCurrentDB
-        Set rectemp = dbsCurrent.OpenRecordset("Quotez")
-        With rectemp
-        .Index = "Qorder"
-        
-            If justdelete = False Then
-            hfile = FreeFile
-            Open textfiletoopen For Input As #hfile
-            ct = 0
-                If LOF(hfile) > 0 Then
-                
-                Do Until EOF(hfile)
-                Line Input #hfile, nextline
-    
-                If Len(nextline) > 172 Then nextline = Left(nextline, 172)
-                    If nextline <> "" Then
-                    If ct > 32767 Then Exit Do
-                    ct = ct + 1
-                    .AddNew
-                    ![Bmpindex] = 0
-                    ![Quotestr] = nextline
-                    ![Bmpfile] = Null
-                    .Update
-                    End If
-                Loop
-                Close #hfile
-                End If
-                If ct > 0 Then
-                gt(191) = ct
-                gt(188) = ct - 1
-                Stringvars(3) = loaddirectory   'Success!
-                Else
-                Stringvars(3) = ""
-                End If
-            End If  'justdelete
+          Loop
+          Close #hfile
+          End If
+          If ct > 0 Then
+          gt(191) = ct
+          gt(188) = ct - 1
+          Stringvars(3) = loaddirectory   'Success!
+          Else
+          Stringvars(3) = ""
+          End If
+        End If  'justdelete
         End With
     End If
 Else    'opennow = False
@@ -2122,40 +2134,40 @@ Else    'opennow = False
 
 
 'Seek record
-    If gt(200) = 1 Then 'first load
-    With rectemp
-    'set gt191
-    ct = 0
-    Do Until .EOF
-    If ![Quotestr] = "If these words, bye and bye, Lose appeal  to the eye 'Tis simple work to change     the text: <Enter>, General, Text Tab next, And a filename you supply." Then
-    zposition = ct
-    End If
-    ct = ct + 1
-    .MoveNext
-    Loop
-    End With
-    Set rectemp = Nothing
-    Set rectemp = dbsCurrent.OpenRecordset("Quotez")
-    With rectemp
-    .Index = gdbCurrentDB.TableDefs(.Name).Indexes(0).Name
-    End With
-    
-    Set rectemp = Nothing
-    Set rectemp = dbsCurrent.OpenRecordset("Quotez")
-    
-    gt(191) = ct
-    gt(188) = ct - 1
+  If gt(200) = 1 Then 'first load
+  With rectemp
+  'set gt191
+  ct = 0
+  Do Until .EOF
+  If ![Quotestr] = "If these words, bye and bye, Lose appeal  to the eye 'Tis simple work to change     the text: <Enter>, General, Text Tab next, And a filename you supply." Then
+  zposition = ct
+  End If
+  ct = ct + 1
+  .MoveNext
+  Loop
+  End With
+  Set rectemp = Nothing
+  Set rectemp = dbsCurrent.OpenRecordset("Quotez")
+  With rectemp
+  .Index = gdbCurrentDB.TableDefs(.Name).Indexes(0).Name
+  End With
+
+  Set rectemp = Nothing
+  Set rectemp = dbsCurrent.OpenRecordset("Quotez")
+
+  gt(191) = ct
+  gt(188) = ct - 1
+  Else
+    If gt(195) = 1 Then
+    zposition = CLng(Int(Rnd * gt(191)))
     Else
-        If gt(195) = 1 Then
-        zposition = CLng(Int(Rnd * gt(191)))
-        Else
-        gt(188) = gt(188) + 1
-        If gt(188) = gt(191) Then gt(188) = 0
-        zposition = gt(188)
-        End If
+    gt(188) = gt(188) + 1
+    If gt(188) = gt(191) Then gt(188) = 0
+    zposition = gt(188)
     End If
-    
-    
+    End If
+
+
 
 With rectemp
 .Move zposition
@@ -2172,41 +2184,40 @@ BmpIX = ![Bmpindex]
 End With
     
     
-    If BmpIX > 0 Then
+  If BmpIX > 0 Then
     
-    Set rectemp = Nothing
-    Set rectemp = dbsCurrent.OpenRecordset("Quotez")
+  Set rectemp = Nothing
+  Set rectemp = dbsCurrent.OpenRecordset("Quotez")
 
-        With rectemp
-        .MoveFirst
-        .Move zposition
-        If IZempty = True Then
-        .MoveFirst
-        For ct = 0 To gt(191) - 1
-        If ![Bmpindex] = BmpIX Then
-        If IZempty = False Then Exit For 'found bmp here
-        End If
-        .MoveNext
-        'No pic
-        Next
-        End If
+    With rectemp
+    .MoveFirst
+    .Move zposition
+    If IZempty = True Then
+    .MoveFirst
+    For ct = 0 To gt(191) - 1
+    If ![Bmpindex] = BmpIX Then
+    If IZempty = False Then Exit For 'found bmp here
+    End If
+    .MoveNext
+    'No pic
+    Next
+    End If
     
-    
-    
-    'Open source file.
-    
-    hfile = FreeFile
-    
-    
-    'Get size of field.
-    ct = ![Bmpfile].FieldSize()
 
-    End With
-    
-    If ct = 0 Then
-    MsgBox "Quote Thumbnail not found!"
-    BmpIX = 0
-    Else
+  'Open source file.
+
+  hfile = FreeFile
+
+
+  'Get size of field.
+  ct = ![Bmpfile].FieldSize()
+
+  End With
+
+  If ct = 0 Then
+  MsgBox "Quote Thumbnail not found!"
+  BmpIX = 0
+  Else
         
     If Chunker(rectemp, False) = False Then GoTo quoteserr
     
@@ -2222,7 +2233,7 @@ End With
     Next
     Pokemach.Quotez.Visible = False
     Set Pokemach.Quotez.Picture = Nothing
-    End If  'ct1
+  End If  'ct1
     
     
 rectemp.Close
@@ -2271,11 +2282,11 @@ quoteztr = ""
 Else
 For ct1 = 44 To 1 Step -1
 tempstr = Mid(quoteztr, ct1, 1)
-    If tempstr = " " Then
-    quotestring(splitno) = Left(quoteztr, ct1 - 1)
-    quoteztr = Right(quoteztr, Len(quoteztr) - ct1)
-    Exit For
-    End If
+  If tempstr = " " Then
+  quotestring(splitno) = Left(quoteztr, ct1 - 1)
+  quoteztr = Right(quoteztr, Len(quoteztr) - ct1)
+  Exit For
+  End If
 Next
 
 

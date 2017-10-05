@@ -3003,7 +3003,7 @@ randomspinvec pw, medfastslowmove, special, spinzstart
 
 If gt(185) > 0 Then
 playsuccess = PlayMidiFile(Stringvars(39), True)
-midiplay.Enabled = playsuccess
+MidiPlay.Enabled = playsuccess
 If gt(187) > 0 Then medfastslowmove(0, 5) = 44
 Else
 playsuccess = False

@@ -2524,8 +2524,10 @@ Unload Zhidden
 Set Zhidden = Nothing
 End Sub
 Private Sub Helpp_Click()
+Dim c As New cRegistry
 PlaySndF App.Path & "\help.wav"
-Shell ("winhlp32.exe  -N 1 " & App.Path & "\MyReels.hlp"), vbNormalFocus
+'Shell ("winhlp32.exe  -N 1 " & App.Path & "\MyReels.hlp"), vbNormalFocus
+c.CallHelp true
 End Sub
 Private Sub Titleadjust_Click()
 With Pokemach

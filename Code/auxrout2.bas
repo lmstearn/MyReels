@@ -1194,7 +1194,7 @@ picnames(ct) = "influence"
 Case 439
 picnames(ct) = "stupor"
 Case 440
-picnames(ct) = "gas"
+picnames(ct) = "colour"
 Case 441
 picnames(ct) = "armour"
 Case 442
@@ -1243,10 +1243,10 @@ If gt(185) = 0 Then ZapMidihWnd
 If gt(200) = 1 Then
 ' Shell ("winhlp32.exe  -N 17 " & App.Path & "\MyReels.hlp"), vbNormalFocus
  On Error GoTo Filedeleteerror
- If Dir(App.Path & "\building.wav") <> "" Then Kill (App.Path & "\building.wav")
- If Dir(App.Path & "\peace.wav") <> "" Then Kill (App.Path & "\peace.wav")
- If Dir(App.Path & "\fabulous.wav") <> "" Then Kill (App.Path & "\fabulous.wav")
- If Dir(App.Path & "\yeah.wav") <> "" Then Kill (App.Path & "\yeah.wav")
+ If FileExists(App.Path & "\building.wav") Then Kill (App.Path & "\building.wav")
+ If FileExists(App.Path & "\peace.wav") Then Kill (App.Path & "\peace.wav")
+ If FileExists(App.Path & "\fabulous.wav") Then Kill (App.Path & "\fabulous.wav")
+ If FileExists(App.Path & "\yeah.wav") Then Kill (App.Path & "\yeah.wav")
 For ct = 1 To 50000
    DoEvents
    Sleep 50
@@ -2418,7 +2418,7 @@ Else    ' wipeimgsel false
    .Move LHSpoz
 
         If imgselprevindex = 0 Then
-        If Dir(loaddirectory & "q0.bmp") <> "" Then Kill (loaddirectory & "q0.bmp")
+        If FileExists(loaddirectory & "q0.bmp") Then Kill (loaddirectory & "q0.bmp")
         SavePicture Quotebrs.picTruesize.Image, loaddirectory & "q0.bmp"
 
 
@@ -2474,7 +2474,7 @@ Else    ' wipeimgsel false
         .Update
 
 
-        If Dir(loaddirectory & "q0.bmp") <> "" Then Kill (loaddirectory & "q0.bmp")
+        If FileExists(loaddirectory & "q0.bmp") Then Kill (loaddirectory & "q0.bmp")
         SavePicture Quotebrs.picTruesize.Image, loaddirectory & "q0.bmp"
 
 
@@ -2568,7 +2568,7 @@ Genopts.Cdlg.CancelError = False
 
 Genopts.Cdlg.ShowOpen
 
-If Dir(Genopts.Cdlg.FileName) = "" Or Genopts.Cdlg.FileName = "" Then
+If Not FileExists(Genopts.Cdlg.FileName) Or Genopts.Cdlg.FileName = "" Then
 .Close
 GoTo Quotezerr
 End If

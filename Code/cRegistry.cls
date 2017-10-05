@@ -381,9 +381,13 @@ Dim hKey As Long
     End If
     
 End Property
-Public Sub CallHelp()
+Public Sub CallHelp(Optional ByVal menuClk As Boolean = False)
 Dim GetDesktophWnd As Long
+if menuClk then
+s = HTMLHelp(GetDesktophWnd, App.HelpFile, HH_HELP_CONTEXT, 1)
+else
 s = HTMLHelp(GetDesktophWnd, App.HelpFile, HH_DISPLAY_TOPIC, 0)
+end if
 End Sub
 
 Public Function CreateKey() As Boolean

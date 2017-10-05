@@ -301,22 +301,41 @@ Next
 
 
 If gt(200) = 1 Or gt(192) < 4 Then 'Install trigger or old ver
-'Associate a File of type .s$t
+'Associate File of type .s$t
 If gt(200) = 1 Then
-If Not c.CreateEXEAssociation(App.Path & "\MyReels.exe", "MyReels", "MyReels", "s$t", , , , , , , , 0) Then
-runAdmin = True
-GoTo ErrHandler
-End If
+ If Not c.CreateEXEAssociation(App.Path & "\MyReels.exe", "MyReels", "MyReels", "s$t", , , , , , , , 0) Then
+ runAdmin = True
+ GoTo ErrHandler
+ End If
 End If
 gt(158) = 2
-
-If Dir(Stringvars(1)) <> "" Then
+If FileExists(Stringvars(1)) Then
 Restoredefaults False, (gt(192) < 4)
 Else
 Restoredefaults False, False
 End If
 gt(158) = 1
 If gt(194) = 0 Then gt(194) = c.MHZ
+Else 'check valid sound, music
+ct1 = 0
+ct2 = 0
+ For ct = 26 To 50
+ If Not FileExists(Stringvars(ct)) Then
+ Stringvars(ct) = ""
+  If ct < 39 Then
+  ct1 = ct1 + 1
+  Else
+  ct2 = ct2 + 1
+  End If
+ End If
+ Next
+' If ported Slotdata then restore defs
+If ct1 = 13 Then
+ If Not SetSndDef Then gt(186) = 0
+End If
+If ct2 = 12 Then
+ If Not SetMusDef Then gt(185) = 0
+End If
 End If
 
 If gt(191) > 32767 Then gt(191) = 32767 'Quote limits
@@ -2625,96 +2644,96 @@ currmov = 1
 End Select
 
 
-        For intreel = 0 To 4
-                
-                dirspin(intreel) = dirofspin
-                'adjust restore position for dirofspin
-                If hq(currheld, 6) <> dirofspin Then
-                If hq(currheld, intreel) < 0 Then
-                ct = -1
-                Else
-                ct = 1
-                End If
-                hq(currheld, intreel) = ct * Advanz(ct * hq(currheld, intreel), 2 * dirofspin)
-                End If
-            
-                
-        spinztemp(intreel) = hq(currheld, intreel) 'top line going down
+  For intreel = 0 To 4
+
+    dirspin(intreel) = dirofspin
+    'adjust restore position for dirofspin
+      If hq(currheld, 6) <> dirofspin Then
+        If hq(currheld, intreel) < 0 Then
+        ct = -1
+        Else
+        ct = 1
+        End If
+        hq(currheld, intreel) = ct * Advanz(ct * hq(currheld, intreel), 2 * dirofspin)
+      End If
+
+
+    spinztemp(intreel) = hq(currheld, intreel) 'top line going down
         
-        'For odd spin dups
-        If spinztemp(intreel) >= 0 Then
-        
-        winz = wheelorder(intreel, Advanz(spinztemp(intreel), -dirofspin - currmov))
-        
-            If winz = hq(currheld, 5) Or (substitute(winz, hq(currheld, 5)) = True And reelcheck(winz, intreel + 1) = True) Then
-            hreel(intreel) = True
-            ElseIf sst(hq(currheld, 5), 2) = 1 Then
-            'Do extra test for scatter
-        
-                If wheelorder(intreel, Advanz(spinztemp(intreel), dirofspin)) = hq(currheld, 5) Then
-                hreel(intreel) = True
-                ElseIf wheelorder(intreel, Advanz(spinztemp(intreel), -2 * dirofspin)) = hq(currheld, 5) Then
-                'Advanz to row 3
-                hreel(intreel) = True
-                Else
-                hreel(intreel) = False
-                End If
-        
-            Else
-            hreel(intreel) = False
-            End If
+    'For odd spin dups
+    If spinztemp(intreel) >= 0 Then
+
+    winz = wheelorder(intreel, Advanz(spinztemp(intreel), -dirofspin - currmov))
+
+      If winz = hq(currheld, 5) Or (substitute(winz, hq(currheld, 5)) = True And reelcheck(winz, intreel + 1) = True) Then
+      hreel(intreel) = True
+      ElseIf sst(hq(currheld, 5), 2) = 1 Then
+        'Do extra test for scatter
+
+        If wheelorder(intreel, Advanz(spinztemp(intreel), dirofspin)) = hq(currheld, 5) Then
+        hreel(intreel) = True
+        ElseIf wheelorder(intreel, Advanz(spinztemp(intreel), -2 * dirofspin)) = hq(currheld, 5) Then
+        'Advanz to row 3
+        hreel(intreel) = True
         Else
         hreel(intreel) = False
         End If
-        Next
-        
-        
-         'Now figure out what goes on the held reels
-        For intreel = 0 To 4
-        If hreel(intreel) = True Then
-        spinz(intreel) = hq(currheld, intreel)
-        spinz(intreel) = Advanz(spinz(intreel), dirofspin * currmov)
-        For ct = 0 To 3
-        spinztemp(intreel) = hq(currheld, intreel) 'necessary for advanz
-        'necessary for advanz - top down arrangement 1,2,3,0
-            If dirofspin = 1 Then
-            If gendirchange = False Then
-                If ct = 0 Then
-                ct1 = -3
-                Else
-                ct1 = 1 - ct
-                End If
+
+      Else
+      hreel(intreel) = False
+      End If
+    Else
+    hreel(intreel) = False
+    End If
+  Next
+
+
+'Now figure out what goes on the held reels
+  For intreel = 0 To 4
+    If hreel(intreel) = True Then
+    spinz(intreel) = hq(currheld, intreel)
+    spinz(intreel) = Advanz(spinz(intreel), dirofspin * currmov)
+      For ct = 0 To 3
+      spinztemp(intreel) = hq(currheld, intreel) 'necessary for advanz
+      'necessary for advanz - top down arrangement 1,2,3,0
+        If dirofspin = 1 Then
+          If gendirchange = False Then
+            If ct = 0 Then
+            ct1 = -3
             Else
-                If ct = 0 Then
-                ct1 = 1
-                Else
-                ct1 = ct - 3
-                End If
+            ct1 = 1 - ct
             End If
-            Else    '0,3,2,1
-            If gendirchange = False Then
-                If ct = 0 Then
-                ct1 = 3
-                Else
-                ct1 = ct - 1
-                End If
+          Else
+            If ct = 0 Then
+            ct1 = 1
             Else
-                If ct = 0 Then
-                ct1 = -1
-                Else
-                ct1 = 3 - ct
-                End If
+            ct1 = ct - 3
             End If
+          End If
+        Else    '0,3,2,1
+          If gendirchange = False Then
+            If ct = 0 Then
+            ct1 = 3
+            Else
+            ct1 = ct - 1
             End If
-        Set Pokemach.M(picnum(intreel, ct)).Picture = Pokemach.Thumbslist(intreel).ListImages(Advanz(spinztemp(intreel), ct1)).Picture
-        Next
-        Else
-        
-        'Now restore current non held symbols
-        hq(currheld, intreel) = ohqgs(currheld, intreel)
+          Else
+            If ct = 0 Then
+            ct1 = -1
+            Else
+            ct1 = 3 - ct
+            End If
+          End If
         End If
-        
-        Next
+      Set Pokemach.M(picnum(intreel, ct)).Picture = Pokemach.Thumbslist(intreel).ListImages(Advanz(spinztemp(intreel), ct1)).Picture
+      Next
+    Else
+
+    'Now restore current non held symbols
+    hq(currheld, intreel) = ohqgs(currheld, intreel)
+    End If
+
+  Next
 End Sub
 Public Function Anychanges()
 
