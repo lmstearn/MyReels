@@ -546,7 +546,7 @@ picnames(ct) = "baseball"
 Case 55
 picnames(ct) = "laugh"
 Case 56
-picnames(ct) = "8ball"
+picnames(ct) = "ability"
 Case 57
 picnames(ct) = "dead"
 Case 58
