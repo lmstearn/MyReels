@@ -2924,7 +2924,7 @@ loaddirectory = CurDir & "\"
         firstgametypeload
 
                 If Inputvars = False Then
-                If runAdmin = False Then response = MsgBox("Input file corrupted! Cannot continue.", vbOKOnly)
+                If runAdmin = False Then response = MsgBox("Input file not accepted! Cannot continue.", vbOKOnly)
                 Stopnoise
                 Unload frmSplsh
                 Exit Sub

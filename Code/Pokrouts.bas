@@ -52,7 +52,6 @@ Public Function Inputvars()
 Dim c As New cRegistry
 runAdmin = False
 Inputvars = False
-temp = 0        '1 if an error
 
 
 sDatabaseName = loaddirectory & "Slotdata.s$t"
@@ -303,7 +302,8 @@ Next
 If gt(200) = 1 Or gt(192) < 4 Then 'Install trigger or old ver
 'Associate File of type .s$t
 If gt(200) = 1 Then
- If Not c.CreateEXEAssociation(App.Path & "\MyReels.exe", "MyReels", "MyReels", "s$t", , , , , , , , 0) Then
+ 
+ If isMainActive = True And Not c.CreateEXEAssociation(App.Path & "\MyReels.exe", "MyReels", "MyReels", "s$t", , , , , , , , 0) Then
  runAdmin = True
  GoTo ErrHandler
  End If
@@ -347,7 +347,7 @@ Set rectemp = Nothing
 Set dbsCurrent = Nothing
 
 
-If temp = 0 Then Inputvars = True
+Inputvars = True
 
 Exit Function
 ErrHandler:

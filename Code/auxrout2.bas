@@ -488,7 +488,7 @@ VOGchg = -1
 gt(0) = -4
 LoadFrmSplsh 3000
 genoptsgen = False  ' can't obviously do this in PokeLoad
-
+isMainActive = True
 
 
 ' Check for previous instance app.previnstance not working
@@ -1258,17 +1258,21 @@ For ct = 1 To 50000
    Next ct
  DoEvents
  gt(200) = 0 ' Trigger turned off for good
-End If
+ End If
 ' gt(200) = 1 'can set trigger here
 
+
 Else
-QuitNow
-If runAdmin = True Then
- DoEvents
- c.RunElevated App.Path & "\" & App.EXEName
-End If
+ QuitNow
+ If runAdmin = True Then
+  DoEvents
+  c.RunElevated App.Path & "\" & App.EXEName
+ End If
 procend = False
 End If
+
+isMainActive = False
+
 Exit Sub
 Filedeleteerror:
 ShowError

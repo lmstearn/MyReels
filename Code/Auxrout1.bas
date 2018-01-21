@@ -12,7 +12,7 @@ Public gamespinsymbol(3) As Long, disablegamespintabs(1) As Boolean, spinsetting
 'reelcheck(pct,0) will be true if scatter is chosen through cornfig, false otherwise
 Public gt(200) As Long, initvec(14) As Long, freegamesettings(1, 9) As Long, sst(14, 10) As Long, gamespinkeep(3) As Long
 Public Stringvars(100) As String, hq(2, 6) As Long, quotestring(3) As String, loaddirectory As String, olddirectory As String, textwidthratio As Single, decsep As String
-Public genoptsgen As Boolean, resX As Single, resY As Single, RR As Boolean, resCheck As Boolean, runAdmin As Boolean, hfile As Integer, changecalculated As Boolean, midisNum As Long, midiDevTot As Integer
+Public genoptsgen As Boolean, resX As Single, resY As Single, RR As Boolean, resCheck As Boolean, runAdmin As Boolean, isMainActive As Boolean, hfile As Integer, changecalculated As Boolean, midisNum As Long, midiDevTot As Integer
 Public dbsCurrent As Database, sDatabaseName As String, rectemp As Recordset
 Private ct As Long, ct1 As Long, ct2 As Long, temp As Long, response As Long, thumbsize As Long
 Public Const INVALID_HANDLE_VALUE = -1
@@ -2138,6 +2138,7 @@ Else    'opennow = False
   With rectemp
   'set gt191
   ct = 0
+  if isMainActive = True then 
   Do Until .EOF
   If ![Quotestr] = "If these words, bye and bye, Lose appeal  to the eye 'Tis simple work to change     the text: <Enter>, General, Text Tab next, And a filename you supply." Then
   zposition = ct
@@ -2145,6 +2146,14 @@ Else    'opennow = False
   ct = ct + 1
   .MoveNext
   Loop
+  else
+  Do Until .EOF
+  ct = ct + 1
+  .MoveNext
+  Loop
+  zposition = CLng(Int(Rnd * ct))
+  end if
+
   End With
   Set rectemp = Nothing
   Set rectemp = dbsCurrent.OpenRecordset("Quotez")
@@ -2157,6 +2166,7 @@ Else    'opennow = False
 
   gt(191) = ct
   gt(188) = ct - 1
+
   Else
     If gt(195) = 1 Then
     zposition = CLng(Int(Rnd * gt(191)))
@@ -2165,7 +2175,7 @@ Else    'opennow = False
     If gt(188) = gt(191) Then gt(188) = 0
     zposition = gt(188)
     End If
-    End If
+  End If
 
 
 
