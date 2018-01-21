@@ -2,8 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #define MyAppName "MyReelsSys"
 #define MyParentAppName "MyReels"
-#define MyAppVersion "3.0"
+#define MyAppVersion "3.1"
 #define MyAppPublisher "Stearn & DisAssoc"
+#define MySetupDir "B:\games\"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -17,9 +18,9 @@ VersionInfoDescription={#MyAppName}
 VersionInfoProductName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppMutex=20b70e57-1c2e-4de9-99e5-20f3961e6812
-OutputDir=I:\games\{#MyParentAppName}\Installer
+OutputDir={#MySetupDir}{#MyParentAppName}\Installer
 OutputBaseFilename=Setup{#MyAppName}
-DefaultDirName=C:\games\{#MyParentAppName}
+DefaultDirName={code:GetUserMyAppDir|Param}
 Compression=lzma
 SolidCompression=yes
 SetupIconFile=CaveMantizardum.ico
@@ -27,6 +28,7 @@ ShowLanguageDialog=no
 DisableWelcomePage=yes
 DisableDirPage=yes
 DisableProgramGroupPage=yes
+UsePreviousAppDir=No
 
 [Files]
 Source: "VclStylesinno.dll"; DestDir: "{app}"; Flags: dontcopy
@@ -86,6 +88,18 @@ UninstalledAll={#MyParentAppName} system files uninstalled!
 procedure LoadVCLStyle(VClStyleFile: String); external 'LoadVCLStyleW@files:VclStylesInno.dll stdcall';
 // Import the UnLoadVCLStyles function from VclStylesInno.DLL
 procedure UnLoadVCLStyles; external 'UnLoadVCLStyles@files:VclStylesInno.dll stdcall';
+const
+   PreviousSysID = 'EF309E25-F688-4318-A762-26BA6A91C977';
+   // MyReelsSys SID
+   PreviousAppID = '7FE3CDE1-00A9-491F-B856-E3A121405B49';
+   // The MyReels SID
+
+   UninstallPathApp = 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{' + PreviousAppID + '}_is1';
+
+   UninstallPathSys = 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{' + PreviousSysID + '}_is1';
+   // Some posts have 'InstallDir', but never observed that
+   InstallKey    = 'InstallLocation';
+
 
 
 function InitializeUninstall(): Boolean;
@@ -141,4 +155,47 @@ begin
 procedure DeinitializeSetup();
 begin
   UnLoadVCLStyles;
+end;
+
+
+function GetDefaultDir( Param: String ) : String;
+var
+   UserSIDs: TArrayOfString;
+   I:        Integer;
+
+begin
+   // Check if the current user installed it
+   if (RegQueryStringValue( HKEY_CURRENT_USER, UninstallPathApp, InstallKey, Result)) Or (RegQueryStringValue(HKEY_CURRENT_USER, UninstallPathSys, InstallKey, Result)) then
+
+   // Current user didn't install it.  Did someone else?
+   else if RegGetSubkeyNames( HKEY_USERS, '', UserSIDs ) then begin
+      for I := 0 to GetArrayLength( UserSIDs ) - 1 do begin
+         if (RegQueryStringValue( HKEY_USERS, UserSIDs[I] + '\' + UninstallPathApp, InstallKey, Result)) Or (RegQueryStringValue(HKEY_USERS, UserSIDs[I] + '\' + UninstallPathSys, InstallKey, Result)) then break;
+      end;  
+   end;
+
+   // Not installed per-user
+   if Result = '' then begin
+      // What about installed for the machine?
+      if (RegQueryStringValue(HKEY_LOCAL_MACHINE, UninstallPathApp, InstallKey, Result)) Or (RegQueryStringValue(HKEY_LOCAL_MACHINE, UninstallPathSys, InstallKey, Result)) then
+
+      // Doesn't appear to be installed, as admin default to Program Files
+      else if IsAdminLoggedOn() then begin
+         Result := ExpandConstant('{pf}\') + ExpandConstant('{#MyParentAppName}');
+
+      // As non-admin, default to Local Application Data
+      end else begin
+         Result := ExpandConstant('{localappdata}\') + ExpandConstant('{#MyParentAppName}');
+      end;
+   end;
+end;
+
+
+function GetUserMyAppDir(Param: String): String;
+var
+temp: String;
+begin
+temp:= ExpandConstant('{param:{#MyParentAppName}Dir|nothingYet}');
+If temp = 'nothingYet' then temp:= GetDefaultDir(Param);
+Result:= temp;
 end;
