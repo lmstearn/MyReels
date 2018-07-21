@@ -255,6 +255,10 @@
 			<param name="Local" value="html/Picture.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Ordinatio Partialis">
+			<param name="Local" value="html\Ordinatio Partialis.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="Big Pictures">
 			<param name="Local" value="html/Big Pictures.htm">
 			</OBJECT>
