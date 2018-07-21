@@ -1,1 +1,1 @@
-## [MyReels V 3.1.](../../wiki) ##
+## [MyReels V 3.2.](../../wiki) ##
