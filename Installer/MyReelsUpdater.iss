@@ -2,14 +2,15 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 ;See the wiki before packing!: https://github.com/lmstearn/MyReels/wiki
 #define MyAppName "MyReels"
-#define MyAppVersion "3.1.0"
+#define MyAppVersion "3.2.0"
 #define MyAppPublisher "Stearn & DisAssoc"
 #define MyAppURL "https://github.com/lmstearn/MyReels/wiki"
+#define MyHomePage "http://members.ozemail.com.au/~lmstearn/"
 #define MyAppDLURL "http://www.ozemail.com.au/~lmstearn/MyReelsStuff"
 #define MyAppExeName "MyReels.exe"
 #define MyAppUpdaterName "MyReelsUpdater"
 #define MyAppUpdaterExeName "MyReelsUpdater.exe"
-#define MyUpdateDir "B:\games\"
+#define MyUpdateDir "C:\games\"
 ;AppSupportURL
 ;AppUpdatesURL
 
@@ -605,7 +606,7 @@ begin
             end;
           IDNO:
             begin
-            Result:= not OpenBrowser(SetupURL);
+            Result:= not OpenBrowser('{#MyHomePage}');
             end;
           else
             begin
