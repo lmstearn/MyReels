@@ -1201,6 +1201,20 @@ Case 442
 picnames(ct) = "attitude"
 Case 443
 picnames(ct) = "suspicion"
+Case 444
+picnames(ct) = "farewell"
+Case 445
+picnames(ct) = "audience"
+Case 446
+picnames(ct) = "spiral"
+Case 447
+picnames(ct) = "hotpotato"
+Case 448
+picnames(ct) = "begin"
+Case 449
+picnames(ct) = "passion"
+Case 450
+picnames(ct) = "sunflower"
 End Select
 Next
 
