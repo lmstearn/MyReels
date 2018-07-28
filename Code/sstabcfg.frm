@@ -1,7 +1,7 @@
 VERSION 5.00
 Object = "{10AB04E3-3AEA-101C-96E6-0020AF38F4BB}#1.0#0"; "TEGSPIN3.OCX"
-Object = "{6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.3#0"; "COMCTL32.OCX"
-Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "TABCTL32.OCX"
+Object = "{6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.3#0"; "ComCtl32.ocx"
+Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "TabCtl32.ocx"
 Begin VB.Form Sstab 
    AutoRedraw      =   -1  'True
    BorderStyle     =   1  'Fixed Single
@@ -1435,6 +1435,13 @@ Dim symbLR As Long, symbRL As Long, symbANY As Long, symbMID As Long
 'sst(pct,0) = 15 fours split in middle
 'sst(pct,0) = 16 fours 3 from left
 'sst(pct,0) = 17 fours 3 from right
+'sst(pct,1) = 1 L-R
+'sst(pct,2) = 1 Scatter
+'sst(pct,3) = 1 R-L
+'sst(pct,4) = 1 Middle Threes
+'sst(pct,5) = 1 Any
+
+
 Private Sub Form_Load()
 procend = False
 
@@ -1792,134 +1799,136 @@ procend = False
 temp = 0
 indexplusone = Index + 1
 
-For pct = 1 To piccount
-
-If substitute(pct, symbolselect) = True Then
-.ToolTipText = "Cannot use a substituted picture as a new substituter"
-procend = True
-Exit Sub
-End If
-
-If substitute(pct, indexplusone) = True And pct <> symbolselect Then
-.ToolTipText = "Sorry, No picture will have more than 1 substituter"
-procend = True
-Exit Sub
-End If
-
-Next
-
-
-If sst(symbolselect, 2) = 1 Then
-.ToolTipText = "A scatter may not be used as a substituter"
-procend = True
-Exit Sub
-End If
-
-If sst(indexplusone, 2) = 1 Then
-.ToolTipText = "A scatter may not be a substituted picture"
-procend = True
-Exit Sub
-End If
-
-'The range of substituter exceeds range of substituted
-
-If sst(indexplusone, 5) = 1 And sst(symbolselect, 1) = 1 Then
-.ToolTipText = "A substituter paying left to right cannot substitute a picture paying ""any"""
-procend = True
-Exit Sub
-End If
-
-If sst(indexplusone, 4) = 1 And sst(symbolselect, 1) = 1 And sst(symbolselect, 4) = 0 Then
-.ToolTipText = "A substituter not paying middle threes cannot substitute pictures paying middle threes"
-procend = True
-Exit Sub
-End If
-
-If sst(indexplusone, 3) = 1 And sst(symbolselect, 1) = 1 And sst(symbolselect, 3) = 0 Then
-.ToolTipText = "A substituter not paying right to left cannot substitute pictures paying right to left"
-procend = True
-Exit Sub
-End If
-
-
-'The substituted prizes in correct range
-Select Case sst(symbolselect, 0)
-Case 0
-If checkprize(indexplusone, 7) = False Then
-procend = True
-Exit Sub
-End If
-Case 1
-If sst(indexplusone, 10) > sst(symbolselect, 10) Or sst(indexplusone, 9) < sst(symbolselect, 10) Then
-.ToolTipText = "Prizes of substituted picture not in correct range"
-procend = True
-Exit Sub
-End If
-
-Case 2 To 5
-If checkprize(indexplusone, 10) = False Then
-procend = True
-Exit Sub
-End If
-Case 6 To 12
-If checkprize(indexplusone, 9) = False Then
-procend = True
-Exit Sub
-End If
-Case 13 To 17
-If checkprize(indexplusone, 8) = False Then
-procend = True
-Exit Sub
-End If
-End Select
 
 
 
 If substitute(symbolselect, indexplusone) = True Then   'no substitute
-    'restore L-R option if the old substituted symbol was "any"
-    If sst(indexplusone, 5) = 1 Then optgeneral(1).Enabled = True
+  'restore L-R option if the old substituted symbol was "any"
+  If sst(indexplusone, 5) = 1 Then optgeneral(1).Enabled = True
 
-    substitute(symbolselect, indexplusone) = False
-    tinyshape(Index).FillStyle = 1
+  substitute(symbolselect, indexplusone) = False
+  tinyshape(Index).FillStyle = 1
     
-    'lt 5 Restore reelcheck for non substitute
-    For intreel = 0 To 4
-    reelcheck(indexplusone, intreel + 1) = True
-    Next
+  'lt 5 Restore reelcheck for non substitute
+  For intreel = 0 To 4
+  reelcheck(indexplusone, intreel + 1) = True
+  Next
 
 
-    remembersubstitute = remembersubstitute - 1
+  remembersubstitute = remembersubstitute - 1
     If remembersubstitute = 0 Then
     If scatterspintemp2 = 0 And enablescatter = True Then chkgeneral(0).Enabled = True 'can have scatter option again
 
     For intreel = 0 To 4
     chkreels(intreel).Enabled = False
     Next
-End If
+    End If
 Else    'get a substitute
-    For pct = 1 To piccount
-    
-    For ct = 1 To piccount
+
+
+  For pct = 1 To piccount
+    If substitute(pct, symbolselect) = True Then
+    .ToolTipText = "Cannot use a substituted picture as a new substituter"
+    procend = True
+    Exit Sub
+    End If
+
+    If substitute(pct, indexplusone) = True And pct <> symbolselect Then
+    .ToolTipText = "Sorry, No picture will have more than 1 substituter"
+    procend = True
+    Exit Sub
+    End If
+  Next
+
+
+  If sst(symbolselect, 2) = 1 Or sst(indexplusone, 2) = 1 Then
+  .ToolTipText = "A scatter may not be used as a substituter"
+  procend = True
+  Exit Sub
+  End If
+
+
+  'The range of substituter exceeds range of substituted
+
+  If sst(indexplusone, 5) = 1 And sst(symbolselect, 1) = 1 Then
+  .ToolTipText = "A substituter paying ""left to right"" cannot substitute a picture paying ""any"""
+  procend = True
+  Exit Sub
+  End If
+
+
+  If sst(indexplusone, 4) = 1 And sst(symbolselect, 1) = 1 And sst(symbolselect, 4) = 0 Then
+  .ToolTipText = "A substituter neither paying ""any"" nor ""middle threes"" cannot substitute pictures paying ""middle threes"""
+  procend = True
+  Exit Sub
+  End If
+
+  If sst(indexplusone, 3) = 1 And sst(symbolselect, 1) = 1 And sst(symbolselect, 3) = 0 Then
+  .ToolTipText = "A substituter neither paying ""any"" nor ""right to left"" cannot substitute pictures paying ""right to left"""
+  procend = True
+  Exit Sub
+  End If
+
+
+
+  'The substituted prizes in correct range
+  Select Case sst(symbolselect, 0)
+  Case 0
+  If checkprize(indexplusone, 7) = False Then
+  procend = True
+  Exit Sub
+  End If
+  Case 1
+  If sst(indexplusone, 10) > sst(symbolselect, 10) Or sst(indexplusone, 9) < sst(symbolselect, 10) Then
+  .ToolTipText = "Prizes of substituted picture not in correct range"
+  procend = True
+  Exit Sub
+  End If
+
+  Case 2 To 5
+  If checkprize(indexplusone, 10) = False Then
+  procend = True
+  Exit Sub
+  End If
+  Case 6 To 12
+  If checkprize(indexplusone, 9) = False Then
+  procend = True
+  Exit Sub
+  End If
+  Case 13 To 17
+  If checkprize(indexplusone, 8) = False Then
+  procend = True
+  Exit Sub
+  End If
+  End Select
+
+
+  For pct = 1 To piccount
+
+  For ct = 1 To piccount
     If substitute(pct, ct) = True And symbolselect <> pct Then
     temp = temp + 1
     Exit For
     End If
     Next
-    
+
     If temp = 4 Then
     .ToolTipText = "Sorry - Cannot use more than 4 substituters"
     procend = True
     Exit Sub
     End If
-    
-    
-    
+
+
+
     If substitute(indexplusone, pct) = True Then
     .ToolTipText = "This picture is already used as a substituter"
     procend = True
     Exit Sub
     End If
     Next
+
+
+
     substitute(symbolselect, indexplusone) = True
     tinyshape(Index).FillStyle = 0
     remembersubstitute = remembersubstitute + 1
@@ -1927,9 +1936,9 @@ Else    'get a substitute
     For intreel = 0 To 4
     'If symbols lt 5
     If wheelvec(intreel + 1, symbolselect) > 0 Then chkreels(intreel).Enabled = True
-    Next
-    .ToolTipText = ""
-    End If
+  Next
+  .ToolTipText = ""
+End If
 End With
 procend = True
 End Sub
@@ -2961,83 +2970,102 @@ optgeneral(0).ToolTipText = ""
 'note special arrangement in sstabgeneral
 
 If .Value = 1 Then
-    If Index = 0 Then
+  If Index = 0 Then
 
-    getscatter
-    sst(symbolselect, 2) = 1
+  getscatter
+  sst(symbolselect, 2) = 1
 
-    ElseIf Index = 1 And sst(symbolselect, 2) = 1 Then
+  ElseIf Index = 1 And sst(symbolselect, 2) = 1 Then
 
-        If sst(symbolselect, 9) > 0 Then
-        .ToolTipText = "Please ensure pair - prize value is zero"
+    If sst(symbolselect, 9) > 0 Then
+    .ToolTipText = "Please ensure pair - prize value is zero"
+    .Value = 0
+    procend = True
+    Exit Sub
+    End If
+    
+  sst(symbolselect, 3) = 1
+
+  scatterstart True
+
+  Else
+        
+    If sst(symbolselect, 0) = 0 Then
+      If Index = 1 Then
+      'The range of substituter exceeds range of substituted
+      For pct = 1 To piccount
+        Select Case sst(pct, 0)
+        Case 0, 3, 7, 10, 14, 15, 17
+        If sst(pct, 3) = 0 And sst(pct, 5) = 0 Then
+        If substitute(pct, symbolselect) = True Then
+        .ToolTipText = "A substituter neither paying ""any"" nor ""right to left"" cannot substitute pictures paying ""right to left"""
+        .Value = 0
+        procend = True
+        Exit Sub
+        ElseIf substitute(symbolselect, pct) = True Then
+        .ToolTipText = "A substituter paying ""right to left"" cannot substitute pictures not paying ""right to left"""
         .Value = 0
         procend = True
         Exit Sub
         End If
-    
-    sst(symbolselect, 3) = 1
-
-    scatterstart True
-
-    Else
-        
-        If sst(symbolselect, 0) = 0 Then
-                If Index = 1 Then
-                'The range of substituter exceeds range of substituted
-                For pct = 1 To piccount
-                Select Case sst(pct, 0)
-                Case 0, 7, 10, 14, 15, 17
-                If sst(pct, 3) = 0 And sst(pct, 5) = 0 And substitute(pct, symbolselect) = True Then
-                .ToolTipText = "A substituter not paying right to left cannot substitute pictures paying right to left"
-                .Value = 0
-                procend = True
-                Exit Sub
-                End If
-                End Select
-                Next
-                End If
-        
-                If Index = 2 Then
-                For pct = 1 To piccount
-                Select Case sst(pct, 0)
-                Case 0, 8, 13, 14
-                If sst(pct, 4) = 0 And sst(pct, 5) = 0 And substitute(pct, symbolselect) = True Then
-                .ToolTipText = "A substituter not paying middle threes cannot substitute pictures paying middle threes"
-                .Value = 0
-                procend = True
-                Exit Sub
-                End If
-                End Select
-                Next
-                End If
-        sst(symbolselect, Index + 2) = 1
-        Else
-                For pct = 1 To piccount
-                If substitute(pct, symbolselect) = True Then
-                .ToolTipText = "Please release the substituter first"
-                .Value = 0
-                procend = True
-                Exit Sub
-                End If
-                Next
-                If sst(symbolselect, 0) = 13 Or sst(symbolselect, 0) = 14 Then
-                sst(symbolselect, 1) = 1
-                Else
-                sst(symbolselect, Index + 2) = 1
-                End If
         End If
+        End Select
+      Next
+      End If
         
+      If Index = 2 Then
+      For pct = 1 To piccount
+        Select Case sst(pct, 0)
+        Case 0, 8, 13, 14
+        If sst(pct, 4) = 0 And sst(pct, 5) = 0 Then
+        If substitute(pct, symbolselect) = True Then
+        .ToolTipText = "A substituter neither paying ""any"" nor ""middle threes"" cannot substitute pictures paying ""middle threes"""
+        .Value = 0
+        procend = True
+        Exit Sub
+        ElseIf substitute(symbolselect, pct) = True Then
+        .ToolTipText = "A substituter paying ""middle threes"" cannot substitute pictures not paying ""middle threes"""
+        .Value = 0
+        procend = True
+        Exit Sub
+        End If
+        End If
+        End Select
+      Next
+      End If
+      sst(symbolselect, Index + 2) = 1
+
+    Else 'lt 5
+      'Event triggered *only* for sst(symbolselect, 0) 13 or 14 - not 8 as chk is greyed
+      For pct = 1 To piccount
+        If sst(pct, 4) = 0 And sst(pct, 5) = 0 Then
+        If substitute(pct, symbolselect) = True Then
+        .ToolTipText = "A substituter neither paying ""any"" nor ""middle threes"" cannot substitute pictures paying ""middle threes"""
+        .Value = 0
+        procend = True
+        Exit Sub
+        End If
+        If substitute(symbolselect, pct) = True Then
+        .ToolTipText = "A substituter paying ""middle threes"" cannot substitute pictures not paying ""middle threes"""
+        .Value = 0
+        procend = True
+        Exit Sub
+        End If
+        End If
+        Next
+      sst(symbolselect, 4) = 1
+      End If
     End If
 
 
 Else 'chkgeneral.value = 0
-    
-    If Index = 0 Then   'no scatters
+
+    If Index = 0 Then   'deselect scatters
     For pct = 0 To piccount - 1
     Imgtinythumb(pct).ToolTipText = ""
     Next
 
-    'If not lt 5 , reenable middles threes
+    'If not lt 5 , re-enable middle threes
     If sst(symbolselect, 0) = 0 And sst(symbolselect, 1) = 1 Then chkgeneral(2).Enabled = True
 
     For ct = 6 To 10 'Reenable prize spins and set default prizes
@@ -3048,20 +3076,20 @@ Else 'chkgeneral.value = 0
     lblprize(ct - 6).Caption = sst(symbolselect, ct)
     Next
 
-        If scatterspintemp2 = symbolselect Then
-        scatterspintemp2 = 0    'note resetting other scatter vars not needed here
-        intscatternumber = 1
-        ElseIf scatterspintemp2 > 0 Then 'scatterspintemp1 is selected
-        scatterspintemp1 = scatterspintemp2
-        scatterspintemp2 = 0
-        intscatternumber = 1
-        Else
-        scatterspintemp1 = 0
-        intscatternumber = 0
-        zeroscatter
-        End If
+      If scatterspintemp2 = symbolselect Then
+      scatterspintemp2 = 0    'note resetting other scatter vars not needed here
+      intscatternumber = 1
+      ElseIf scatterspintemp2 > 0 Then 'scatterspintemp1 is selected
+      scatterspintemp1 = scatterspintemp2
+      scatterspintemp2 = 0
+      intscatternumber = 1
+      Else
+      scatterspintemp1 = 0
+      intscatternumber = 0
+      zeroscatter
+      End If
 
-        sst(symbolselect, 2) = 0
+      sst(symbolselect, 2) = 0
     ElseIf Index = 1 And sst(symbolselect, 2) = 1 Then
 
     sst(symbolselect, 3) = 0
@@ -3070,49 +3098,71 @@ Else 'chkgeneral.value = 0
 
     Else    'no scatters
 
-        If sst(symbolselect, 0) = 0 Then    'lt 5 case
-
-                If Index = 1 Then
-                'The range of substituter exceeds range of substituted
-                For pct = 1 To piccount
-                        If sst(pct, 3) = 1 And substitute(symbolselect, pct) = True Then
-                        .ToolTipText = "A substituter not paying right to left cannot substitute pictures paying right to left"
-                        .Value = 1
-                        procend = True
-                        Exit Sub
-                        End If
-                Next
-                End If
+    If sst(symbolselect, 0) = 0 Then
+      If Index = 1 Then
+      'The range of substituter exceeds range of substituted
+        For pct = 1 To piccount
+        Select Case sst(pct, 0)
+        Case 0, 3, 7, 10, 14, 15, 17
+          If sst(pct, 3) = 1 And substitute(symbolselect, pct) = True Then
+          .ToolTipText = "A substituter neither paying ""any"" nor ""right to left"" cannot substitute pictures paying ""right to left"""
+          .Value = 1
+          procend = True
+          Exit Sub
+          End If
+          If sst(pct, 3) = 1 And substitute(pct, symbolselect) = True Then
+          .ToolTipText = "A substituter paying ""right to left"" cannot substitute pictures not paying ""right to left"""
+          .Value = 1
+          procend = True
+          Exit Sub
+          End If
+        End Select
+        Next
+      End If
         
-                If Index = 2 Then
-                For pct = 1 To piccount
-                        If sst(pct, 4) = 1 And substitute(symbolselect, pct) = True Then
-                        .ToolTipText = "A substituter not paying middle threes cannot substitute pictures paying middle threes"
-                        .Value = 1
-                        procend = True
-                        Exit Sub
-                        End If
-                Next
-                End If
-        sst(symbolselect, Index + 2) = 0
-        Else
-                For pct = 1 To piccount
-                If substitute(pct, symbolselect) = True Then
-                .ToolTipText = "Please release the substituter first"
-                .Value = 1
-                procend = True
-                Exit Sub
-                End If
-                Next
+      If Index = 2 Then
+        For pct = 1 To piccount
+        Select Case sst(pct, 0)
+        Case 0, 8, 13, 14
+          If sst(pct, 4) = 1 And substitute(symbolselect, pct) = True Then
+          .ToolTipText = "A substituter neither paying ""any"" nor ""middle threes"" cannot substitute pictures paying ""middle threes"""
+          .Value = 1
+          procend = True
+          Exit Sub
+          End If
+          If sst(pct, 4) = 1 And substitute(pct, symbolselect) = True Then
+          .ToolTipText = "A substituter paying ""middle threes"" cannot substitute pictures not paying ""middle threes"""
+          .Value = 1
+          procend = True
+          Exit Sub
+          End If
+        End Select
+        Next
+      End If
+      sst(symbolselect, Index + 2) = 0
 
-                If sst(symbolselect, 0) = 13 Or sst(symbolselect, 0) = 14 Then
-                sst(symbolselect, 4) = 0
-                Else
-                sst(symbolselect, Index + 2) = 0
-                End If
+
+      Else 'lt 5
+
+      For pct = 1 To piccount
+        If sst(pct, 4) = 1 Then
+        If substitute(pct, symbolselect) = True Then
+        .ToolTipText = "A substituter paying ""middle threes"" cannot substitute pictures not paying ""middle threes"""
+        .Value = 0
+        procend = True
+        Exit Sub
         End If
+        If substitute(symbolselect, pct) = True Then
+        .ToolTipText = "A substituter neither paying ""any"" nor ""middle threes"" cannot substitute pictures paying ""middle threes"""
+        .Value = 0
+        procend = True
+        Exit Sub
+        End If
+        End If
+      Next
+      sst(symbolselect, 4) = 0
+      End If
 
-   
     End If
 
 
@@ -3128,6 +3178,7 @@ Private Sub optgeneral_Click(Index As Integer)
 
 If procend = False Then Exit Sub
 procend = False
+
 nomorespinup = False
 
 For ct = 0 To 1
@@ -3139,20 +3190,43 @@ Next
 If Index = 1 Then   'L-R
 
 For pct = 1 To piccount     'Cannot have a LR substituting an "any"
-If substitute(symbolselect, pct) = True Then
 If sst(pct, 5) = 1 Then
-optgeneral(1).ToolTipText = "A substituter paying left to right cannot substitute a picture paying ""any"""
-optgeneral(0).Value = True
-procend = True
-Exit Sub
-ElseIf sst(pct, 3) = 1 Or sst(pct, 3) = 1 Then
-optgeneral(1).ToolTipText = "Please first deselect ""middle threes"" or ""Right to Left"" of the pictures this is substituting"
-optgeneral(0).Value = True
-procend = True
-Exit Sub
-End If
+  If substitute(symbolselect, pct) = True Then
+    optgeneral(1).ToolTipText = "A substituter paying ""left to right"" cannot substitute a picture paying ""any"""
+    optgeneral(0).Value = True
+    procend = True
+    Exit Sub
+  End If
+
+ElseIf substitute(pct, symbolselect) = True Then
+  'sst(pct, 1) = 1
+  If sst(pct, 3) = 0 then
+    Select Case sst(pct, 0)
+    Case 3, 7, 10, 14, 15, 17
+    .ToolTipText = "The substituter of this picture must pay ""right to left"""
+    .Value = 0
+    procend = True
+    Exit Sub
+    End Select
+  ElseIf sst(pct, 4) = 0 then
+
+    Select Case sst(pct, 0)
+    Case 8, 13, 14
+    If sst(pct, 4) = 0 And sst(pct, 5) = 0 Then
+    If substitute(pct, symbolselect) = True Then
+    .ToolTipText = "The substituter of this picture must pay ""middle threes"""
+    .Value = 0
+    procend = True
+    Exit Sub
+    End Select
+  End If
 End If
 Next
+
+
+
+
+
 
 sst(symbolselect, 1) = 1
 sst(symbolselect, 5) = 0
@@ -3183,12 +3257,14 @@ Else 'Index = 0
 
 
 For pct = 1 To piccount     'Cannot have a LR substituting an "any"
-If substitute(pct, symbolselect) = True And sst(pct, 1) = 1 Then
-optgeneral(0).ToolTipText = "A substituter paying left to right cannot substitute a picture paying ""any"""
-optgeneral(1).Value = True
-procend = True
-Exit Sub
-End If
+  If sst(pct, 1) = 1 Then
+    If substitute(pct, symbolselect) = True Then
+    optgeneral(0).ToolTipText = "A substituter paying one or more of ""left to right"", ""right to left"", ""middle threes"" cannot substitute a picture paying ""any"""
+    optgeneral(1).Value = True
+    procend = True
+    Exit Sub
+    End If
+  End If
 Next
 
 
@@ -3229,7 +3305,6 @@ Private Sub spngamspn_SpinUp(Index As Integer)
 Dim testval As Long
 
 With lblgamspn(Index)
-
 If Index < 4 Then
 temp = CLng(.Caption)
 ElseIf Index > 8 Then

@@ -2884,34 +2884,43 @@ gamestartup = 3
 End Select
 
 
-    If gamestartup = 1 Then
+  If gamestartup = 1 Then
 
-       'Slotdata.s$t exists in curdir?
-       If gt(0) = 0 Then loadnow = findafile(CurDir, "Slotdata.s$t")
+  'Slotdata.s$t exists in curdir?
+  If gt(0) = 0 Then loadnow = findafile(CurDir, "Slotdata.s$t")
 
-       If loadnow = 0 Then
-       CommonDialog1.InitDir = CurDir
-         CommonDialog1.Filter = "MyReels (Slotdata.s$t)|Slotdata.s$t|All Files (*.*)|*.*"
-         ' Specify default filter
-         CommonDialog1.FilterIndex = 1
-         ' Set CancelError is True
-         CommonDialog1.CancelError = True
-         On Error GoTo Errcancel
-         CommonDialog1.ShowOpen
-           If CommonDialog1.FileTitle <> "Slotdata.s$t" Then
-           response = MsgBox("Please respecify Slotdata.s$t!", vbOKOnly)
-           Unload frmSplsh
-           Stopnoise
-           Exit Sub
-           End If
-        If gt(0) = -1 Then
-        LoadFrmSplsh 440
-        Else
-        frmSplsh.Refresh
-        End If
+    If loadnow = 0 Then
+
+
+    ct = InStr(1, CurDir, App.Path)
+
+    If ct > 0 Then
+    CommonDialog1.InitDir = App.Path
+    Else
+    CommonDialog1.InitDir = CurDir
+    End If
+
+    CommonDialog1.Filter = "MyReels (Slotdata.s$t)|Slotdata.s$t|All Files (*.*)|*.*"
+    ' Specify default filter
+    CommonDialog1.FilterIndex = 1
+    ' Set CancelError is True
+    CommonDialog1.CancelError = True
+    On Error GoTo Errcancel
+    CommonDialog1.ShowOpen
+      If CommonDialog1.FileTitle <> "Slotdata.s$t" Then
+      response = MsgBox("Please respecify Slotdata.s$t!", vbOKOnly)
+      Unload frmSplsh
+      Stopnoise
+      Exit Sub
       End If
+      If gt(0) = -1 Then
+      LoadFrmSplsh 440
+      Else
+      frmSplsh.Refresh
+      End If
+    End If
 
-    End If  'gamestartup condition
+  End If  'gamestartup condition
 
 loaddirectory = CurDir & "\"
 
