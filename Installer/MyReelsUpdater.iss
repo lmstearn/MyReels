@@ -8,6 +8,7 @@
 #define MyHomePage "http://members.ozemail.com.au/~lmstearn/"
 #define MyAppDLURL "http://www.ozemail.com.au/~lmstearn/MyReelsStuff"
 #define MyAppExeName "MyReels.exe"
+#define MySetupAppExeName "SetupMyReels.exe"
 #define MyAppUpdaterName "MyReelsUpdater"
 #define MyAppUpdaterExeName "MyReelsUpdater.exe"
 #define MyUpdateDir "C:\games\"
@@ -115,6 +116,7 @@ const
    NL = #13#10;    //carriage return and line feed
    SetupURL = '{#MyAppDLURL}/{#MyAppUpdaterExeName}';
    VersionURL = '{#MyAppDLURL}/version.txt';
+   MinVersion = '3.2.0';
    MOVEFILE_DELAY_UNTIL_REBOOT = $00000004;
 
 
@@ -560,6 +562,30 @@ if (runningNew = True) then
     end;
 end;
 
+function GetDefaultVer() : String;
+var
+   UserSIDs: TArrayOfString;
+   I:        Integer;
+
+begin
+   // Check if the current user installed it
+   if RegQueryStringValue( HKEY_CURRENT_USER, UninstallPathApp, 'DisplayVersion', Result) then
+
+   // Current user didn't install it.  Did someone else?
+   else if RegGetSubkeyNames( HKEY_USERS, '', UserSIDs ) then begin
+      for I := 0 to GetArrayLength( UserSIDs ) - 1 do begin
+         if RegQueryStringValue( HKEY_USERS, UserSIDs[I] + '\' + UninstallPathApp, 'DisplayVersion', Result) then break;
+      end;  
+   end;
+
+   // Not installed per-user
+   if Result = '' then begin
+      // What about installed for the machine?
+      RegQueryStringValue(HKEY_LOCAL_MACHINE, UninstallPathApp, 'DisplayVersion', Result);
+      //Result : ''; Doesn't appear to be installed
+   end;
+end;
+
 function InitializeSetup: Boolean;
 var
   SetupVersion: string;
@@ -589,7 +615,29 @@ begin
     Log('Language specified, proceeding with installation');
   end;
 
-  if runningNew = False then
+  if runningNew = True then
+  //3.2 + full version required as some files have changed
+  begin
+    SetupVersion := GetDefaultVer;
+    if SetupVersion = '' then
+    begin
+    MsgBox('Cannot retrieve version registry for ' + ExpandConstant('{#MyAppName}') + '!', mbError, MB_OK);
+    Result := False;
+    end
+    else
+    begin
+      if CompareVersionStr(MinVersion, SetupVersion) = crGreater then
+      begin
+        if MsgBox('The current version of MyReels is too old to update!' +NL+ 'The full 3.2+ installer is now required.' +NL+ 'Do you wish to download it through the browser?', mbConfirmation, MB_YESNO) = IDYES then
+        begin
+          if not OpenBrowser(ExpandConstant('{#MyAppDLURL}/{#MySetupAppExeName}')) then
+          MsgBox('Download Failed!', mbError, MB_OK);
+        end;
+      Result := False;
+      end;
+    end;
+  end
+  else
   begin
   //Ancient versions will not have this key!
     if RegKeyExists(HKCU, ExpandConstant('SOFTWARE\{#MyAppPublisher}\{#MyAppName}')) then
