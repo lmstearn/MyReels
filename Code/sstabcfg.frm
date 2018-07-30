@@ -1740,6 +1740,17 @@ Else
 chkgeneral(1).Enabled = False
 optgeneral(0).Value = True
 End If
+Case 15
+optgeneral(1).Caption = "Left to right pays"
+chkgeneral(1).Caption = "Right to left pays"
+chkgeneral(2).Visible = False
+If symbLR = 1 Then
+optgeneral(1).Value = True
+If symbRL = 1 Then chkgeneral(1).Value = 1
+Else
+chkgeneral(1).Enabled = False
+optgeneral(0).Value = True
+End If
 Case Else
 optgeneral(1).Visible = False
 chkgeneral(1).Visible = False
@@ -2625,44 +2636,44 @@ If sst(symbolselect, 0) = 0 Then
 
 
 If intspinchoice = 1 Then
-        Select Case intoptionchoice
-        Case 1
-        chkspin(0).Enabled = True
-        chkspin(1).Enabled = True
-        Case 4
-        chkspin(2).Enabled = True
-        chkspin(3).Enabled = True
-        Case 7
-        chkspin(4).Enabled = True
-        End Select
+  Select Case intoptionchoice
+  Case 1
+  chkspin(0).Enabled = True
+  chkspin(1).Enabled = True
+  Case 4
+  chkspin(2).Enabled = True
+  chkspin(3).Enabled = True
+  Case 7
+  chkspin(4).Enabled = True
+  End Select
 Else    'any or 0
-        Select Case intoptionchoice
-        Case 1
-        'Must zero the checkboxes and their load values
-        tsp(frstsec, 2) = 0
-        tsp(frstsec, 3) = 0
-        If chkspin(0).Value = 1 Then wantaspinno = wantaspinno - 1
-        chkspin(0).Value = 0
-        If chkspin(1).Value = 1 Then wantaspinno = wantaspinno - 1
-        chkspin(1).Value = 0
-        chkspin(0).Enabled = False
-        chkspin(1).Enabled = False
-        Case 4
-        tsp(frstsec, 5) = 0
-        tsp(frstsec, 6) = 0
-        If chkspin(2).Value = 1 Then wantaspinno = wantaspinno - 1
-        chkspin(2).Value = 0
-        If chkspin(3).Value = 1 Then wantaspinno = wantaspinno - 1
-        chkspin(3).Value = 0
-        chkspin(2).Enabled = False
-        chkspin(3).Enabled = False
-        Case 7
-        tsp(frstsec, 8) = 0
-        If chkspin(4).Value = 1 Then wantaspinno = wantaspinno - 1
-        chkspin(4).Value = 0
-        chkspin(4).Enabled = False
-        End Select
-    End If
+  Select Case intoptionchoice
+  Case 1
+  'Must zero the checkboxes and their load values
+  tsp(frstsec, 2) = 0
+  tsp(frstsec, 3) = 0
+  If chkspin(0).Value = 1 Then wantaspinno = wantaspinno - 1
+  chkspin(0).Value = 0
+  If chkspin(1).Value = 1 Then wantaspinno = wantaspinno - 1
+  chkspin(1).Value = 0
+  chkspin(0).Enabled = False
+  chkspin(1).Enabled = False
+  Case 4
+  tsp(frstsec, 5) = 0
+  tsp(frstsec, 6) = 0
+  If chkspin(2).Value = 1 Then wantaspinno = wantaspinno - 1
+  chkspin(2).Value = 0
+  If chkspin(3).Value = 1 Then wantaspinno = wantaspinno - 1
+  chkspin(3).Value = 0
+  chkspin(2).Enabled = False
+  chkspin(3).Enabled = False
+  Case 7
+  tsp(frstsec, 8) = 0
+  If chkspin(4).Value = 1 Then wantaspinno = wantaspinno - 1
+  chkspin(4).Value = 0
+  chkspin(4).Enabled = False
+  End Select
+End If
 
 Else    'sstab(0) > 0
 
@@ -2676,107 +2687,107 @@ tsp(frstsec, intoptionchoice) = intspinchoice
 Select Case sst(symbolselect, 0)
 
 Case 8, 11, 13
-        If intspinchoice = 1 Then
-        Select Case intoptionchoice
-        Case 1
-        chkspin(1).Enabled = True
-        Case 4
-        chkspin(3).Enabled = True
-        End Select
-        Else
-                Select Case intoptionchoice
-                Case 1
-                'Must zero the checkboxes and their load values
-                tsp(frstsec, 3) = 0
-                With chkspin(1)
-                If .Value = 1 Then wantaspinno = wantaspinno - 1
-                .Value = 0
-                .Enabled = False
-                End With
-                Case 4
-                'Must zero the checkboxes and their load values
-                tsp(frstsec, 6) = 0
-                With chkspin(3)
-                If .Value = 1 Then wantaspinno = wantaspinno - 1
-                .Value = 0
-                .Enabled = False
-                End With
-                End Select
+  If intspinchoice = 1 Then
+  Select Case intoptionchoice
+  Case 1
+  chkspin(1).Enabled = True
+  Case 4
+  chkspin(3).Enabled = True
+  End Select
+  Else
+    Select Case intoptionchoice
+    Case 1
+    'Must zero the checkboxes and their load values
+    tsp(frstsec, 3) = 0
+    With chkspin(1)
+    If .Value = 1 Then wantaspinno = wantaspinno - 1
+    .Value = 0
+    .Enabled = False
+    End With
+    Case 4
+    'Must zero the checkboxes and their load values
+    tsp(frstsec, 6) = 0
+    With chkspin(3)
+    If .Value = 1 Then wantaspinno = wantaspinno - 1
+    .Value = 0
+    .Enabled = False
+    End With
+    End Select
 
-        End If
+  End If
 
 Case 14, 17
-    If intspinchoice = 1 Then
-        Select Case intoptionchoice
-        Case 1
-        chkspin(0).Enabled = True
-        chkspin(1).Enabled = True
-        Case 4
-        chkspin(2).Enabled = True
-        chkspin(3).Enabled = True
-        End Select
-    Else
-        Select Case intoptionchoice
-        Case 1
-                'Must zero the checkboxes and their load values
-                tsp(frstsec, 2) = 0
-                tsp(frstsec, 3) = 0
-                With chkspin(0)
-                If .Value = 1 Then wantaspinno = wantaspinno - 1
-                .Value = 0
-                .Enabled = False
-                End With
-                With chkspin(1)
-                If .Value = 1 Then wantaspinno = wantaspinno - 1
-                .Value = 0
-                .Enabled = False
-                End With
-        Case 4
-                'Must zero the checkboxes and their load values
-                tsp(frstsec, 5) = 0
-                tsp(frstsec, 6) = 0
-                With chkspin(2)
-                If .Value = 1 Then wantaspinno = wantaspinno - 1
-                .Value = 0
-                .Enabled = False
-                End With
-                With chkspin(3)
-                If .Value = 1 Then wantaspinno = wantaspinno - 1
-                .Value = 0
-                .Enabled = False
-                End With
-        End Select
+If intspinchoice = 1 Then
+  Select Case intoptionchoice
+  Case 1
+  chkspin(0).Enabled = True
+  chkspin(1).Enabled = True
+  Case 4
+  chkspin(2).Enabled = True
+  chkspin(3).Enabled = True
+  End Select
+Else
+  Select Case intoptionchoice
+  Case 1
+    'Must zero the checkboxes and their load values
+    tsp(frstsec, 2) = 0
+    tsp(frstsec, 3) = 0
+    With chkspin(0)
+    If .Value = 1 Then wantaspinno = wantaspinno - 1
+    .Value = 0
+    .Enabled = False
+    End With
+    With chkspin(1)
+    If .Value = 1 Then wantaspinno = wantaspinno - 1
+    .Value = 0
+    .Enabled = False
+    End With
+    Case 4
+    'Must zero the checkboxes and their load values
+    tsp(frstsec, 5) = 0
+    tsp(frstsec, 6) = 0
+    With chkspin(2)
+    If .Value = 1 Then wantaspinno = wantaspinno - 1
+    .Value = 0
+    .Enabled = False
+    End With
+    With chkspin(3)
+    If .Value = 1 Then wantaspinno = wantaspinno - 1
+    .Value = 0
+    .Enabled = False
+    End With
+    End Select
 
     End If
 Case 7, 10, 15
-        If intspinchoice = 1 Then
-        Select Case intoptionchoice
-        Case 1
-        chkspin(0).Enabled = True
-        Case 4
-        chkspin(2).Enabled = True
-        End Select
-        Else
-                Select Case intoptionchoice
-                Case 1
-                'Must zero the checkboxes and their load values
-                tsp(frstsec, 2) = 0
-                With chkspin(0)
-                If .Value = 1 Then wantaspinno = wantaspinno - 1
-                .Value = 0
-                .Enabled = False
-                End With
-                Case 4
-                'Must zero the checkboxes and their load values
-                tsp(frstsec, 5) = 0
-                With chkspin(2)
-                If .Value = 1 Then wantaspinno = wantaspinno - 1
-                .Value = 0
-                .Enabled = False
-                End With
-                End Select
+  If intspinchoice = 1 Then
+  Select Case intoptionchoice
+  Case 1
+  chkspin(0).Enabled = True
+  Case 4
+  chkspin(2).Enabled = True
+  End Select
+  Else
+    Select Case intoptionchoice
+    Case 1
+    'Must zero the checkboxes and their load values
+    tsp(frstsec, 2) = 0
+    With chkspin(0)
+    If .Value = 1 Then wantaspinno = wantaspinno - 1
+    .Value = 0
+    .Enabled = False
+    End With
+    Case 4
+    'Must zero the checkboxes and their load values
+    tsp(frstsec, 5) = 0
+    With chkspin(2)
+    If .Value = 1 Then wantaspinno = wantaspinno - 1
+    .Value = 0
+    .Enabled = False
+    End With
+    End Select
 
-        End If
+    End If
 
 End Select
 End If
@@ -2812,13 +2823,13 @@ Case 0, 1
 If optpairsany.Value = True Then
 optpairsany.Value = False
     
-    If optpairleft.Visible = True Then
-    tsp(frstsec, 1) = 1
-    optpairleft.Value = True
-    Else
-    optpairnofreespin.Value = True
-    tsp(frstsec, 1) = 0
-    End If
+  If optpairleft.Visible = True Then
+  tsp(frstsec, 1) = 1
+  optpairleft.Value = True
+  Else
+  optpairnofreespin.Value = True
+  tsp(frstsec, 1) = 0
+  End If
 Else
 wantaspinno = wantaspinno + 1
 End If
@@ -2828,13 +2839,13 @@ Case 2, 3
 If opttriplesany.Value = True Then
 opttriplesany.Value = False
     
-    If opttriplesleft.Visible = True Then
-    tsp(frstsec, 4) = 1
-    opttriplesleft.Value = True
-    Else
-    opttriplesnofreespin.Value = True
-    tsp(frstsec, 4) = 0
-    End If
+  If opttriplesleft.Visible = True Then
+  tsp(frstsec, 4) = 1
+  opttriplesleft.Value = True
+  Else
+  opttriplesnofreespin.Value = True
+  tsp(frstsec, 4) = 0
+  End If
 Else
 wantaspinno = wantaspinno + 1
 End If
@@ -2844,13 +2855,13 @@ Case 4
 If optfoursany.Value = True Then
 optfoursany.Value = False
     
-    If optfoursleft.Visible = True Then
-    tsp(frstsec, 7) = 1
-    optfoursleft.Value = True
-    Else
-    optfoursnofreespin.Value = True
-    tsp(frstsec, 7) = 0
-    End If
+  If optfoursleft.Visible = True Then
+  tsp(frstsec, 7) = 1
+  optfoursleft.Value = True
+  Else
+  optfoursnofreespin.Value = True
+  tsp(frstsec, 7) = 0
+  End If
 Else
 wantaspinno = wantaspinno + 1
 End If
@@ -2886,41 +2897,41 @@ tsp(frstsec, intoptionchoice) = 0
 End If
 
 Select Case intoptionchoice
-        Case 1
-            'Must zero the checkboxes and their load values
-                If chkspin(0).Value = 1 Then
-                wantaspinno = wantaspinno - 1
-                chkspin(0).Value = 0
-                End If
-            tsp(frstsec, 2) = 0
-            chkspin(0).Enabled = False
-                If chkspin(1).Value = 1 Then
-                wantaspinno = wantaspinno - 1
-                chkspin(1).Value = 0
-                End If
-            tsp(frstsec, 3) = 0
-            chkspin(1).Enabled = False
-        Case 4
-            'Must zero the checkboxes and their load values
-                If chkspin(2).Value = 1 Then
-                wantaspinno = wantaspinno - 1
-                chkspin(2).Value = 0
-                End If
-            tsp(frstsec, 5) = 0
-            chkspin(2).Enabled = False
-                If chkspin(3).Value = 1 Then
-                wantaspinno = wantaspinno - 1
-                chkspin(3).Value = 0
-                End If
-            tsp(frstsec, 6) = 0
-            chkspin(3).Enabled = False
-        Case 7
-                If chkspin(4).Value = 1 Then
-                wantaspinno = wantaspinno - 1
-                chkspin(4).Value = 0
-                End If
-            tsp(frstsec, 8) = 0
-            chkspin(4).Enabled = False
+  Case 1
+    'Must zero the checkboxes and their load values
+      If chkspin(0).Value = 1 Then
+      wantaspinno = wantaspinno - 1
+      chkspin(0).Value = 0
+      End If
+    tsp(frstsec, 2) = 0
+    chkspin(0).Enabled = False
+      If chkspin(1).Value = 1 Then
+      wantaspinno = wantaspinno - 1
+      chkspin(1).Value = 0
+      End If
+    tsp(frstsec, 3) = 0
+    chkspin(1).Enabled = False
+  Case 4
+    'Must zero the checkboxes and their load values
+      If chkspin(2).Value = 1 Then
+      wantaspinno = wantaspinno - 1
+      chkspin(2).Value = 0
+      End If
+    tsp(frstsec, 5) = 0
+    chkspin(2).Enabled = False
+      If chkspin(3).Value = 1 Then
+      wantaspinno = wantaspinno - 1
+      chkspin(3).Value = 0
+      End If
+    tsp(frstsec, 6) = 0
+    chkspin(3).Enabled = False
+  Case 7
+      If chkspin(4).Value = 1 Then
+      wantaspinno = wantaspinno - 1
+      chkspin(4).Value = 0
+      End If
+    tsp(frstsec, 8) = 0
+    chkspin(4).Enabled = False
 End Select
 
 
@@ -2944,9 +2955,9 @@ lblgamspn(ct - 1).Caption = ""
 Next
 tsp(frstsec, 15) = 0
 Sstab.sstaboption.TabEnabled(3) = False
-        If disablegamespintabs(0) = False Then
-        If sst(symbolselect, 0) = 0 Or sst(symbolselect, 0) > 5 Then Sstab.sstaboption.TabEnabled(1) = True
-        End If
+  If disablegamespintabs(0) = False Then
+  If sst(symbolselect, 0) = 0 Or sst(symbolselect, 0) > 5 Then Sstab.sstaboption.TabEnabled(1) = True
+  End If
 disablegamespintabs(1) = False
 If frstsec = 1 Then
 gamespinsymbol(3) = 0
@@ -3189,10 +3200,13 @@ Next
 
 If Index = 1 Then   'L-R
 
-For pct = 1 To piccount     'Cannot have a LR substituting an "any"
+With optgeneral(1)
+
+For pct = 1 To piccount      'Cannot have a LR substituting an "any"
 If sst(pct, 5) = 1 Then
   If substitute(symbolselect, pct) = True Then
-    optgeneral(1).ToolTipText = "A substituter paying ""left to right"" cannot substitute a picture paying ""any"""
+    .ToolTipText = "A substituter paying ""left to right"" cannot substitute a picture paying ""any"""
+    .Value = 0
     optgeneral(0).Value = True
     procend = True
     Exit Sub
@@ -3200,29 +3214,49 @@ If sst(pct, 5) = 1 Then
 
 ElseIf substitute(pct, symbolselect) = True Then
   'sst(pct, 1) = 1
-  If sst(pct, 3) = 0 then
+  If sst(pct, 3) = 0 Then
     Select Case sst(pct, 0)
-    Case 3, 7, 10, 14, 15, 17
+    Case 3, 7, 14
     .ToolTipText = "The substituter of this picture must pay ""right to left"""
     .Value = 0
+    optgeneral(0).Value = True
     procend = True
     Exit Sub
     End Select
-  ElseIf sst(pct, 4) = 0 then
+  ElseIf sst(pct, 4) = 0 Then
 
-    Select Case sst(pct, 0)
-    Case 8, 13, 14
-    If sst(pct, 4) = 0 And sst(pct, 5) = 0 Then
-    If substitute(pct, symbolselect) = True Then
-    .ToolTipText = "The substituter of this picture must pay ""middle threes"""
+    '13 & 14 are checked
+    If sst(pct, 0) = 8 And sst(pct, 4) = 0 And sst(pct, 5) = 0 Then
+      If substitute(pct, symbolselect) = True Then
+      .ToolTipText = "The substituter of this picture must pay ""middle threes"""
+      .Value = 0
+      optgeneral(0).Value = True
+      procend = True
+      Exit Sub
+      End If
+    End If
+  End If
+Else
+  If substitute(symbolselect, pct) = True Then
+  If sst(pct, 3) = 0 Then
+    Select Case sst(symbolselect, 0)
+    Case 3, 7, 14
+    .ToolTipText = "The substitute of this picture must pay ""right to left"""
     .Value = 0
+    optgeneral(0).Value = True
     procend = True
     Exit Sub
     End Select
+  ElseIf sst(symbolselect, 0) = 8 And sst(pct, 4) = 0 Then
+    .ToolTipText = "The substitute of this picture must pay ""middle threes"""
+    .Value = 0
+    optgeneral(0).Value = True
+    procend = True
+    Exit Sub
+  End If
   End If
 End If
 Next
-
 
 
 
@@ -3234,24 +3268,24 @@ sst(symbolselect, 5) = 0
 Select Case sst(symbolselect, 0)       'lt 5 case
 Case 0
 chkgeneral(1).Enabled = True
-        If sst(symbolselect, 2) = 0 Then
-        chkgeneral(2).Enabled = True 'if not a scatter
-        Else
-        'Need to change the scatter prizes as well
-        scatterstart True
-        End If
+  If sst(symbolselect, 2) = 0 Then
+  chkgeneral(2).Enabled = True 'if not a scatter
+  Else
+  'Need to change the scatter prizes as well
+  scatterstart True
+  End If
 Case 3, 7
 sst(symbolselect, 3) = 1
 Case 8
 sst(symbolselect, 4) = 1
-Case 13
+Case 13, 15
 chkgeneral(1).Enabled = True
 Case 14
 chkgeneral(1).Enabled = True
 sst(symbolselect, 3) = 1
 End Select
 
-
+End With
 
 Else 'Index = 0
 
@@ -3286,7 +3320,7 @@ Case 3, 7
 sst(symbolselect, 3) = 0
 Case 8
 sst(symbolselect, 4) = 0
-Case 13
+Case 13, 15
 sst(symbolselect, 4) = 0
 chkgeneral(1).Enabled = False
 chkgeneral(1).Value = 0
@@ -3310,20 +3344,20 @@ temp = CLng(.Caption)
 ElseIf Index > 8 Then
 temp = CLng(lblgamspn(Index - 5).Caption)
 Else
-    temp = CLng(lblprize(Index - 4).Caption)
+  temp = CLng(lblprize(Index - 4).Caption)
 
-    'No low level prize exceeds a higher level one
-    If chkprizelevel(True, Index + 2) = False Then Exit Sub
-    'Substituted price < substitute price but substituted price > substitute price - 1
-        For pct = 1 To piccount
-        If pct <> symbolselect Then
-        testval = -1
-        If sortprizes(Index + 2, pct, testval) = True And substitute(pct, symbolselect) = True And temp >= sst(pct, Index + 2) Then Exit Sub
-        If Index > 4 Then
-        If sortprizes(Index + 1, pct, testval) = True And substitute(symbolselect, pct) = True And temp >= sst(pct, Index + 1) Then Exit Sub
-        End If
-        End If
-        Next
+  'No low level prize exceeds a higher level one
+  If chkprizelevel(True, Index + 2) = False Then Exit Sub
+  'Substituted price < substitute price but substituted price > substitute price - 1
+    For pct = 1 To piccount
+    If pct <> symbolselect Then
+    testval = -1
+    If sortprizes(Index + 2, pct, testval) = True And substitute(pct, symbolselect) = True And temp >= sst(pct, Index + 2) Then Exit Sub
+    If Index > 4 Then
+    If sortprizes(Index + 1, pct, testval) = True And substitute(symbolselect, pct) = True And temp >= sst(pct, Index + 1) Then Exit Sub
+    End If
+    End If
+    Next
 
 End If
 
@@ -3363,11 +3397,11 @@ If sst(symbolselect, 2) = 1 Then
 scatterspin True, Index + 2, lblprize(2).Caption
 Else
 If temp < 200 Then
-    If temp >= 20 Then
-    lblprize(2).Caption = CStr(temp + 5)
-    Else
-    lblprize(2).Caption = CStr(temp + 1)
-    End If
+  If temp >= 20 Then
+  lblprize(2).Caption = CStr(temp + 5)
+  Else
+  lblprize(2).Caption = CStr(temp + 1)
+  End If
 sst(symbolselect, 8) = lblprize(2).Caption
 End If
 End If
@@ -3414,23 +3448,23 @@ temp = CLng(.Caption)
 ElseIf Index > 8 Then
 temp = CLng(lblgamspn(Index - 5).Caption)
 Else
-    temp = CLng(lblprize(Index - 4).Caption)
+  temp = CLng(lblprize(Index - 4).Caption)
 
-    chkgeneral(1).ToolTipText = ""  'no RL scatter warning
-    'No low level prize exceeds a higher level one
+  chkgeneral(1).ToolTipText = ""  'no RL scatter warning
+  'No low level prize exceeds a higher level one
 
-    If chkprizelevel(False, Index + 2) = False Then Exit Sub
+  If chkprizelevel(False, Index + 2) = False Then Exit Sub
 
-    'Substituted price < substitute price but substituted price > substitute price - 1
-        For pct = 1 To piccount
-        If pct <> symbolselect Then
-        testval = -1
-        If sortprizes(Index + 2, pct, testval) = True And substitute(symbolselect, pct) = True And temp <= sst(pct, Index + 2) Then Exit Sub
-            If Index < 8 Then
-            If sortprizes(Index + 3, pct, testval) = True And substitute(pct, symbolselect) = True And temp <= sst(pct, Index + 3) Then Exit Sub
-            End If
-        End If
-        Next
+  'Substituted price < substitute price but substituted price > substitute price - 1
+  For pct = 1 To piccount
+    If pct <> symbolselect Then
+    testval = -1
+    If sortprizes(Index + 2, pct, testval) = True And substitute(symbolselect, pct) = True And temp <= sst(pct, Index + 2) Then Exit Sub
+      If Index < 8 Then
+      If sortprizes(Index + 3, pct, testval) = True And substitute(pct, symbolselect) = True And temp <= sst(pct, Index + 3) Then Exit Sub
+      End If
+    End If
+  Next
 End If
 
 
@@ -3466,11 +3500,11 @@ If sst(symbolselect, 2) = 1 Then
 scatterspin False, Index + 2, lblprize(2).Caption
 Else
 If temp > 1 Then
-    If temp > 20 Then
-    lblprize(2).Caption = CStr(temp - 5)
-    Else
-    lblprize(2).Caption = CStr(temp - 1)
-    End If
+  If temp > 20 Then
+  lblprize(2).Caption = CStr(temp - 5)
+  Else
+  lblprize(2).Caption = CStr(temp - 1)
+  End If
 sst(symbolselect, 8) = lblprize(2).Caption
 End If
 End If
@@ -3503,28 +3537,28 @@ Private Sub chkreels_Click(Index As Integer)
 If procend = False Then Exit Sub
 procend = False
 If chkreels(Index).Value = 1 Then
-    'Remember reelcheck default value is true
-    reelcheck(symbolselect, Index + 1) = True
-    'Have to change reelcheck for substituted symbols as well
-    For pct = 1 To piccount
-    If pct <> symbolselect And substitute(symbolselect, pct) = True Then reelcheck(pct, Index + 1) = True
-    Next
+  'Remember reelcheck default value is true
+  reelcheck(symbolselect, Index + 1) = True
+  'Have to change reelcheck for substituted symbols as well
+  For pct = 1 To piccount
+  If pct <> symbolselect And substitute(symbolselect, pct) = True Then reelcheck(pct, Index + 1) = True
+  Next
 Else
-        temp = 0
-        For intreel = 1 To 5
-        If reelcheck(symbolselect, intreel) = True And wheelvec(intreel, symbolselect) > 0 Then temp = temp + 1
-        Next
-        If temp = 1 Then
-        chkreels(Index).Value = 1
-        procend = True
-        Exit Sub
-        Else
-        reelcheck(symbolselect, Index + 1) = False
-            'Have to change reelcheck for substituted symbols as well
-            For pct = 1 To piccount
-            If pct <> symbolselect And substitute(symbolselect, pct) = True Then reelcheck(pct, Index + 1) = False
-            Next
-        End If
+    temp = 0
+    For intreel = 1 To 5
+    If reelcheck(symbolselect, intreel) = True And wheelvec(intreel, symbolselect) > 0 Then temp = temp + 1
+    Next
+    If temp = 1 Then
+    chkreels(Index).Value = 1
+    procend = True
+    Exit Sub
+    Else
+    reelcheck(symbolselect, Index + 1) = False
+      'Have to change reelcheck for substituted symbols as well
+      For pct = 1 To piccount
+      If pct <> symbolselect And substitute(symbolselect, pct) = True Then reelcheck(pct, Index + 1) = False
+      Next
+    End If
 End If
 procend = True
 End Sub
@@ -3549,42 +3583,42 @@ mischkgamespin(3).Enabled = True
 Else
 optfreegameany.Value = True
 End If
-        If tgs(frstsec, 3) = 0 Then
-        mischkgamespin(3).Value = 0
-        Else
-        mischkgamespin(3).Value = 1
-        End If
+  If tgs(frstsec, 3) = 0 Then
+  mischkgamespin(3).Value = 0
+  Else
+  mischkgamespin(3).Value = 1
+  End If
 Case 14
 mischkgamespin(2).Visible = True
 mischkgamespin(3).Visible = True
 mischkgamespin(2).Enabled = True
 mischkgamespin(3).Enabled = True
-        For ct = 0 To 1
-        If tgs(frstsec, 2 + ct) = 0 Then
-        mischkgamespin(2 + ct).Value = 0
-        Else
-        mischkgamespin(2 + ct).Value = 1
-        End If
-        Next
+  For ct = 0 To 1
+  If tgs(frstsec, 2 + ct) = 0 Then
+  mischkgamespin(2 + ct).Value = 0
+  Else
+  mischkgamespin(2 + ct).Value = 1
+  End If
+  Next
 Case 7, 17
 With mischkgamespin(2)
 .Visible = True
 .Enabled = True
-        If tgs(frstsec, 2) = 0 Then
-        .Value = 0
-        Else
-        .Value = 1
-        End If
+  If tgs(frstsec, 2) = 0 Then
+  .Value = 0
+  Else
+  .Value = 1
+  End If
 End With
 Case 8
 With mischkgamespin(3)
 .Visible = True
 .Enabled = True
-        If tgs(frstsec, 3) = 0 Then
-        .Value = 0
-        Else
-        .Value = 1
-        End If
+  If tgs(frstsec, 3) = 0 Then
+  .Value = 0
+  Else
+  .Value = 1
+  End If
 End With
 Case 6, 16
 optfreegame123.Visible = True
@@ -3711,40 +3745,40 @@ End If
 If baseprizeno = 8 And lblprize(3).Caption > 0 Then Exit Sub 'exit if the spin below is > 0
 
 If upup = True Then
-    If currval < 9 And nomorespinup = False Then  'going up
+  If currval < 9 And nomorespinup = False Then  'going up
     If sst(symbolselect, 3) = 0 Then spngamspn(7).Enabled = True
     If currval = 8 Then Exit Sub
     
-        If currval > 0 Then
-    
-        currval = currval + 1
-            For ct = baseprizeno To 10
-    
-            If ct = baseprizeno Then
-            sst(symbolselect, 16 - ct) = currval
-            
-            Else
-            temp = currval * lblprize(10 - ct).Caption / (currval - 1)
-            If temp > 10975 Then nomorespinup = True
-            lblprize(10 - ct).Caption = temp
-            sst(symbolselect, 16 - ct) = temp
-            End If
-            Next
-            
-        Else    'currval <= 0, starts here *only* if baseprizeno = 7 as bspn 8 <> 0
-        'Exit if not correct prize multiple
-            If sstabany = False Then
-            If lblprize(2).Caption <> 24 / (3 * wheelvec(1, symbolselect)) Then Exit Sub
-            Else
-            If lblprize(2).Caption <> (24 - 3 * wheelvec(1, symbolselect)) / (3 * wheelvec(1, symbolselect)) Then Exit Sub
-            End If
-        currval = 1
-        sst(symbolselect, 9) = 1
-        End If
-        
-        scatterstart False
+    If currval > 0 Then
 
+    currval = currval + 1
+    For ct = baseprizeno To 10
+
+    If ct = baseprizeno Then
+    sst(symbolselect, 16 - ct) = currval
+    
+    Else
+    temp = currval * lblprize(10 - ct).Caption / (currval - 1)
+    If temp > 10975 Then nomorespinup = True
+    lblprize(10 - ct).Caption = temp
+    sst(symbolselect, 16 - ct) = temp
     End If
+    Next
+        
+  Else    'currval <= 0, starts here *only* if baseprizeno = 7 as bspn 8 <> 0
+    'Exit if not correct prize multiple
+    If sstabany = False Then
+    If lblprize(2).Caption <> 24 / (3 * wheelvec(1, symbolselect)) Then Exit Sub
+    Else
+    If lblprize(2).Caption <> (24 - 3 * wheelvec(1, symbolselect)) / (3 * wheelvec(1, symbolselect)) Then Exit Sub
+    End If
+    currval = 1
+    sst(symbolselect, 9) = 1
+    End If
+    
+    scatterstart False
+
+  End If
 Else    'upup = false
     nomorespinup = False
     If currval > 0 Then   '=0 then disable spngamspn(7) but makes the control go crazy
