@@ -628,7 +628,7 @@ begin
     begin
       if CompareVersionStr(MinVersion, SetupVersion) = crGreater then
       begin
-        if MsgBox('The current version of MyReels is too old to update!' +NL+ 'The full 3.2+ installer is now required.' +NL+ 'Do you wish to download it through the browser?', mbConfirmation, MB_YESNO) = IDYES then
+        if MsgBox('The current version of MyReels is too old to update!' +NL+ 'A repair install by the full 3.2+ version is now required.' +NL+ 'Do you wish to download it through the browser?', mbConfirmation, MB_YESNO) = IDYES then
         begin
           if not OpenBrowser(ExpandConstant('{#MyAppDLURL}/{#MySetupAppExeName}')) then
           MsgBox('Download Failed!', mbError, MB_OK);
