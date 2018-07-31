@@ -2033,26 +2033,26 @@ Select Case sst(symbolselect, 0)      '2 checkboxes involved
 Case 13
 tgs(frstsec, Index) = mischval
 Case 14
-    If mischval = 0 Then
-                'This is case at most one checkbox checked
-                If mischkgamespin(2).Value = 1 Or mischkgamespin(3).Value = 1 Then
-                tgs(frstsec, Index) = mischval
-                procend = True
-                Exit Sub        '1 chkbox still enabled
-                End If
-
-        resetgamevals
-    Else
-                If mischkgamespin(2).Value = 1 And mischkgamespin(3).Value = 1 Then
-                'This is case two checkboxes checked
-                tgs(frstsec, Index) = mischval
-                procend = True
-                Exit Sub
-                End If
- 
-        freegameset False
-        updategamesetting Index, 1
+  If mischval = 0 Then
+    'This is case at most one checkbox checked
+    If mischkgamespin(2).Value = 1 Or mischkgamespin(3).Value = 1 Then
+    tgs(frstsec, Index) = mischval
+    procend = True
+    Exit Sub        '1 chkbox still enabled
     End If
+
+  resetgamevals
+  Else
+    If mischkgamespin(2).Value = 1 And mischkgamespin(3).Value = 1 Then
+    'This is case two checkboxes checked
+    tgs(frstsec, Index) = mischval
+    procend = True
+    Exit Sub
+    End If
+ 
+  freegameset False
+  updategamesetting Index, 1
+  End If
 Case Else
     If mischval = 1 Then
     freegameset False
@@ -2081,13 +2081,13 @@ Private Sub chkenablefreegame_Click()
 If procend = False Then Exit Sub
 procend = False
 If chkenablefreegame.Value = 1 Then
-    If sst(symbolselect, 0) = 0 Then
-    optfreegame123.Enabled = True
-    optfreegameany.Enabled = True
-    Else
-    'This for LT 5 symbols
-    Freegamecheck
-    End If
+  If sst(symbolselect, 0) = 0 Then
+  optfreegame123.Enabled = True
+  optfreegameany.Enabled = True
+  Else
+  'This for LT 5 symbols
+  Freegamecheck
+  End If
 
 Sstab.sstaboption.TabEnabled(2) = False
 
@@ -2143,11 +2143,11 @@ tgs(frstsec, 4 + ct) = mischkgamespin(ct).Value
 tgs(frstsec, 6 + ct) = CLng(lblgamspn(ct).Caption)
 tgs(frstsec, 8 + ct) = CLng(lblgamspn(2 + ct).Caption)
 Next
-    'Clean unnecessary values
-    If tgs(frstsec, 1) = 2 Then
-    tgs(frstsec, 2) = 0
-    tgs(frstsec, 3) = 0
-    End If
+  'Clean unnecessary values
+  If tgs(frstsec, 1) = 2 Then
+  tgs(frstsec, 2) = 0
+  tgs(frstsec, 3) = 0
+  End If
 
 ElseIf chkenablefreegame.Value = 1 Then
 'Not selected a free game!
@@ -2223,64 +2223,64 @@ End If
 chkenablefreegame.Value = 1
 
 If sst(symbolselect, 0) > 0 Then       'If lt than 5 symbols
-        Freegamecheck
-        Select Case sst(symbolselect, 0)
-        Case 13
-        If tgs(frstsec, 1) = 1 Then optfreegame123.Value = True
-                If tgs(frstsec, 3) = 0 Then
-                mischkgamespin(3).Value = 0
-                Else
-                mischkgamespin(3).Value = 1
-                End If
-        Case 14
-                For ct = 0 To 1
-                If tgs(frstsec, 2 + ct) = 0 Then
-                mischkgamespin(2 + ct).Value = 0
-                Else
-                mischkgamespin(2 + ct).Value = 1
-                End If
-                Next
-        Case 7, 17
-                If tgs(frstsec, 2) = 0 Then
-                mischkgamespin(2).Value = 0
-                Else
-                mischkgamespin(2).Value = 1
-                End If
-        Case 8
-                If tgs(frstsec, 3) = 0 Then
-                mischkgamespin(3).Value = 0
-                Else
-                mischkgamespin(3).Value = 1
-                End If
-        Case 6, 16
-        If tgs(frstsec, 1) = 1 Then optfreegame123.Value = True
-        Case 9, 10, 11, 12, 15
-        If tgs(frstsec, 1) = 2 Then optfreegameany.Value = True
-        End Select
+  Freegamecheck
+  Select Case sst(symbolselect, 0)
+  Case 13
+    If tgs(frstsec, 1) = 1 Then optfreegame123.Value = True
+    If tgs(frstsec, 3) = 0 Then
+    mischkgamespin(3).Value = 0
+    Else
+    mischkgamespin(3).Value = 1
+    End If
+  Case 14
+    For ct = 0 To 1
+    If tgs(frstsec, 2 + ct) = 0 Then
+    mischkgamespin(2 + ct).Value = 0
+    Else
+    mischkgamespin(2 + ct).Value = 1
+    End If
+    Next
+  Case 7, 17
+    If tgs(frstsec, 2) = 0 Then
+    mischkgamespin(2).Value = 0
+    Else
+    mischkgamespin(2).Value = 1
+    End If
+  Case 8
+    If tgs(frstsec, 3) = 0 Then
+    mischkgamespin(3).Value = 0
+    Else
+    mischkgamespin(3).Value = 1
+    End If
+  Case 6, 16
+    If tgs(frstsec, 1) = 1 Then optfreegame123.Value = True
+  Case 9, 10, 11, 12, 15
+    If tgs(frstsec, 1) = 2 Then optfreegameany.Value = True
+  End Select
 
 Else    'If 5 symbols
-        optfreegame123.Visible = True
-        optfreegame123.Enabled = True
-        optfreegameany.Visible = True
-        optfreegameany.Enabled = True
-        
-        If tgs(frstsec, 1) = 1 Then
-        optfreegame123.Value = True
-        Else
-        optfreegameany.Value = True
-        End If
+  optfreegame123.Visible = True
+  optfreegame123.Enabled = True
+  optfreegameany.Visible = True
+  optfreegameany.Enabled = True
 
-        For ct = 0 To 1
-        mischkgamespin(2 + ct).Visible = True
-        If tgs(frstsec, 1) = 1 Then
-        mischkgamespin(2 + ct).Enabled = True
-                If tgs(frstsec, 2 + ct) = 0 Then
-                mischkgamespin(2 + ct).Value = 0
-                Else
-                mischkgamespin(2 + ct).Value = 1
-                End If
-        End If
-        Next
+  If tgs(frstsec, 1) = 1 Then
+  optfreegame123.Value = True
+  Else
+  optfreegameany.Value = True
+  End If
+
+  For ct = 0 To 1
+  mischkgamespin(2 + ct).Visible = True
+  If tgs(frstsec, 1) = 1 Then
+  mischkgamespin(2 + ct).Enabled = True
+    If tgs(frstsec, 2 + ct) = 0 Then
+    mischkgamespin(2 + ct).Value = 0
+    Else
+    mischkgamespin(2 + ct).Value = 1
+    End If
+End If
+Next
 
 
 End If
@@ -2457,44 +2457,44 @@ wantaspinno = 0
 
 For ct = 1 To 8
 
-    If ct <> 1 And ct <> 4 And ct <> 7 Then
+If ct <> 1 And ct <> 4 And ct <> 7 Then
 
-        If tsp(frstsec, ct) = 1 Then
-        
-        Select Case ct
-        Case 2, 3
-        chkspin(0).Enabled = True
-        chkspin(1).Enabled = True
-        Case 5, 6
-        chkspin(2).Enabled = True
-        chkspin(3).Enabled = True
-        Case 8
-        chkspin(4).Enabled = True
-        End Select
+  If tsp(frstsec, ct) = 1 Then
 
-        wantaspinno = wantaspinno + 1
-        chkspin(temp).Value = 1
+  Select Case ct
+  Case 2, 3
+  chkspin(0).Enabled = True
+  chkspin(1).Enabled = True
+  Case 5, 6
+  chkspin(2).Enabled = True
+  chkspin(3).Enabled = True
+  Case 8
+  chkspin(4).Enabled = True
+  End Select
 
-        End If
-    temp = temp + 1
-    Else
-    If tsp(frstsec, ct) > 0 Then wantaspinno = wantaspinno + 1
+  wantaspinno = wantaspinno + 1
+  chkspin(temp).Value = 1
 
-        If tsp(frstsec, ct) = 1 Then
+  End If
+temp = temp + 1
+Else
+If tsp(frstsec, ct) > 0 Then wantaspinno = wantaspinno + 1
 
-        Select Case ct
-        Case 1
-        chkspin(0).Enabled = True
-        chkspin(1).Enabled = True
-        Case 4
-        chkspin(2).Enabled = True
-        chkspin(3).Enabled = True
-        Case 7
-        chkspin(4).Enabled = True
-        End Select
-        End If
+  If tsp(frstsec, ct) = 1 Then
 
-    End If
+  Select Case ct
+  Case 1
+  chkspin(0).Enabled = True
+  chkspin(1).Enabled = True
+  Case 4
+  chkspin(2).Enabled = True
+  chkspin(3).Enabled = True
+  Case 7
+  chkspin(4).Enabled = True
+  End Select
+  End If
+
+End If
 Next
 
 Case 3
@@ -3000,13 +3000,13 @@ If .Value = 1 Then
   scatterstart True
 
   Else
-        
+
     If sst(symbolselect, 0) = 0 Then
       If Index = 1 Then
       'The range of substituter exceeds range of substituted
       For pct = 1 To piccount
         Select Case sst(pct, 0)
-        Case 0, 3, 7, 10, 14, 15, 17
+        Case 0, 3, 7, 8, 10, 14, 15, 17
         If sst(pct, 3) = 0 And sst(pct, 5) = 0 Then
         If substitute(pct, symbolselect) = True Then
         .ToolTipText = "A substituter neither paying ""any"" nor ""right to left"" cannot substitute pictures paying ""right to left"""
@@ -3046,32 +3046,44 @@ If .Value = 1 Then
       End If
       sst(symbolselect, Index + 2) = 1
 
-    Else 'lt 5
-      'Event triggered *only* for sst(symbolselect, 0) 13 or 14 - not 8 as chk is greyed
+    Else 'lt 5 only two cases
+
+
       For pct = 1 To piccount
-        If sst(pct, 4) = 0 And sst(pct, 5) = 0 Then
         If substitute(pct, symbolselect) = True Then
+        If sst(symbolselect, 0) = 8 And sst(pct, 4) = 0 And sst(pct, 5) = 0 Then
         .ToolTipText = "A substituter neither paying ""any"" nor ""middle threes"" cannot substitute pictures paying ""middle threes"""
         .Value = 0
         procend = True
         Exit Sub
+        ElseIf sst(symbolselect, 0) = 15 And sst(pct, 3) = 0 Then
+        .ToolTipText = "A substituter paying ""right to left"" cannot substitute pictures not paying ""right to left"""
+        .Value = 0
+        procend = True
+        Exit Sub
         End If
-        If substitute(symbolselect, pct) = True Then
+        ElseIf substitute(symbolselect, pct) = True Then
+        If sst(symbolselect, 0) = 8 And sst(pct, 4) = 0 Then
         .ToolTipText = "A substituter paying ""middle threes"" cannot substitute pictures not paying ""middle threes"""
+        .Value = 0
+        procend = True
+        Exit Sub
+        ElseIf sst(symbolselect, 0) = 15 And sst(pct, 3) = 0 Then
+        .ToolTipText = "A substituter paying ""right to left"" cannot substitute pictures not paying ""right to left"""
         .Value = 0
         procend = True
         Exit Sub
         End If
         End If
-        Next
-      sst(symbolselect, 4) = 1
-      End If
+      Next
+
+      If sst(symbolselect, 0) = 8 Then sst(symbolselect, 4) = 1
+      If sst(symbolselect, 0) = 15 Then sst(symbolselect, 3) = 1
     End If
-
-
+  End If
 Else 'chkgeneral.value = 0
 
-    If Index = 0 Then   'deselect scatters
+  If Index = 0 Then   'deselect scatters
     For pct = 0 To piccount - 1
     Imgtinythumb(pct).ToolTipText = ""
     Next
@@ -3107,45 +3119,46 @@ Else 'chkgeneral.value = 0
     spngamspn(7).Enabled = True
     scatterstart True
 
-    Else    'no scatters
+  Else    'no scatters
 
     If sst(symbolselect, 0) = 0 Then
       If Index = 1 Then
       'The range of substituter exceeds range of substituted
         For pct = 1 To piccount
         Select Case sst(pct, 0)
-        Case 0, 3, 7, 10, 14, 15, 17
-          If sst(pct, 3) = 1 And substitute(symbolselect, pct) = True Then
+        Case 0, 3, 7, 8, 10, 14, 15, 17
+          If sst(pct, 3) = 1 Then
+          If substitute(symbolselect, pct) = True Then
           .ToolTipText = "A substituter neither paying ""any"" nor ""right to left"" cannot substitute pictures paying ""right to left"""
           .Value = 1
           procend = True
           Exit Sub
-          End If
-          If sst(pct, 3) = 1 And substitute(pct, symbolselect) = True Then
+          ElseIf substitute(pct, symbolselect) = True Then
           .ToolTipText = "A substituter paying ""right to left"" cannot substitute pictures not paying ""right to left"""
           .Value = 1
           procend = True
           Exit Sub
           End If
+          End If
         End Select
         Next
-      End If
         
-      If Index = 2 Then
+      ElseIf Index = 2 Then
         For pct = 1 To piccount
         Select Case sst(pct, 0)
         Case 0, 8, 13, 14
-          If sst(pct, 4) = 1 And substitute(symbolselect, pct) = True Then
+          If sst(pct, 4) = 1 Then
+          If substitute(symbolselect, pct) = True Then
           .ToolTipText = "A substituter neither paying ""any"" nor ""middle threes"" cannot substitute pictures paying ""middle threes"""
           .Value = 1
           procend = True
           Exit Sub
-          End If
-          If sst(pct, 4) = 1 And substitute(pct, symbolselect) = True Then
+          ElseIf substitute(pct, symbolselect) = True Then
           .ToolTipText = "A substituter paying ""middle threes"" cannot substitute pictures not paying ""middle threes"""
           .Value = 1
           procend = True
           Exit Sub
+          End If
           End If
         End Select
         Next
@@ -3153,26 +3166,40 @@ Else 'chkgeneral.value = 0
       sst(symbolselect, Index + 2) = 0
 
 
-      Else 'lt 5
+    Else 'lt 5:
 
       For pct = 1 To piccount
-        If sst(pct, 4) = 1 Then
         If substitute(pct, symbolselect) = True Then
+        If sst(symbolselect, 0) = 8 And sst(pct, 4) = 1 Then
         .ToolTipText = "A substituter paying ""middle threes"" cannot substitute pictures not paying ""middle threes"""
-        .Value = 0
+        .Value = 1
+        procend = True
+        Exit Sub
+        ElseIf sst(symbolselect, 0) = 15 And sst(pct, 3) = 0 Then
+        .ToolTipText = "A substituter not paying ""right to left"" cannot substitute pictures paying ""right to left"""
+        .Value = 1
         procend = True
         Exit Sub
         End If
-        If substitute(symbolselect, pct) = True Then
+        ElseIf substitute(symbolselect, pct) = True Then
+        If sst(symbolselect, 0) = 8 And sst(pct, 4) = 1 Then
         .ToolTipText = "A substituter neither paying ""any"" nor ""middle threes"" cannot substitute pictures paying ""middle threes"""
-        .Value = 0
+        .Value = 1
+        procend = True
+        Exit Sub
+        ElseIf sst(symbolselect, 0) = 15 And sst(pct, 3) = 1 Then
+        .ToolTipText = "A substituter neither paying ""any"" nor ""right to left"" cannot substitute pictures not paying ""right to left"""
+        .Value = 1
         procend = True
         Exit Sub
         End If
         End If
       Next
-      sst(symbolselect, 4) = 0
-      End If
+
+      If sst(symbolselect, 0) = 8 Then sst(symbolselect, 4) = 0
+      If sst(symbolselect, 0) = 15 Then sst(symbolselect, 3) = 0
+
+    End If
 
     End If
 
@@ -3223,37 +3250,45 @@ ElseIf substitute(pct, symbolselect) = True Then
     procend = True
     Exit Sub
     End Select
-  ElseIf sst(pct, 4) = 0 Then
+  End If
 
-    '13 & 14 are checked
-    If sst(pct, 0) = 8 And sst(pct, 4) = 0 And sst(pct, 5) = 0 Then
-      If substitute(pct, symbolselect) = True Then
-      .ToolTipText = "The substituter of this picture must pay ""middle threes"""
+
+  If sst(pct, 0) = 8 And sst(pct, 4) = 0 Then
+  '13 & 14 are checked
+    .ToolTipText = "The substituter of this picture must pay ""middle threes"""
+    .Value = 0
+    optgeneral(0).Value = True
+    procend = True
+    Exit Sub
+  End If
+Else
+  ' still sst(pct, 1) = 1
+  If substitute(symbolselect, pct) = True Then
+
+    Select Case sst(symbolselect, 0)
+    Case 3, 7, 14, 15
+      If sst(pct, 3) = 1 Then
+      .ToolTipText = "A substitute of this picture cannot pay ""right to left"""
       .Value = 0
       optgeneral(0).Value = True
       procend = True
       Exit Sub
       End If
-    End If
-  End If
-Else
-  If substitute(symbolselect, pct) = True Then
-  If sst(pct, 3) = 0 Then
-    Select Case sst(symbolselect, 0)
-    Case 3, 7, 14
-    .ToolTipText = "The substitute of this picture must pay ""right to left"""
-    .Value = 0
-    optgeneral(0).Value = True
-    procend = True
-    Exit Sub
+    Case 8
+      If sst(pct, 4) = 0 Then
+      .ToolTipText = "A substitute of this picture must pay ""middle threes"""
+      .Value = 0
+      optgeneral(0).Value = True
+      procend = True
+      Exit Sub
+      ElseIf sst(pct, 3) = 1 Then
+      .ToolTipText = "A substitute of this picture cannot pay ""right to left"""
+      .Value = 0
+      optgeneral(0).Value = True
+      procend = True
+      Exit Sub
+      End If
     End Select
-  ElseIf sst(symbolselect, 0) = 8 And sst(pct, 4) = 0 Then
-    .ToolTipText = "The substitute of this picture must pay ""middle threes"""
-    .Value = 0
-    optgeneral(0).Value = True
-    procend = True
-    Exit Sub
-  End If
   End If
 End If
 Next
