@@ -866,6 +866,9 @@ For ct = 0 To 8
 If Dir(loaddirectory & "q" & ct & ".bmp") <> "" Then Kill (loaddirectory & "q" & ct & ".bmp")
 Next
 
+' In case above fails
+On Error Resume Next
+
 If Stringvars(3) <> "" Then BitmapDb 4, RHSoffset, RHSpoz, LHSpoz, imgselprevindex, wipeimgsel
 
 
@@ -1843,8 +1846,8 @@ End Function
 Private Sub ProcessQuotez(Optional Dizable As Boolean = False)
 cmmd(3).Caption = "&Delete Quote"
 If Dizable = True Then
-Genopts.enabled = false
-Gametype.enabled = false
+Genopts.Enabled = False
+gametype.Enabled = False
 quotetext.Visible = False
 quotelist.Visible = False
 Quotebrs.Refresh

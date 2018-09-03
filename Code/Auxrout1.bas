@@ -2097,7 +2097,7 @@ If opennow = True Then 'empty Quotes.s$t
       .Index = "Qorder"
 
         If justdelete = False Then
-        hfile = FreeFile
+        hfile = FreeFile()
         Open textfiletoopen For Input As #hfile
         ct = 0
           If LOF(hfile) > 0 Then
@@ -2214,10 +2214,6 @@ End With
     End If
     
 
-  'Open source file.
-
-  hfile = FreeFile
-
 
   'Get size of field.
   ct = ![Bmpfile].FieldSize()
@@ -2269,7 +2265,7 @@ End If
 
 quoteserr:
 BmpIX = 0
-Close
+rectemp.Close
 Set rectemp = Nothing
 Set dbsCurrent = Nothing
 ShowError

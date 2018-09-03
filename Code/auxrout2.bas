@@ -1215,6 +1215,8 @@ Case 449
 picnames(ct) = "passion"
 Case 450
 picnames(ct) = "sunflower"
+Case 451
+picnames(ct) = "wheel"
 End Select
 Next
 
@@ -2577,10 +2579,6 @@ Genopts.Cdlg.Filter = "text (*.,txt)|*.txt|All Files (*.*)|*.*"
 ' Specify default filter
 Genopts.Cdlg.DialogTitle = " Write to Text File"
 
-On Error GoTo Quotezerr
-' Not good as we miss the .close
-
-
 Genopts.Cdlg.InitDir = Stringvars(3)
 Genopts.Cdlg.CancelError = False
 
@@ -2591,9 +2589,15 @@ If Not FileExists(Genopts.Cdlg.FileName) Or Genopts.Cdlg.FileName = "" Then
 GoTo Quotezerr
 End If
 
+hfile = FreeFile()
+
+On Error GoTo Quotezerr
+' Not good as we miss the .close
 
 Open Genopts.Cdlg.FileName For Output As #hfile
 Close #hfile
+
+hfile = FreeFile()
 
 Open Genopts.Cdlg.FileName For Output As #hfile
 .MoveFirst
@@ -2625,7 +2629,7 @@ killdb sDatabaseName
 
 Exit Sub
 Quotezerr:
-Close
+rectemp.Close
 Set rectemp = Nothing
 Set dbsCurrent = Nothing
 ShowError
@@ -2708,7 +2712,7 @@ End Function
 Public Function Chunker(Rekordset As Recordset, Torek As Boolean, Optional kt As Long = 0)
 Dim NumBlocks As Integer, FileLength As Long, LeftOver As Long, filedata As String
 Const blocksize = 32768
-hfile = FreeFile
+hfile = FreeFile()
 On Error GoTo Chunkerr
 With Rekordset
 If Torek = True Then
@@ -2748,39 +2752,41 @@ If Torek = True Then
 
 
     Else
-            ' Get size of the field.
+        ' Get size of the field.
 
 
 
 
-            FileLength = ![Bmpfile].FieldSize()
+        FileLength = ![Bmpfile].FieldSize()
 
 
-            If FileLength = 0 Then GoTo Chunkerr
+        If FileLength = 0 Then GoTo Chunkerr
 
 
-            ' Calculate no. of blocks to write, & leftover bytes.
-            NumBlocks = FileLength \ blocksize
-            LeftOver = FileLength Mod blocksize
+        ' Calculate no. of blocks to write, & leftover bytes.
+        NumBlocks = FileLength \ blocksize
+        LeftOver = FileLength Mod blocksize
 
-            ' Remove any existing destination file.
-            Open loaddirectory & "q" & kt & ".bmp" For Binary As #hfile
-            Close #hfile
+        hfile = FreeFile()
+        ' Remove any existing destination file.
+        Open loaddirectory & "q" & kt & ".bmp" For Binary As #hfile
+        Close #hfile
 
-            Open loaddirectory & "q" & kt & ".bmp" For Binary As #hfile
-
-
-            ' Write leftover data to output file.
-            filedata = ![Bmpfile].GetChunk(0, LeftOver)
-            Put #hfile, , filedata
+        hfile = FreeFile()
+        Open loaddirectory & "q" & kt & ".bmp" For Binary As #hfile
 
 
-            ' Write remaining blocks of data to output file.
-            For ct1 = 1 To NumBlocks ' Reads a chunk and writes it to output file.
-            filedata = ![Bmpfile].GetChunk((ct1 - 1) * blocksize + LeftOver, blocksize)
-            Put #hfile, , filedata
-            Next
-            Close #hfile
+        ' Write leftover data to output file.
+        filedata = ![Bmpfile].GetChunk(0, LeftOver)
+        Put #hfile, , filedata
+
+
+        ' Write remaining blocks of data to output file.
+        For ct1 = 1 To NumBlocks ' Reads a chunk and writes it to output file.
+        filedata = ![Bmpfile].GetChunk((ct1 - 1) * blocksize + LeftOver, blocksize)
+        Put #hfile, , filedata
+        Next
+        Close #hfile
 
 End If
 
@@ -2790,5 +2796,5 @@ Exit Function
 Chunkerr:
 Chunker = False
 ShowError
-Close
+Rekordset.Close
 End Function
