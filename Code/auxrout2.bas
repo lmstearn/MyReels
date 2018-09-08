@@ -1994,7 +1994,7 @@ Case -3 ' get imgselprev
 
 .MoveFirst
 .Move RHSpoz
-imgselprevindex = ![Bmpindex]
+imgselprevindex = ![bmpindex]
 If imgselprevindex > 0 Then
 wipeimgsel = False
 Else
@@ -2011,7 +2011,7 @@ Quotebrs.quotetext.Clear
 Quotebrs.quotelist.Clear
 gt(196) = 0 ' init no of different DBpics
 For ct = 0 To gt(191) - 1
-If ![Bmpindex] > gt(196) Then gt(196) = ![Bmpindex]
+If ![bmpindex] > gt(196) Then gt(196) = ![bmpindex]
 ' If ![Bmpindex] = 81 Then
 Quotebrs.quotetext.AddItem ![Quotestr]
 Quotebrs.quotelist.AddItem CStr(ct + 1)
@@ -2038,7 +2038,7 @@ End If
 .Move LHSpoz
 
 
-ct1 = ![Bmpindex]
+ct1 = ![bmpindex]
 i = ct1
 ' Is bmpindex(LHSpoz) last of its type?
 
@@ -2046,7 +2046,7 @@ i = ct1
 .MoveFirst
 For ct = 0 To gt(191) - 1
 
-If ![Bmpindex] = ct1 And ct <> LHSpoz Then ct1 = 0
+If ![bmpindex] = ct1 And ct <> LHSpoz Then ct1 = 0
 .MoveNext
 Next
 
@@ -2056,9 +2056,9 @@ Next
   .MoveFirst
 
   For ct = 0 To gt(191) - 1
-    If ![Bmpindex] > ct1 Then
+    If ![bmpindex] > ct1 Then
     .Edit
-    ![Bmpindex] = ![Bmpindex] - 1
+    ![bmpindex] = ![bmpindex] - 1
     .Update
     End If
    .MoveNext
@@ -2080,14 +2080,14 @@ Next
       Else
       .MoveFirst
       For ct = 0 To gt(191) - 1
-      Select Case ![Bmpindex]
+      Select Case ![bmpindex]
       Case i
       .Edit
-      ![Bmpindex] = 0
+      ![bmpindex] = 0
       .Update
       Case Is > i ' reduce uppers
       .Edit
-      ![Bmpindex] = ![Bmpindex] - 1
+      ![bmpindex] = ![bmpindex] - 1
       .Update
       End Select
       .MoveNext
@@ -2122,8 +2122,8 @@ Case 0  ' Fill images on RH screen
   zhiddnstatus = -zhiddnstatus
   .MoveFirst
   For ct = 0 To gt(191) - 1
-  If ![Bmpindex] = 0 Then DoEvents
-    If ![Bmpindex] = zhiddnstatus Then
+  If ![bmpindex] = 0 Then DoEvents
+    If ![bmpindex] = zhiddnstatus Then
     RHSoffset = ct
     Exit For
   Else
@@ -2146,14 +2146,14 @@ Case 0  ' Fill images on RH screen
     Quotebrs.RHSquote(ct) = Left(![Quotestr], 90 * resX)
     End If
 
-    i = ![Bmpindex]
+    i = ![bmpindex]
     If i > 0 Then
        Quotebrs.lblindex(ct).Caption = i
        If IZempty = True Then
          Quotebrs.lblindex(ct).ForeColor = &H80FF&
          .MoveFirst
          For ct1 = 0 To gt(191) - 1
-         If ![Bmpindex] = i And IZempty = False Then Exit For
+         If ![bmpindex] = i And IZempty = False Then Exit For
          .MoveNext
          Next
          Quotebrs.lblindex(ct).ToolTipText = "Thumbnail located at: " & CStr(ct1 + 1)
@@ -2190,9 +2190,9 @@ Case 1  ' Put bmp in imgsel on quotetext_click
 
 .MoveFirst
 .Move LHSpoz
-i = ![Bmpindex]
+i = ![bmpindex]
 
- If ![Bmpindex] > 0 Then
+ If ![bmpindex] > 0 Then
 
     If IZempty = False Then ' bmp here
 
@@ -2204,7 +2204,7 @@ i = ![Bmpindex]
     ' Search for picture
     .MoveFirst
     For ct = 0 To gt(191) - 1
-    If ![Bmpindex] = i Then
+    If ![bmpindex] = i Then
     If IZempty = False Then Exit For ' found bmp here
     End If
     .MoveNext
@@ -2270,7 +2270,7 @@ Next
 
 .MoveFirst
 .Move LHSpoz
-ct1 = ![Bmpindex]
+ct1 = ![bmpindex]
 
 .Edit
 ![Quotestr] = Quotebrs.quotetext.Text
@@ -2339,7 +2339,7 @@ End If
 
 .MoveFirst
 For ct = 0 To gt(191) - 1
-If ![Bmpindex] = ct1 And ct <> LHSpoz Then
+If ![bmpindex] = ct1 And ct <> LHSpoz Then
 ct1 = 0
 Exit For
 End If
@@ -2366,16 +2366,16 @@ Next
     ' Clear picture assignment from DB
     .Edit
     ![Bmpfile] = Null
-    ![Bmpindex] = 0
+    ![bmpindex] = 0
     .Update
 
 
     If ct1 = 0 Then ' zero others if > 1 entry
     .MoveFirst
     For ct = 0 To gt(191) - 1
-        If ![Bmpindex] = i Then
+        If ![bmpindex] = i Then
         .Edit
-        ![Bmpindex] = 0
+        ![bmpindex] = 0
         .Update
         End If
     .MoveNext
@@ -2384,9 +2384,9 @@ Next
 
     .MoveFirst
     For ct = 0 To gt(191) - 1
-        If ![Bmpindex] > i Then
+        If ![bmpindex] > i Then
         .Edit
-        ![Bmpindex] = ![Bmpindex] - 1
+        ![bmpindex] = ![bmpindex] - 1
         .Update
         End If
     .MoveNext
@@ -2394,7 +2394,7 @@ Next
 
     Else ' IZempty true- Clear picture assignment from DB
     .Edit
-    ![Bmpindex] = 0
+    ![bmpindex] = 0
     .Update
     End If
 
@@ -2418,7 +2418,7 @@ Else    ' wipeimgsel false
     'check for other assignments
     .MoveFirst
     For ct = 0 To gt(191) - 1
-        If ![Bmpindex] = ct1 And ct <> LHSpoz Then
+        If ![bmpindex] = ct1 And ct <> LHSpoz Then
         response = MsgBox("Other assignments to the thumbnail that was here will point to the new picture. OK?", vbYesNo)
         If response = vbNo Then
         gt(191) = -gt(191)
@@ -2445,7 +2445,7 @@ Else    ' wipeimgsel false
         If Chunker(rectemp, True) = False Then GoTo Quotezerr
 
         .Edit
-        ![Bmpindex] = ct1
+        ![bmpindex] = ct1
         .Update
         Else
         ' Point assignments to new picture, condense
@@ -2454,13 +2454,13 @@ Else    ' wipeimgsel false
 
         .MoveFirst
         For ct = 0 To gt(191) - 1
-        If ![Bmpindex] > ct1 Then
+        If ![bmpindex] > ct1 Then
         .Edit
-        ![Bmpindex] = ![Bmpindex] - 1
+        ![bmpindex] = ![bmpindex] - 1
         .Update
-        ElseIf ![Bmpindex] = ct1 Then
+        ElseIf ![bmpindex] = ct1 Then
         .Edit
-        ![Bmpindex] = imgselprevindex
+        ![bmpindex] = imgselprevindex
         .Update
         End If
         .MoveNext
@@ -2483,14 +2483,14 @@ Else    ' wipeimgsel false
         ' Need next available bmpindex number for new bmp from scratch
         .MoveFirst
         For ct = 0 To gt(191) - 1
-        If ![Bmpindex] > ct1 Then ct1 = ![Bmpindex]
+        If ![bmpindex] > ct1 Then ct1 = ![bmpindex]
         .MoveNext
         Next
 
         .MoveFirst
         .Move LHSpoz
         .Edit
-        ![Bmpindex] = ct1 + 1
+        ![bmpindex] = ct1 + 1
         .Update
 
 
@@ -2501,7 +2501,7 @@ Else    ' wipeimgsel false
         If Chunker(rectemp, True) = False Then GoTo Quotezerr
         Else
         .Edit
-        ![Bmpindex] = imgselprevindex
+        ![bmpindex] = imgselprevindex
         .Update
         End If
     End If  ' izempty
@@ -2534,7 +2534,7 @@ wipeimgsel = True
 
 .AddNew
 ![Quotestr] = "New"
-![Bmpindex] = 0
+![bmpindex] = 0
 ![Bmpfile] = Null
 .Update
 
@@ -2604,7 +2604,7 @@ Open Genopts.Cdlg.FileName For Output As #hfile
 
 For ct = 0 To gt(191) - 2
 ' If !bmpindex > 40 And !bmpindex < 54 Then
-' If ![Bmpindex] = 81 Then
+' If Len(![Quotestr]) < 88 Then
 ' If Asc(Left$(![Quotestr], 1)) > 96 Then
 Print #hfile, ![Quotestr]
 ' End If
