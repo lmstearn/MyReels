@@ -2029,10 +2029,7 @@ Quotebrs.quotetext.Text = Quotebrs.quotetext.List(LHSpoz)
 
 Case -1 ' Delete quote
 
-If gt(191) = 1 Then
-.Close
-GoTo Quotezerr
-End If
+If gt(191) = 1 Then GoTo Quotezerr
 
 .MoveFirst
 .Move LHSpoz
@@ -2040,7 +2037,7 @@ End If
 
 ct1 = ![Bmpindex]
 i = ct1
-' Is bmpindex(LHSpoz) last of its type?
+' Is Bmpindex(LHSpoz) last of its type?
 
 
 .MoveFirst
@@ -2075,7 +2072,6 @@ Next
     If IZempty = False Then
     response = MsgBox("Other assignments to this thumbnail will be deleted. OK?", vbYesNo)
       If response = vbNo Then
-      .Close
       GoTo Quotezerr
       Else
       .MoveFirst
@@ -2098,7 +2094,7 @@ Next
 
   End If
 
-  ' Now decrement apt bmpindex
+  ' Now decrement apt Bmpindex
   gt(191) = gt(191) - 1
 
   ' And current position
@@ -2240,14 +2236,12 @@ Case 2 ' Assigns text & picture to position LHSpoz of db
 ' Update text first
 If Quotebrs.quotetext.Text = "" Then
 MsgBox "Please type some text"
-.Close
 gt(191) = -gt(191)
 GoTo Quotezerr
 End If
 
 Quotebrs.quotetext.Text = Left(Quotebrs.quotetext.Text, 172)
 If Namevalid(2, Quotebrs.quotetext.Text) = False Then
-.Close
 gt(191) = -gt(191)
 GoTo Quotezerr
 End If
@@ -2259,7 +2253,6 @@ End If
 For ct = 0 To gt(191) - 1
     If Quotebrs.quotetext.Text = ![Quotestr] Then
         If ct <> LHSpoz Then
-        .Close
         MsgBox Msgdup, vbOKOnly
         gt(191) = -gt(191)
         GoTo Quotezerr
@@ -2314,10 +2307,7 @@ Quotebrs.quotetext.ListIndex = LHSpoz
 
 
 ' Update picture next
-If imgseljustchanged = False Then
-.Close
-GoTo Quotezerr
-End If
+If imgseljustchanged = False Then GoTo Quotezerr
 
 .MoveFirst
 .Move LHSpoz
@@ -2329,11 +2319,10 @@ End If
 If wipeimgsel = True Then
 
 i = ct1
-If ct1 = 0 Then
-' Nothing to replace
-.Close
-GoTo Quotezerr
-End If
+If ct1 = 0 Then GoTo Quotezerr ' Nothing to replace
+
+
+
 
 ' Is this the last assignment?
 
@@ -2359,7 +2348,6 @@ Next
     response = MsgBox("Other assignments to the thumbnail just replaced will be erased. OK?", vbYesNo)
         If response = vbNo Then
         gt(191) = -gt(191)
-        .Close
         GoTo Quotezerr
         End If
     End If
@@ -2408,11 +2396,8 @@ Else    ' wipeimgsel false
     If ct1 > 0 Then ' ct1 should never be 0 anyway!
 
         ' Don't replace root bmp with same
-        If imgselprevindex = ct1 Then
-        ' Still need to update RHS
-        .Close
-        GoTo Quotezerr
-        End If
+        If imgselprevindex = ct1 Then GoTo Quotezerr ' Still need to update RHS
+
 
 
     'check for other assignments
@@ -2422,7 +2407,6 @@ Else    ' wipeimgsel false
         response = MsgBox("Other assignments to the thumbnail that was here will point to the new picture. OK?", vbYesNo)
         If response = vbNo Then
         gt(191) = -gt(191)
-        .Close
         GoTo Quotezerr
         Else
         Exit For
@@ -2480,7 +2464,7 @@ Else    ' wipeimgsel false
 
     Else    ' izempty true
         If imgselprevindex = 0 Then
-        ' Need next available bmpindex number for new bmp from scratch
+        ' Need next available Bmpindex number for new bmp from scratch
         .MoveFirst
         For ct = 0 To gt(191) - 1
         If ![Bmpindex] > ct1 Then ct1 = ![Bmpindex]
@@ -2520,7 +2504,6 @@ Case 3  ' add new record, picture always cleared
 
 For ct = 0 To gt(191) - 1
     If ![Quotestr] = "New" Then
-    .Close
     MsgBox Msgdup, vbOKOnly
     gt(191) = -gt(191)
     GoTo Quotezerr
@@ -2584,15 +2567,11 @@ Genopts.Cdlg.CancelError = False
 
 Genopts.Cdlg.ShowOpen
 
-If Not FileExists(Genopts.Cdlg.FileName) Or Genopts.Cdlg.FileName = "" Then
-.Close
-GoTo Quotezerr
-End If
+If Not FileExists(Genopts.Cdlg.FileName) Or Genopts.Cdlg.FileName = "" Then GoTo Quotezerr
 
 hfile = FreeFile()
 
 On Error GoTo Quotezerr
-' Not good as we miss the .close
 
 Open Genopts.Cdlg.FileName For Output As #hfile
 Close #hfile
