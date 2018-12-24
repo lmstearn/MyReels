@@ -157,7 +157,7 @@ Private response As Long, ct As Long, ct1 As Long, hWnd As Long, nRet As Long
 Private midirc As Long, oldsndfname As String, CanPlayWaves As Boolean, hmidi(5) As Long, hmsmidi(5) As Long, curmididev As Long, strPlaying As String, VMSynth As Boolean
 
 ' Picnames
-Private picnames(450) As String, picnamesort(450) As String
+Private picnames(500) As String, picnamesort(500) As String
 Dim c As New cRegistry
 Private Function FindWindowPartial(Optional InstallUpdate As Boolean = False) As Long
 Dim TitleTmp As String
@@ -509,10 +509,12 @@ Else
 End If
 
 ' Init quotes db pics
-For ct = 1 To 450
+For ct = 1 To 500
 Select Case ct
-Case 1 To 28, 30 To 40, 107, 109 To 157, 170, 184, 185
+Case 1 To 24, 26, 27, 28, 30 To 40, 107, 109 To 157, 170, 184, 185
 picnames(ct) = "lear"
+Case 25
+picnames(ct) = "beard"
 Case 29
 picnames(ct) = "anger"
 Case 41
@@ -1948,20 +1950,19 @@ End If
 End Sub
 Public Function Docaptions(numb As Long, Optional sortpicnamesnow As Boolean, Optional sortpicnames As Boolean) As String
 If sortpicnamesnow = True Then
-    For ct = 1 To 450
+    For ct = 1 To 500
     picnamesort(ct) = picnames(ct)
     Next
     c.InsertSortStringsStart picnamesort
-Else
-    If sortpicnames - False Then
+End If
+If sortpicnames - False Then
     Docaptions = CStr(numb) & "     " & picnamesort(numb)
     Else
     Docaptions = CStr(numb) & "     " & picnames(numb)
-    End If
 End If
 End Function
 Public Sub Getzhiddnstat()
-    For ct = 1 To 450
+    For ct = 1 To 500
     If picnamesort(-zhiddnstatus) = picnames(ct) Then
     zhiddnstatus = -ct
     Exit Sub
@@ -1988,6 +1989,20 @@ With rectemp
 .Index = gdbCurrentDB.TableDefs(.Name).Indexes(0).Name
 
 Select Case picsloadstatus
+
+
+Case -4  ' find real RHSoffset to match passed RHSoffset
+  zhiddnstatus = -zhiddnstatus
+  .MoveFirst
+  For ct = 0 To gt(191) - 1
+  If ![Bmpindex] = 0 Then DoEvents
+    If ![Bmpindex] = zhiddnstatus Then
+    zhiddnstatus = ct
+    Exit For
+  Else
+    .MoveNext
+  End If
+  Next
 
 Case -3 ' get imgselprev
 
@@ -2113,20 +2128,6 @@ If LHSpoz > 0 Then LHSpoz = LHSpoz - 1
 
 
 Case 0  ' Fill images on RH screen
-
-  If zhiddnstatus < 0 Then ' find real RHSoffset to match passed RHSoffset
-  zhiddnstatus = -zhiddnstatus
-  .MoveFirst
-  For ct = 0 To gt(191) - 1
-  If ![Bmpindex] = 0 Then DoEvents
-    If ![Bmpindex] = zhiddnstatus Then
-    RHSoffset = ct
-    Exit For
-  Else
-    .MoveNext
-  End If
-  Next
-  End If
 
   For ct = 0 To 8
 

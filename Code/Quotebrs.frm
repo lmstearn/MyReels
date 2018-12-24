@@ -812,7 +812,9 @@ Exit Sub
 End If
 Next
 If zhiddnstatus < 0 Then
-BitmapDb 0, RHSoffset, RHSpoz, LHSpoz, imgselprevindex, wipeimgsel
+'previous code just called BitmapDB as in PicScroll_Change()
+BitmapDb -4, RHSoffset, RHSpoz, LHSpoz, imgselprevindex, wipeimgsel
+PicScroll.Value = zhiddnstatus
 zhiddnstatus = 0
 End If
 End Sub
@@ -1047,7 +1049,6 @@ End Sub
 Private Sub PicScroll_Change()
 If procend = False Or ScrollKeydown = True Then Exit Sub
 procend = False
-
 cmmd(3).Caption = "&Delete Quote"
 RHSoffset = PicScroll.Value
 If RHSoffset + 9 > gt(191) Then RHSoffset = gt(191) - 9

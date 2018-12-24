@@ -39,7 +39,7 @@ Begin VB.Form frmSplsh
          Width           =   1335
       End
       Begin VB.Label lblCopyright 
-         Caption         =   "Copyright 1999-2018"
+         Caption         =   "Copyright 1999-2019"
          Height          =   255
          Left            =   3480
          TabIndex        =   3

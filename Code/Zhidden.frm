@@ -1450,6 +1450,7 @@ End With
 setformpos Zhidden
 HScroll1.Visible = False
 VScroll1.Visible = False
+
 With Cellz
 .Width = Zhidden.Width
 .Height = Zhidden.Height - 2 * cmdok.Height
@@ -1460,37 +1461,24 @@ End With
 With cmdok
 .FontBold = True
 .Fontsize = 18
-
-If gt(196) < 71 Then
-.Caption = "Back to Quote Thumbnails"
-Else
-.Caption = "Previous"
-End If
-
 .Width = Cellz.Width - 120
 .Cancel = False
 .Top = Zhidden.Height - .Height - 350
 End With
 
-lblDoffset = gt(196) - 70
-If lblDoffset < 0 Then lblDoffset = 0
-
 lblCelltitle(7).Visible = False
 For ct = 70 To 79
 lblCell(ct).Visible = False
 Next
+
 For ct1 = 0 To 6
 lblCelltitle(ct1).Visible = False
 lblCell(ct1).Top = lblCell(ct1 + 1).Top - lblCell(ct1).Height
-For ct = 0 To 9
-ct2 = ct1 * 10 + ct
-lblCell(ct2).Width = Cellz.Width / 7
-lblCell(ct2).Left = ct1 * Cellz.Width / 7
-If ct2 < gt(196) Then lblCell(ct2).Caption = Docaptions(ct2 + lblDoffset + 1)
-Next
 Next
 
 HiddenTitle.Text = ""
+
+CellzClicked
 
 With Zhidden
 .Enabled = True
@@ -2407,7 +2395,7 @@ Else
 End If
 
 End Select
-Pokemach.midiplay.Enabled = CBool(gt(185) > 0)
+Pokemach.MidiPlay.Enabled = CBool(gt(185) > 0)
 End Sub
 Public Sub Soundd_Click()
 
@@ -2527,7 +2515,7 @@ Private Sub Helpp_Click()
 Dim c As New cRegistry
 PlaySndF App.Path & "\help.wav"
 'Shell ("winhlp32.exe  -N 1 " & App.Path & "\MyReels.hlp"), vbNormalFocus
-c.CallHelp true
+c.CallHelp True
 End Sub
 Private Sub Titleadjust_Click()
 With Pokemach
@@ -2536,19 +2524,31 @@ If .waitimer.Enabled = True Or .Prizemeter.Enabled = True Or .gamespinwait.Enabl
 End With
 End Sub
 Private Sub Cellz_Click()
+CellzClicked
+End Sub
+Private Sub CellzClicked()
 If zhiddnstatus < 0 Then
-If Cellz.ToolTipText = "sorted" Then Exit Sub
-
-  If gt(196) < 71 Then
-  cmdok.Caption = "Back to Quote Thumbnails"
-  Else
-  cmdok.Caption = "Previous"
-  End If
+If gt(196) < 71 Then
+cmdok.Caption = "Back to Quote Thumbnails"
+Else
+cmdok.Caption = "Previous"
+End If
 
 lblDoffset = gt(196) - 70
 If lblDoffset < 0 Then lblDoffset = 0
-Cellz.ToolTipText = "sorted"
-lblCell(0).Caption = Docaptions(0, True) 'sort picnames
+
+'Populate sort array
+lblCell(0).Caption = Docaptions(0, zhiddenloading)
+If Cellz.ToolTipText = "sorted" Then
+Cellz.ToolTipText = "unsorted"
+Else
+  If Cellz.ToolTipText = "unsorted" Then
+  Cellz.ToolTipText = "sorted"
+  Else
+  Cellz.ToolTipText = "unsorted"
+  End If
+End If
+
 For ct1 = 0 To 6
 For ct = 0 To 9
 ct2 = ct1 * 10 + ct
