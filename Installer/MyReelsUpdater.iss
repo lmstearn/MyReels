@@ -11,7 +11,8 @@
 #define MySetupAppExeName "SetupMyReels.exe"
 #define MyAppUpdaterName "MyReelsUpdater"
 #define MyAppUpdaterExeName "MyReelsUpdater.exe"
-#define MyUpdateDir "C:\games\"
+; Following usually C drive
+#define MyUpdateDir "B:\games\"
 ;AppSupportURL
 ;AppUpdatesURL
 
@@ -63,8 +64,9 @@ Source: "Configuration\slotdata.s$t"; DestDir: "{app}"; Flags: touch ignoreversi
 Source: "..\{#MyAppName}.chm"; DestDir: "{app}"; Flags: touch ignoreversion replacesameversion; Components: help
 Source: "..\Quotes.s$t"; DestDir: "{app}"; Flags: touch ignoreversion replacesameversion; Components: quotes
 
-;Source: "..\*.mid"; DestDir: "{app}"; Components: midi/default
-;Source: "..\..\Originals\*.mid"; DestDir: "{app}"; Components: midi/original
+;Source: "Default\*.mid"; DestDir: "{app}"; Flags: touch; Components: midi\default
+;Source: "Originals\*.mid"; DestDir: "{app}"; Flags: touch; Components: midi\original
+;Source: "..\MyNewWavFile.wav"; DestDir: "{app}"; Flags: ignoreversion touch replacesameversion; Components: program
 
 [Components]
 Name: "program"; Description: "Program Files"; Types: full compact custom; Flags: fixed
@@ -628,12 +630,21 @@ begin
     begin
       if CompareVersionStr(MinVersion, SetupVersion) = crGreater then
       begin
-        if MsgBox('The current version of MyReels is too old to update!' +NL+ 'A repair install by the full 3.2+ version is now required.' +NL+ 'Do you wish to download it through the browser?', mbConfirmation, MB_YESNO) = IDYES then
-        begin
+        Case MsgBox('The current version of MyReels is too old to update!' +NL+ 'A repair install by the full 3.2+ version is now required.'+NL+ 'Note: Currently 3.2+ version unavailable so reply No.' +NL+ +NL+ 'Yes: Download it through your browser' +NL+ 'No: Continue with missing or superseded files (Not Recommended)' +NL+ 'Cancel: Cancel the update.', mbConfirmation, MB_YESNOCANCEL) of
+        IDYES:
+          begin
           if not OpenBrowser(ExpandConstant('{#MyAppDLURL}/{#MySetupAppExeName}')) then
           MsgBox('Download Failed!', mbError, MB_OK);
+          end;
+        IDNO:
+          begin
+          Result:= True;
+          end;
+        IDCANCEL:
+          begin
+          Result:= False;
+          end;
         end;
-      Result := False;
       end;
     end;
   end

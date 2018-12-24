@@ -9,7 +9,9 @@
 #define MyAppUpdaterExeName "MyReelsUpdater.exe"
 #define MyAppSysExeName "SetupMyReelsSys.exe"
 #define MySetupDir "B:\games\"
-#define MyDefaultDir "C:\games\"
+; Following usually C Drive
+#define MyDefaultDir "B:\games\" 
+
 
 ;AppSupportURL
 ;AppUpdatesURL
