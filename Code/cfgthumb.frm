@@ -339,10 +339,7 @@ Option Explicit
 Const MAX_PATH = 260
 
 
-'Constants ending in 'A' are for Win95 ANSI
-'calls; those ending in 'W' are the wide Unicode
-'calls for NT.
-
+'The following BFFM_ constants for reference. Others are actually used in auxrouts1
 'Sets the status text to the null-terminated
 'string specified by the lParam parameter.
 'wParam is ignored and should be set to 0.
@@ -362,7 +359,6 @@ Const BFFM_ENABLEOK As Long = (WM_USER + 101)
 'Note that after this message is sent, the browse
 'dialog receives a subsequent BFFM_SELECTIONCHANGED
 'message.
-'BFFM_SETSELECTIONA in auxrouts
 Const BFFM_SETSELECTIONW As Long = (WM_USER + 103)
 
 'specific to the STRING method
@@ -454,21 +450,63 @@ Enum SHOWCMDFLAGS
     SHOWMINIMIZE = 7
 End Enum
 
+Private Type BrowseInfo    'bi
+  hWndOwner As Long
+  pIDLRoot As Long
+  pszDisplayName As String   'return display name of item selected
+  lpszTitle As String        'text to go in the banner over the tree
+  ulFlags As Long            'flags that control the return stuff
+  lpfnCallback As Long
+  lParam As Long             'extra info passed back in callbacks
+  iImage As Long             'output var: where to return the Image index
+End Type
 
+Const BIF_RETURNONLYFSDIRS = &H1&, BIF_NEWDIALOGSTYLE = &H40&, BIF_NONEWFOLDERBUTTON = &H200&
+
+
+'Following for SHChangeNotify
+Enum SHCN_Flags
+  SHCNF_IDLIST = &H0      ' LPITEMIDLIST
+  SHCNF_PATHA = &H1       ' path name
+  SHCNF_PRINTERA = &H2    ' printer friendly name
+  SHCNF_DWORD = &H3       ' DWORD
+  SHCNF_PATHW = &H5       ' path name
+  SHCNF_PRINTERW = &H6    ' printer friendly name
+  SHCNF_TYPE = &HFF
+  ' Flushes the system event buffer. The function does not return until the system is
+  ' finished processing the given event.
+  SHCNF_FLUSH = &H1000
+  ' Flushes the system event buffer. The function returns immediately regardless of
+  ' whether the system is finished processing the given event.
+  SHCNF_FLUSHNOWAIT = &H2000
+  SHCNE_UPDATEDIR = &H1000
+  SHCNF_PATH = SHCNF_PATHW
+  SHCNF_PRINTER = SHCNF_PRINTERW
+
+End Enum
+
+Const SHCNE_CREATE = &H2
+
+Private Declare Function ILCreateFromPathW Lib "shell32" (ByVal pwszPath As Long) As Long
 Private Declare Function SHFileOperation Lib "shell32.dll" Alias "SHFileOperationA" (lpFileOp As SHFILEOPSTRUCT) As Long
 Private Declare Function SHGetSpecialFolderLocation Lib "shell32.dll" (ByVal hWndOwner As Long, ByVal nFolder As Long, pidl As Long) As Long
 Private Declare Function SHBrowseForFolder Lib "shell32" (lpbi As BrowseInfo) As Long
 Private Declare Function SHGetPathFromIDList Lib "shell32" (ByVal pidList As Long, ByVal lpBuffer As String) As Long
-Private Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
-Private Declare Sub MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSource As Any, ByVal dwLength As Long)
+'Private Declare Function SysReAllocStringLen Lib "oleaut32.dll" (ByVal pBSTR As Long, Optional ByVal pszStrPtr As Long, Optional ByVal Length As Long) As Long
 
-'specific to the STRING method
+Private Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
+
+
+'To notify Start menu of new shortcut
+Private Declare Function SHChangeNotify Lib "shell32.dll" (ByVal wEventID As Long, ByVal uFlags As Long, ByVal dwItem1 As Long, ByVal dwItem2 As Long) As Long
+
+'Reference only: specific to the STRING method
 Private Declare Function LocalAlloc Lib "kernel32" (ByVal uFlags As Long, ByVal uBytes As Long) As Long
 Private Declare Function LocalFree Lib "kernel32" (ByVal hMem As Long) As Long
 
 
 Dim currentdirectory As String
-Dim thumbs(14) As StdPicture, truethumbs(14) As StdPicture
+Dim thumbs(14) As StdPicture, trueThumbs(14) As StdPicture
 Dim firstchangeofdir As Boolean, blnsaveyet As Boolean, warning As Boolean, warning1 As Boolean, justclicked(14) As Boolean, writehallfame As Boolean
 Dim inttracker(14) As Long, ct As Long, ct1 As Long, oldpicno As Long, response As Long, oldX As Long, oldY As Long, cropwidth As Long, cropheight As Long
 Dim newX As Long, newY As Long, entryX As Long, entryY As Long
@@ -537,10 +575,11 @@ tan7 = Tan(7 * 3.1416 / 8)
 chkalwayssquare.Value = gt(44)
 Shortcutter.Value = gt(190)
 
-
+ 
 DoingDragDrop = False
 rightbuttdown = False
-currentdirectory = CurDir
+currentdirectory = CurDir$
+olddirectory = ""
 oldpicno = 0
 dirused = False
 boosloterror = False
@@ -1138,13 +1177,19 @@ End Sub
 Private Function BrowseForFolderByPath(sSelPath As String) As String
 
 Dim BI As BrowseInfo
-Dim pidl As Long
-Dim lpSelPath As Long
-Dim sPath As String * MAX_PATH
-  
+Dim pidl1 As Long, pidl2 As Long
+Dim sPath As String * MAX_PATH 'SysReAllocStringLen didn't work
+
 With BI
+
+    .ulFlags = BIF_RETURNONLYFSDIRS Or BIF_NEWDIALOGSTYLE Or BIF_NONEWFOLDERBUTTON
+
    'owner of the dialog. Pass 0 for the desktop.
+    If Not Screen.ActiveForm Is Nothing Then
+    .hWndOwner = Screen.ActiveForm.hWnd
+    Else
     .hWndOwner = 0
+    End If
    
    'The desktop folder will be the dialog's root folder.
    'SHSimpleIDListFromPath can also be used to set this value.
@@ -1157,54 +1202,47 @@ With BI
     
    'Obtain and set the address of the callback function
     .lpfnCallback = FARPROC(AddressOf BrowseCallbackProcStr)
-    
-   'Now the fun part. Allocate some memory for the dialog's
-   'selected folder path (sSelPath), blast the string into
-   'the allocated memory, and set the value of the returned
-   'pointer to lParam (checking LocalAlloc's success is
-   'omitted for brevity). Note: VB's StrPtr function won't
-   'work here because a variable's memory address goes out
-   'of scope when passed to SHBrowseForFolder.
-    lpSelPath = LocalAlloc(LPTR, Len(sSelPath))
-    MoveMemory ByVal lpSelPath, ByVal sSelPath, Len(sSelPath)
-    .lParam = lpSelPath
+
+     pidl1 = ILCreateFromPathW(StrPtr(sSelPath))
+     .lParam = pidl1
     
 End With
-    
+
   'Shows the browse dialog and doesn't return until the
   'dialog is closed. The BrowseCallbackProcStr will
   'receive all browse dialog specific messages while
   'the dialog is open. pidl will contain the pidl of the
-  'selected folder if the dialog is not canceled.
-pidl = SHBrowseForFolder(BI)
-   
-If pidl Then
+  'selected folder if the dialog is not canceled: (re-using pidl)
+   pidl2 = SHBrowseForFolder(BI)
+
+
+
+If pidl2 Then
    
      'Get the path from the selected folder's pidl returned
      'from the SHBrowseForFolder call (rtns True on success,
      'sPath must be pre-allocated!)
-     
-      If SHGetPathFromIDList(pidl, sPath) Then
-      
+
+      If SHGetPathFromIDList(pidl2, sPath) Then
+        'SysReAllocStringLen VarPtr(sPath), , MAX_PATH
         'Return the path
          BrowseForFolderByPath = Left$(sPath, InStr(sPath, vbNullChar) - 1)
          
       End If
       
      'Free the memory the shell allocated for the pidl.
-      Call CoTaskMemFree(pidl)
+      Call CoTaskMemFree(pidl2)
    
 End If
-   
-'Free our allocated string pointer
-Call LocalFree(lpSelPath)
-
+'If lpSelPath <> 0 Then Call LocalFree(lpSelPath)
+Call CoTaskMemFree(pidl1)
 End Function
 Private Sub Savenew_Click()
 Dim snewdir As String, sBuffer As String
 
 cfgthumb.Enabled = False
-sBuffer = BrowseForFolderByPath(Left(loaddirectory, Len(loaddirectory) - 1))
+sBuffer = Left(loaddirectory, Len(loaddirectory) - 1)
+sBuffer = BrowseForFolderByPath(sBuffer)
 cfgthumb.Enabled = True
 If sBuffer = "" Then Exit Sub
 
@@ -1294,7 +1332,7 @@ If warning = True Then
     
     If InStr(currentdirectory, "~") > 0 Then
     If Left(Right(currentdirectory, 8), 6) = Left(Right(App.Path, 8), 6) Then
-    response = MsgBox("Your Install path name contains a ""~"" which usually MSDOS truncation. I cannot tell from the new path name whether or not you are changing the generic default Configuration. If that is the case then it is not recommended that this be changed. Are you sure you want to continue?", vbYesNo)
+    response = MsgBox("Your Install path name contains a ""~"" which usually MSDOS truncation. Unable to tell from the new path name whether or not you are changing the generic default Configuration. If that is the case then it is not recommended that this be changed. Are you sure you want to continue?", vbYesNo)
         If response = vbNo Then
         warning1 = False
         Exit Sub
@@ -1322,62 +1360,53 @@ If findafile(currentdirectory, "Slotdata.s$t") > 0 Then dirused = True
         Exit Sub
         End If
     End If
-    
-    'Kill existing files
-    For ct1 = 1 To 9
-    If findafile(currentdirectory, ct1 & ".bmp") > 0 Then Kill ct1 & ".bmp"
-    Next
-    
-    For ct1 = 0 To 4
-    If findafile(currentdirectory, "1" & ct1 & ".bmp") > 0 Then Kill "1" & ct1 & ".bmp"
-    Next
-    
-    
-    CopypicstoDir thumbs
-    
+
+    KillExistingPics 14
+
+    CopypicstoDir
+
     gt(0) = 5 'No going back
     Quit.Enabled = False
     oldpicno = 0
     warning1 = True
     filesource.Refresh
     blnsaveyet = True
-    
+
         If writehallfame = True Then  'don't need to write to hallfame twice!
         If currentdirectory <> loaddirectory Then FileCopy loaddirectory & "Slotdata.s$t", currentdirectory & "Slotdata.s$t"
         GoTo Writesuccess
         End If
-    
-    
+
+
     On Error GoTo Sloterror
         If findafile(currentdirectory, "Slotdata.s$t") > 0 Then
-        
 
         'Write to Hallfame name found in new Slotdata
-       
-        
+
+
         sDatabaseName = currentdirectory & "Slotdata.s$t"
-        
-        
+
+
         If OpenDb(sDatabaseName, 0) = False Then
         MsgBox "Slotdata.s$t in new directory has been corrupted, data cannot be written to Hall_Of_Fame.", vbOKOnly
         Else
         Set dbsCurrent = gdbCurrentDB
-        
-        
+
+
         'REORG  Slotdata
         REORGSLOT
         Set rectemp = dbsCurrent.OpenRecordset("SELECT Lorng FROM Inpoot")
-        
+
             With rectemp
             On Error GoTo ErrHandlerr
-            
+
             .MoveFirst
-            
+
             '345 moves before gt, 116 after
             For ct1 = 1 To 345
             .MoveNext
             Next
-            
+
             For ct1 = 1 To 192
             Select Case ct1
             Case 29
@@ -1400,11 +1429,11 @@ If findafile(currentdirectory, "Slotdata.s$t") > 0 Then dirused = True
                 oldgt(ct1) = 0
                 ElseIf oldgt(ct1) > 9999 Then oldgt(ct1) = 9999
                 End If
-            
+
             End Select
             .MoveNext
             Next
-            
+
                 If oldgt(10) > 0 Then
                 gt(31) = oldgt(31)
                 gt(32) = oldgt(32)
@@ -1415,15 +1444,15 @@ If findafile(currentdirectory, "Slotdata.s$t") > 0 Then dirused = True
                 oldvog = CSng(inputformat(29))
                 End If
             End With
-        
-        
-        
+
+
+
         Set rectemp = dbsCurrent.OpenRecordset("SELECT Streeng FROM Inpoot")
             With rectemp
             On Error GoTo ErrHandlerr
-            
+
             .MoveFirst
-            
+
             For ct1 = 1 To 8
             Select Case ct1
             Case 4
@@ -1444,57 +1473,56 @@ If findafile(currentdirectory, "Slotdata.s$t") > 0 Then dirused = True
             ElseIf Namevalid(2, oldvars(ct1)) = False Then
             oldvars(ct1) = "Invalid_Name"
             End If
-            
+
             End Select
             .MoveNext
             Next
-            
-            
-            
+
+
+
             End With
         Set gdbCurrentDB = dbsCurrent
         killdb sDatabaseName
         Set rectemp = Nothing
         Set dbsCurrent = Nothing
-        
-        
-        
-        
-        
+
+
+
+
         'Write to Hallfame
-        
+
         sDatabaseName = oldvars(4) & "Hallfame.s$t"
-        
+
         If OpenDb(sDatabaseName, 1) = False Then
         MsgBox "Hallfame.s$t missing or corrupted, data cannot be written there ; continuing ...", vbOKOnly
         GoTo Writesuccess
         End If
-        
+
         Set dbsCurrent = gdbCurrentDB
-        
+
         Set rectemp = dbsCurrent.OpenRecordset("Hall")
-        
+
         With rectemp
-        
+
         .MoveLast
-        
+
         .AddNew
-        
+
         On Error GoTo Writesuccess
-        
+
         ![Player] = oldvars(8)
-        
+
         ![Game] = oldvars(5)
-        
+
         ct1 = CLng(Left(CStr(oldgt(155)), 3))
         If ct1 <= 500 Then
         ![Startcash] = ct1
         Else
         ![Startcash] = 50
         End If
-        
+
         ![Endcash] = oldgt(2)
-        
+
         If oldgt(156) = 1 And oldgt(192) > 1 Then
         ![Reason] = 2
         ElseIf oldgt(2) = 0 Then
@@ -1502,46 +1530,45 @@ If findafile(currentdirectory, "Slotdata.s$t") > 0 Then dirused = True
         Else
         ![Reason] = 3
         End If
-        
+
         ![Date] = CDate(Date)
-        
+
         ![Spintotal] = oldgt(49) + oldgt(50) + oldgt(51)
-        
-        
+
         ![ReelChange] = oldgt(26)
-        
+
         ![SymbolChange] = oldgt(27)
-        
+
         ![GeneralChange] = oldgt(28)
-        
+
         ![StatsResets] = oldgt(150)
-        
-        
+
+
         If oldgt(55) < 0 Then oldgt(55) = 0
         ![GameReplays] = oldgt(55)
-        
-        
+
+
         If oldgt(133) > 0 Then
         ![SVOG] = ((oldgt(59) + oldgt(63) + oldgt(67) + oldgt(71) + oldgt(75) + oldgt(79) + oldgt(83) + oldgt(87)) / oldgt(133)) * 100
         Else
         ![SVOG] = 0
         End If
-        
+
         If VOGchg = 1 Then
         ![VOG] = -oldvog
         Else
         ![VOG] = oldvog
         End If
-        
+
         If oldgt(152) < 0 Then oldgt(152) = -oldgt(152)
         ![MonteCarlo] = oldgt(152)
-        
+
         .Update
-        
-        
+
+
         .Close
         End With
-        
+
         Set rectemp = Nothing
         Set dbsCurrent = Nothing
         killdb sDatabaseName
@@ -1549,16 +1576,15 @@ If findafile(currentdirectory, "Slotdata.s$t") > 0 Then dirused = True
         If compactdb(1) = False Then GoTo Writesuccess
 
         End If  'Slotdata open error
-    
-    
-    
+
+
+
     Else
     'No Slotdata here yet
     FileCopy loaddirectory & "Slotdata.s$t", currentdirectory & "Slotdata.s$t"
     End If
 
-
-olddirectory = loaddirectory
+If loaddirectory <> currentdirectory And olddirectory = "" Then olddirectory = loaddirectory
 loaddirectory = currentdirectory
 
 
@@ -1588,7 +1614,7 @@ MsgBox "Slotdata.s$t in new directory has been corrupted, data cannot be written
 'Delete old Slotdata
 Kill currentdirectory & "Slotdata.s$t"
 FileCopy loaddirectory & "Slotdata.s$t", currentdirectory & "Slotdata.s$t"
-olddirectory = loaddirectory
+If loaddirectory <> currentdirectory And olddirectory = "" Then olddirectory = loaddirectory
 loaddirectory = currentdirectory
 End Sub
 Private Sub Nextscreen_Click()
@@ -1616,27 +1642,45 @@ Case 3 To 14
     
     End If
 End Select
-CopypicstoDir truethumbs
+CopypicstoDir True
 If gt(190) = 1 Then Shortcutting
-FinishPictureConfig truethumbs, ct
+FinishPictureConfig trueThumbs, ct
 Unload Me
 Set cfgthumb = Nothing
 Load cornfig
 End Sub
-Private Sub CopypicstoDir(Thumbies() As StdPicture)
-Dim ct2 As Long
+Private Sub CopypicstoDir(Optional ReassignThumbs = False)
+Dim ct2 As Long, thumbTmp(14) As StdPicture
 ct2 = 0
 
 For ct1 = 1 To 14
 If inttracker(ct1) <> 0 Then
 ct2 = ct2 + 1
-Set Thumbies(ct2) = thumbs(ct1)
+Set thumbTmp(ct2) = thumbs(ct1)
 End If
 Next
 
-For ct1 = 1 To ct
-SavePicture Thumbies(ct1), CStr(ct1) & ".bmp"
+KillExistingPics ct2
+
+For ct1 = 1 To ct2 'ct is equivalent
+If ReassignThumbs Then Set trueThumbs(ct1) = thumbTmp(ct1)
+SavePicture thumbTmp(ct1), CStr(ct1) & ".bmp"
 Next
+End Sub
+Private Sub KillExistingPics(ByVal picMax As Integer)
+If picMax < 10 Then
+    'Kill existing files
+    For ct1 = 1 To picMax
+    If findafile(currentdirectory, ct1 & ".bmp") > 0 Then Kill ct1 & ".bmp"
+    Next
+    Else
+    For ct1 = 1 To 9
+    If findafile(currentdirectory, ct1 & ".bmp") > 0 Then Kill ct1 & ".bmp"
+    Next
+    For ct1 = 0 To picMax - 10
+    If findafile(currentdirectory, "1" & ct1 & ".bmp") > 0 Then Kill "1" & ct1 & ".bmp"
+    Next
+    End If
 End Sub
 Private Sub imgsel_DragDrop(Index As Integer, Source As Control, X As Single, Y As Single)
 If DoingDragDrop = True Then Exit Sub
@@ -1875,20 +1919,22 @@ inttracker(whichindex) = 0
 ShowError
 End Sub
 Private Sub Shortcutting()
-Dim indexoficon As Long, startupmode As Long, StartMenuPath As String, dirlen As Long
+Dim indexoficon As Long, startupmode As Long, sBuff As String, startMenuPath As String, StartMenuName As String, dirlen As Long
 
-  
+indexoficon = 0
+startupmode = 0
+
 '- We also need the user's Start Menu folder
-StartMenuPath = GetSpecialFolder(CSIDL_STARTMENU)
-   
-If StartMenuPath = "" Then
+startMenuPath = GetSpecialFolder(CSIDL_STARTMENU)
+
+If startMenuPath = "" Then
 MsgBox "Sorry, no StartMenuPath, no shortcut."
 Exit Sub
 End If
   
 'set up the StartMenuPath now to reflect the folder
 'we'll be installing the shortcuts into a bit later
-StartMenuPath = StartMenuPath & "Programs\MyReels\"
+startMenuPath = startMenuPath & "Programs\MyReels\"
 
 'trim right string off currentdirectory
 dirlen = Len(currentdirectory) - 1
@@ -1897,8 +1943,24 @@ For ct1 = dirlen To 1 Step -1
 If Mid(currentdirectory, ct1, 1) = "\" Then Exit For
 Next
 
-fCreateShellLink StartMenuPath & Mid(currentdirectory, ct1 + 1, dirlen - ct1) & ".lnk", App.Path & "\MyReels.exe", currentdirectory, App.Path & "\MyReels.exe", indexoficon, startupmode
+StartMenuName = Mid(currentdirectory, ct1 + 1, dirlen - ct1) & ".lnk"
 
+If findafile(startMenuPath, StartMenuName) > 0 Then
+GetsBuff:
+sBuff = InputBox("A shortcut with the name " & StartMenuName & " already exists. Please type in another name for it: " & " click OK, or click Cancel to overwrite the existing shortcut.", "New Shortcut Name", "New Shortcut Name")
+  If sBuff = StartMenuName Then
+  GoTo GetsBuff
+  ElseIf sBuff <> "" Then
+  StartMenuName = sBuff & ".lnk"
+  End If
+End If
+StartMenuName = startMenuPath & StartMenuName
+'fCreateShellLink StartMenuName, App.Path & "\MyReels.exe", currentdirectory, App.Path & "\MyReels.exe", indexoficon, startupmode
+fCreateShellLink StartMenuName, currentdirectory & "\Slotdata.s$t", currentdirectory, "", indexoficon, startupmode
+
+
+'SHChangeNotify SHCNE_CREATE, SHCNF_PATH, StrPtr(StartMenuName), 0
+SHChangeNotify SHCNE_UPDATEDIR, SHCNF_PATH, StrPtr(StartMenuName), 0
 
 End Sub
 Private Sub ShellRenameFile(sOldName As String, sNewName As String)

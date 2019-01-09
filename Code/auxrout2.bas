@@ -1258,14 +1258,14 @@ If FindShellTaskBar Then Dotaskwindow Pokemach
 ' Must close handles if midi off!
 If gt(185) = 0 Then ZapMidihWnd
 
-If gt(200) = 1 Then
-' Shell ("winhlp32.exe  -N 17 " & App.Path & "\MyReels.hlp"), vbNormalFocus
+ If gt(200) = 1 Then
+ ' Shell ("winhlp32.exe  -N 17 " & App.Path & "\MyReels.hlp"), vbNormalFocus
  On Error GoTo Filedeleteerror
  If FileExists(App.Path & "\building.wav") Then Kill (App.Path & "\building.wav")
  If FileExists(App.Path & "\peace.wav") Then Kill (App.Path & "\peace.wav")
  If FileExists(App.Path & "\fabulous.wav") Then Kill (App.Path & "\fabulous.wav")
  If FileExists(App.Path & "\yeah.wav") Then Kill (App.Path & "\yeah.wav")
-For ct = 1 To 50000
+   For ct = 1 To 50000
    DoEvents
    Sleep 50
    If justcached = True Then
@@ -2636,18 +2636,18 @@ Public Sub stripMBstats(STRIPRH As Boolean)
 For ct = 89 To 103
 If ct - 88 <= gt(10) Then
 If STRIPRH = True Then  ' clear new
-        If gt(ct) > 30 Then
-        If Mid(CStr(gt(ct)), 3, 1) = "0" Then
-        gt(ct) = CLng(Left(CStr(gt(ct)), 2))
-        ElseIf Mid(CStr(gt(ct)), 2, 1) = "0" Then
-        gt(ct) = CLng(Left(CStr(gt(ct)), 1))
-        End If
-        End If
+      If gt(ct) > 30 Then
+      If Mid(CStr(gt(ct)), 3, 1) = "0" Then
+      gt(ct) = CLng(Left(CStr(gt(ct)), 2))
+      ElseIf Mid(CStr(gt(ct)), 2, 1) = "0" Then
+      gt(ct) = CLng(Left(CStr(gt(ct)), 1))
+      End If
+      End If
 Else
-        ct1 = CLng(Right(CStr(gt(ct)), 2))
-        gt(ct) = ct1
-        gt(88) = gt(88) + ct1 ' stats
-        gt(129) = gt(129) + 1
+      ct1 = CLng(Right(CStr(gt(ct)), 2))
+      gt(ct) = ct1
+      gt(88) = gt(88) + ct1 ' stats
+      gt(129) = gt(129) + 1
 End If
 ElseIf ct - 88 > gt(151) Then
 gt(ct) = 0

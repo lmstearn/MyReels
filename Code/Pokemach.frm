@@ -2887,17 +2887,17 @@ End Select
   If gamestartup = 1 Then
 
   'Slotdata.s$t exists in curdir?
-  If gt(0) = 0 Then loadnow = findafile(CurDir, "Slotdata.s$t")
+  If gt(0) = 0 Then loadnow = findafile(CurDir$, "Slotdata.s$t")
 
     If loadnow = 0 Then
 
 
-    ct = InStr(1, CurDir, App.Path)
+    ct = InStr(1, CurDir$, App.Path)
 
     If ct > 0 Then
     CommonDialog1.InitDir = App.Path
     Else
-    CommonDialog1.InitDir = CurDir
+    CommonDialog1.InitDir = CurDir$
     End If
 
     CommonDialog1.Filter = "MyReels (Slotdata.s$t)|Slotdata.s$t|All Files (*.*)|*.*"
@@ -2922,10 +2922,7 @@ End Select
 
   End If  'gamestartup condition
 
-loaddirectory = CurDir & "\"
-
-
-
+loaddirectory = CurDir$ & "\"
 'firstload, chdir or gametype cancel
 
         If gamestartup < 3 Then

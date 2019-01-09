@@ -107,7 +107,7 @@ Public Type BrowseInfo
 'Browse constants
 Const BFFM_INITIALIZED = 1
 Public Const WM_USER = &H400
-Const BFFM_SETSELECTIONA As Long = (WM_USER + 102)
+Const BFFM_SETSELECTIONA As Long = (WM_USER + 102), BFFM_SETEXPANDED = (WM_USER + 106)
 
 Const MaxLFNPath = 260
 
@@ -349,6 +349,7 @@ With WFD
 If Right$(curpath$, 1) <> "\" Then curpath$ = curpath$ & "\"
     
 xfile = FindFirstFile(curpath$ & filecriteria, WFD)
+
 If xfile <> INVALID_HANDLE_VALUE Then
 Do
 If Len(Left$(.cFileName, InStr(.cFileName, vbNullChar) - 1)) > 0 Then
@@ -359,6 +360,7 @@ If Len(Left$(.cFileName, InStr(.cFileName, vbNullChar) - 1)) > 0 Then
     Else
     Select Case .nFileSizeLow \ KB
     Case 0
+    If InStr(.cFileName, ".lnk") > 0 Then findafile = 1
     Case Is < 10
     findafile = CSng(Format(.nFileSizeLow / KB, "0.00"))
     Case Is < 100
@@ -377,21 +379,18 @@ End Function
 Public Function BrowseCallbackProcStr(ByVal hWnd As Long, ByVal uMsg As Long, ByVal lParam As Long, ByVal lpData As Long) As Long
                                        
 'Callback for the Browse STRING method.
- 
+
 'On initialization, set the dialog's
 'pre-selected folder from the pointer
 'to the path allocated as bi.lParam,
 'passed back to the callback as lpData param.
- 
-   Select Case uMsg
-      Case BFFM_INITIALIZED
-      
-         Call SendMessage(hWnd, BFFM_SETSELECTIONA, True, ByVal StrFromPtrA(lpData))
-                          
-         Case Else:
-         
+
+  Select Case uMsg
+    Case BFFM_INITIALIZED
+       Call SendMessage(hWnd, BFFM_SETSELECTIONA, False, ByVal lpData)
+       Call SendMessage(hWnd, BFFM_SETEXPANDED, False, ByVal lpData)
+       Case Else:
    End Select
-          
 End Function
 Public Function FARPROC(pfn As Long) As Long
 'A dummy procedure that receives and returns
@@ -2138,7 +2137,7 @@ Else    'opennow = False
   With rectemp
   'set gt191
   ct = 0
-  if isMainActive = True then 
+  If isMainActive = True Then
   Do Until .EOF
   If ![Quotestr] = "If these words, bye and bye, Lose appeal  to the eye 'Tis simple work to change     the text: <Enter>, General, Text Tab next, And a filename you supply." Then
   zposition = ct
@@ -2146,13 +2145,13 @@ Else    'opennow = False
   ct = ct + 1
   .MoveNext
   Loop
-  else
+  Else
   Do Until .EOF
   ct = ct + 1
   .MoveNext
   Loop
   zposition = CLng(Int(Rnd * ct))
-  end if
+  End If
 
   End With
   Set rectemp = Nothing

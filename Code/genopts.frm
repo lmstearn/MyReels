@@ -2420,7 +2420,7 @@ With Cdlg
 .FilterIndex = 1
 ' Set CancelError is True
 On Error GoTo NoAction
-.InitDir = CurDir
+.InitDir = CurDir$
 If gt(0) = 0 Then .CancelError = True
 .ShowOpen
 
@@ -2473,7 +2473,7 @@ With Cdlg
 
     Else    'setbackbmpdir true so choose curdir
 
-    .InitDir = CurDir
+    .InitDir = CurDir$
     
     End If
 
@@ -2756,7 +2756,7 @@ Exit Sub
 
 Notvaliddirectory:
 With Cdlg
-.InitDir = CurDir
+.InitDir = CurDir$
 On Error GoTo NoAction
 .ShowOpen
 If namelt100chars(.FileName) = False Then
@@ -2796,8 +2796,8 @@ End Sub
 Private Sub MidiPlay_Timer()
 ' Share timer regarding Quotebrs show issue
 If QuotebrsShow Then
-  Gametype.enabled = true
-  Genopts.enabled = true
+  gametype.Enabled = True
+  Genopts.Enabled = True
   MidiPlay.Enabled = False
   MidiPlay.Interval = 18
 Else

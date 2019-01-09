@@ -2354,7 +2354,7 @@ olddirectory = ""
 Exit Sub
 quoterror:
 ShowError
-MsgBox "Quotes.s$t pathname > 100 characters or corrupt or inaccessible ; continuing ...", vbOKOnly
+MsgBox "Quotes.s$t pathname > 100 characters or corrupt or inaccessible from its original directory. Continuing ...", vbOKOnly
 Stringvars(3) = ""
 olddirectory = ""
 End Sub

@@ -237,12 +237,10 @@ End Type
 
 
 
-Private Declare Function GetVersionEx Lib "kernel32" Alias "GetVersionExA" _
-  (lpVersionInformation As OSVERSIONINFO) As Long
-
+Private Declare Function GetVersionEx Lib "kernel32" Alias "GetVersionExA" (lpVersionInformation As OSVERSIONINFO) As Long
 
 'For Association
-Private Declare Function SHChangeNotify Lib "shell32.dll" (ByVal wEventID As Long, ByVal uFlags As Long, ByVal dwItem1 As String, ByVal dwItems As String) As Long
+Private Declare Function SHChangeNotify Lib "shell32.dll" (ByVal wEventID As Long, ByVal uFlags As Long, ByVal dwItem1 As Long, ByVal dwItem2 As Long) As Long
 Const SHCNE_ASSOCCHANGED = &H8000000
 Const SHCNF_IDLIST = &H0
 
@@ -383,11 +381,11 @@ Dim hKey As Long
 End Property
 Public Sub CallHelp(Optional ByVal menuClk As Boolean = False)
 Dim GetDesktophWnd As Long
-if menuClk then
+If menuClk Then
 s = HTMLHelp(GetDesktophWnd, App.HelpFile, HH_HELP_CONTEXT, 1)
-else
+Else
 s = HTMLHelp(GetDesktophWnd, App.HelpFile, HH_DISPLAY_TOPIC, 0)
-end if
+End If
 End Sub
 
 Public Function CreateKey() As Boolean
@@ -780,7 +778,7 @@ CreateEXEAssociation = True
       pSetClassValue sExePath & "," & CStr(lDefaultIconIndex)
    End If
 
-If (XP Or VistaorLater) Then SHChangeNotify SHCNE_ASSOCCHANGED, SHCNF_IDLIST, vbNullString, vbNullString
+If (XP Or VistaorLater) Then SHChangeNotify SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0
 
 Exit Function
 EXEAssocerror:

@@ -825,7 +825,7 @@ Const GAP = 60
 Quotebrs.Caption = "Configure Quote Thumbnails"  'Space(109)
 
 
-filesource.Path = CurDir
+filesource.Path = CurDir$
 
     'If WindowState = 1 Then Exit Sub
 
