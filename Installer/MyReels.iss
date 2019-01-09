@@ -840,13 +840,14 @@ var
  ExistsE: Boolean;
  ExistsG: Boolean;
  begin
- //test to see if the INI file and LOG files still exist
+ //Zap Start Menu items
  FileA:= ExpandConstant('{userprograms}\{#MyAppName}\*'); //'*' is not recommended
  FileB:= ExpandConstant('{userprograms}\{#MyAppName}');
+ //test to see if the INI(??) file and LOG files still exist
  FileC:= ExpandConstant('{app}\{#MyAppName}.log');
  FileD:= ExpandConstant('{app}\Process.log');
  FileE:= ExpandConstant('{app}\{#MyAppUpdaterExeName}');
- FileF:= ExpandConstant('{app}\*'); //'*' is not recommended
+ FileF:= ExpandConstant('{app}\*.wav'); //'*' not recommendedL wav files only
  FileG:= ExpandConstant('{app}');
  ExistsB:= FileExists(FileB);
  ExistsC:= FileExists(FileC);
@@ -867,6 +868,7 @@ var
  DeleteManyFiles(+FileG+ '??????XX.mdb', False);
  DeleteManyFiles(+FileG+ '{app}\??????YY.mdb', False);
  DeleteManyFiles(+FileG+ '{app}\??????ZZ.mdb', False);
+ DeleteManyFiles(FileF, False);
 
  //Any Subfolders in MyApp?
  if isEmptyDir(FileG, True) = False Then

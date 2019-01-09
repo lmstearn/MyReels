@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 ;See the wiki before packing!: https://github.com/lmstearn/MyReels/wiki
 #define MyAppName "MyReels"
-#define MyAppVersion "3.2.0"
+#define MyAppVersion "3.2.1"
 #define MyAppPublisher "Stearn & DisAssoc"
 #define MyAppURL "https://github.com/lmstearn/MyReels/wiki"
 #define MyHomePage "http://members.ozemail.com.au/~lmstearn/"
@@ -118,7 +118,7 @@ const
    NL = #13#10;    //carriage return and line feed
    SetupURL = '{#MyAppDLURL}/{#MyAppUpdaterExeName}';
    VersionURL = '{#MyAppDLURL}/version.txt';
-   MinVersion = '3.2.0';
+   MinVersion = '3.2.0'; //No conflict with MinVersion Directive above hopefully
    MOVEFILE_DELAY_UNTIL_REBOOT = $00000004;
 
 
