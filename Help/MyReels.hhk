@@ -118,6 +118,10 @@
 		<param name="Local" value="html/Feature-Reset.htm">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="File Dialog">
+		<param name="Local" value="html\File Dialog.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Filesizes">
 		<param name="Local" value="html/Filesizes.htm">
 		</OBJECT>
@@ -257,6 +261,11 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Optimal Money Back Strategy">
 		<param name="Local" value="html/Optimal Money Back Strategy.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Ordinatio Partialis">
+		<param name="Name" value="Ordinatio Partialis">
+		<param name="Local" value="html\Ordinatio Partialis.htm">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Pay Method">

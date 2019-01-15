@@ -423,6 +423,10 @@
 			<param name="Local" value="html/Shortcut.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="File Dialog">
+			<param name="Local" value="html\File Dialog.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="Filesizes">
 			<param name="Local" value="html/Filesizes.htm">
 			</OBJECT>
