@@ -1969,7 +1969,7 @@ Public Sub Getzhiddnstat()
     End If
     Next
 End Sub
-Public Sub BitmapDb(picsloadstatus As Long, RHSoffset As Long, RHSpoz As Long, LHSpoz As Long, imgselprevindex As Long, wipeimgsel As Boolean, Optional imgseljustchanged As Boolean = False)
+Public Sub BitmapDb(ByVal picsloadstatus As Long, ByVal RHSoffset As Long, ByVal RHSpoz As Long, LHSpoz As Long, imgselprevindex As Long, wipeimgsel As Boolean, Optional imgseljustchanged As Boolean = False, Optional selString As String = "")
 Dim i As Long
 
 
@@ -2543,56 +2543,73 @@ Quotebrs.imgsel.Picture = LoadPicture(App.Path & "\blank.bmp")
 
 
 
-Case 4  ' exit screen
+Case 4  ' print
 
 
-' Get rid of null quotes
+' Remove null quotes
+If selString = "" And gt(191) > 2 Then
 .MoveFirst
-For ct = 0 To gt(191) - 1
+For ct = 0 To gt(191) - 2
 If .Fields(0).Value = "" Then .DELETE
 .MoveNext
 Next
+If .Fields(0).Value = "" Then .DELETE
+End If
 
 
+If gt(189) = 1 Or selString <> "" Then
+ ' Remove any existing dest. file.
+ If selString = "" Then
+ Genopts.Cdlg.FileName = "Favrites"
+ Else
+ Genopts.Cdlg.FileName = "QuotesFor_" & selString & "_"
+ End If
+ Genopts.Cdlg.FilterIndex = 1
+ Genopts.Cdlg.Filter = "text (*.,txt)|*.txt|All Files (*.*)|*.*"
+ ' Specify default filter
+ Genopts.Cdlg.DialogTitle = " Write to Text File"
 
-If gt(189) = 1 Then
-' Remove any existing dest. file.
-Genopts.Cdlg.FileName = ""
-Genopts.Cdlg.FilterIndex = 1
-Genopts.Cdlg.Filter = "text (*.,txt)|*.txt|All Files (*.*)|*.*"
-' Specify default filter
-Genopts.Cdlg.DialogTitle = " Write to Text File"
+ Genopts.Cdlg.InitDir = Stringvars(3)
+ Genopts.Cdlg.CancelError = True
 
-Genopts.Cdlg.InitDir = Stringvars(3)
-Genopts.Cdlg.CancelError = False
+ On Error Resume Next
+ Genopts.Cdlg.ShowOpen
+ 
+ If Err.Number > 0 or Genopts.Cdlg.FileName = "" Then GoTo Quotezerr
+ ' once used Not FileExists(Genopts.Cdlg.FileName)
 
-Genopts.Cdlg.ShowOpen
+ hfile = FreeFile()
 
-If Not FileExists(Genopts.Cdlg.FileName) Or Genopts.Cdlg.FileName = "" Then GoTo Quotezerr
+ On Error GoTo Quotezerr
 
-hfile = FreeFile()
+ Open Genopts.Cdlg.FileName For Output As #hfile
+ Close #hfile
 
-On Error GoTo Quotezerr
+ hfile = FreeFile()
 
-Open Genopts.Cdlg.FileName For Output As #hfile
-Close #hfile
+ Open Genopts.Cdlg.FileName For Output As #hfile
+ .MoveFirst
 
-hfile = FreeFile()
 
-Open Genopts.Cdlg.FileName For Output As #hfile
-.MoveFirst
+ If selString = "" Then
+ 
+ If gt(191) > 1 Then
+ For ct = 0 To gt(191) - 2
+ Print #hfile, ![Quotestr]
+ .MoveNext
+ Next
+ End If
+ Print #hfile, ![Quotestr]; ' ; suppresses linefeed
+ Else
+ For ct = 0 To gt(191) - 2
+ If !Bmpindex = -zhiddnstatus Then Print #hfile, ![Quotestr]
+ ' (!Bmpindex > 40 And !Bmpindex < 54) (Len(![Quotestr]) < 88) (Asc(Left$(![Quotestr], 1)) > 96)
+ .MoveNext
+ Next
+ If !Bmpindex = -zhiddnstatus Then Print #hfile, ![Quotestr];
+ End If
 
-For ct = 0 To gt(191) - 2
-' If !Bmpindex > 40 And !Bmpindex < 54 Then
-' If Len(![Quotestr]) < 88 Then
-' If Asc(Left$(![Quotestr], 1)) > 96 Then
-Print #hfile, ![Quotestr]
-' End If
-.MoveNext
-Next
-Print #hfile, ![Quotestr];
-
-Close #hfile
+ Close #hfile
 End If
 
 End Select

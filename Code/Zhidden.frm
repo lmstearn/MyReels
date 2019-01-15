@@ -2598,22 +2598,34 @@ Private Sub Cellcolour_Timer()
 lblCell(lastclicked).BackColor = lastcolour
 Cellcolour.Enabled = False
 End Sub
-Private Sub lblCell_Click(Index As Integer)
+Private Sub lblCell_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
+Dim dLHSpoz As Long, dimgselprevindex As Long, dwipeimgsel As Boolean, selString as String
+
 If zhiddnstatus < 0 Then
 zhiddnstatus = -(Index + lblDoffset + 1) 'TEMPORARY zhiddenstatus
 If Cellz.ToolTipText = "sorted" Then Getzhiddnstat
-Zhidden.Enabled = False
-Unload Zhidden
-Set Zhidden = Nothing
+End If
+
+If Button = 1 Then
+  If zhiddnstatus < 0 Then
+   Zhidden.Enabled = False
+   Unload Zhidden
+   Set Zhidden = Nothing
+  Else
+   With Cellcolour
+   If .Enabled = True Then .Enabled = False    'Reset
+   .Enabled = True
+   End With
+   If lastcolour > 0 Then lblCell(lastclicked).BackColor = lastcolour
+   lastcolour = lblCell(Index).BackColor
+   lastclicked = Index
+   lblCell(Index).BackColor = vbYellow
+  End If
 Else
-With Cellcolour
-If .Enabled = True Then .Enabled = False    'Reset
-.Enabled = True
-End With
-If lastcolour > 0 Then lblCell(lastclicked).BackColor = lastcolour
-lastcolour = lblCell(Index).BackColor
-lastclicked = Index
-lblCell(Index).BackColor = vbYellow
+ If zhiddnstatus < 0 Then
+ selString=replace(lblCell(Index).Caption," ","")
+ BitmapDb 4, 0, 0, dLHSpoz, dimgselprevindex, dwipeimgsel, , selString
+ End if
 End If
 End Sub
 Private Sub LoadInfo(a$, usehDC&)

@@ -1961,6 +1961,7 @@ Public Sub ShowError()
 Dim stmp As String
 
 If Err.Number = 0 Then Exit Sub
+if Err.Number <> &H7FF3 then 'cdlg cancel
 Screen.MousePointer = vbDefault
 stmp = "The following Error occurred:" & vbCrLf & vbCrLf
 'add the error string
@@ -1969,6 +1970,7 @@ stmp = stmp & Err.Description & vbCrLf
 stmp = stmp & "Number: " & Err
 Beep
 response = MsgBox(stmp, vbOKOnly)
+end if
 Err.Clear
 End Sub
 Public Sub Maketransparent(objframe As Frame)
