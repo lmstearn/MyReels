@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 ;See the wiki before packing!: https://github.com/lmstearn/MyReels/wiki
 #define MyAppName "MyReels"
-#define MyAppVersion "3.2.1"
+#define MyAppVersion "3.3.0"
 #define MyAppPublisher "Stearn & DisAssoc"
 #define MyAppURL "https://github.com/lmstearn/MyReels/wiki"
 #define MyHomePage "http://members.ozemail.com.au/~lmstearn/"
@@ -123,7 +123,7 @@ const
 
 
    PreviousAppID = '7FE3CDE1-00A9-491F-B856-E3A121405B49';
-   // The MyReels SID
+   // The MyAppName SID
 
    UninstallPathApp = 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{' + PreviousAppID + '}_is1';
 
@@ -630,7 +630,7 @@ begin
     begin
       if CompareVersionStr(MinVersion, SetupVersion) = crGreater then
       begin
-        Case MsgBox('The current version of MyReels is too old to update!' +NL+ 'A repair install by the full 3.2+ version is now required.'+NL+ 'Note: Currently 3.2+ version unavailable so reply No.' +NL+ +NL+ 'Yes: Download it through your browser' +NL+ 'No: Continue with missing or superseded files (Not Recommended)' +NL+ 'Cancel: Cancel the update.', mbConfirmation, MB_YESNOCANCEL) of
+        Case MsgBox('The current version of ' + ExpandConstant('{#MyAppName}') + ' is too old to update!' +NL+ 'A repair install by the full 3.2+ version is now required.'+NL+ 'Note: Currently 3.2+ version unavailable so reply No.' +NL+ +NL+ 'Yes: Download it through your browser' +NL+ 'No: Continue with missing or superseded files (Not Recommended)' +NL+ 'Cancel: Cancel the update.', mbConfirmation, MB_YESNOCANCEL) of
         IDYES:
           begin
           if not OpenBrowser(ExpandConstant('{#MyAppDLURL}/{#MySetupAppExeName}')) then
@@ -792,11 +792,11 @@ Begin
   Begin
      if (isDir = True) Then
      begin
-     sTxt:= 'The Directory item: ' +sFullFilePath+ +NL+ 'and its contents are no longer needed by the program.' +NL+ 'Click Yes to delete all such MyApp directories, click No to continue prompt for deletion of each directory or Cancel to keep them.';
+     sTxt:= 'The Directory item: ' +sFullFilePath+ +NL+ 'and its contents are no longer needed by the program.' +NL+ 'Click Yes to delete all such ' + ExpandConstant('{#MyAppName}') + ' directories, click No to continue prompt for deletion of each directory or Cancel to keep them.';
      end
      else
      begin
-     sTxt:= 'The file item: ' +sFullFilePath+ '' +NL+ 'is no longer needed by the program.' +NL+ 'Click Yes to delete all such MyApp files, click No to continue prompt for deletion of each one or Cancel to keep them.';
+     sTxt:= 'The file item: ' +sFullFilePath+ '' +NL+ 'is no longer needed by the program.' +NL+ 'Click Yes to delete all such ' + ExpandConstant('{#MyAppName}') + ' files, click No to continue prompt for deletion of each one or Cancel to keep them.';
      end;
   End;
   end; //case
@@ -844,7 +844,7 @@ Begin
         begin
           if (isDir = True) Then
           Begin
-            sTxt:= 'Uno o más directorios creados por MyApp, el primero de los cuales es: ' +sFullFilePath+ '' +NL+ ' Todavía están presentes pero son más necesarios por el programa.' +NL+ ' Haga clic en Sí para eliminarlos todos, haga clic en No para solicitar la eliminación de cada uno o en Cancelar para conservarlos.';
+            sTxt:= 'Uno o más directorios creados por ' + ExpandConstant('{#MyAppName}') + ', el primero de los cuales es: ' +sFullFilePath+ '' +NL+ ' Todavía están presentes pero son más necesarios por el programa.' +NL+ ' Haga clic en Sí para eliminarlos todos, haga clic en No para solicitar la eliminación de cada uno o en Cancelar para conservarlos.';
           end
           else
           begin
@@ -855,22 +855,22 @@ Begin
         begin
           if (isDir = True) Then
           begin
-            sTxt:= 'Ein oder mehrere Verzeichnisse von MyApp erstellt, die erste davon ist: ' +sFullFilePath+ '' +NL+ ' Sind noch vorhanden, werden aber länger vom Programm benötigt.' +NL+ 'Klicken Sie auf Ja, um sie alle zu löschen, klicken Sie auf Nein, um zum Löschen von jedem aufzufordern oder Abbrechen, um sie zu behalten.';
+            sTxt:= 'Ein oder mehrere Verzeichnisse von ' + ExpandConstant('{#MyAppName}') + ' erstellt, die erste davon ist: ' +sFullFilePath+ '' +NL+ ' Sind noch vorhanden, werden aber länger vom Programm benötigt.' +NL+ 'Klicken Sie auf Ja, um sie alle zu löschen, klicken Sie auf Nein, um zum Löschen von jedem aufzufordern oder Abbrechen, um sie zu behalten.';
           end
           else
           begin
-            sTxt:= 'Ein oder mehrere Dateien oder Links von MyApp erstellt, die erste davon ist: ' +sFullFilePath+ '' +NL+ '  Sind noch vorhanden, werden aber länger vom Programm benötigt.' +NL+ 'Klicken Sie auf Ja, um sie alle zu löschen, klicken Sie auf Nein, um zum Löschen von jedem aufzufordern oder Abbrechen, um sie zu behalten.';
+            sTxt:= 'Ein oder mehrere Dateien oder Links von ' + ExpandConstant('{#MyAppName}') + ' erstellt, die erste davon ist: ' +sFullFilePath+ '' +NL+ '  Sind noch vorhanden, werden aber länger vom Programm benötigt.' +NL+ 'Klicken Sie auf Ja, um sie alle zu löschen, klicken Sie auf Nein, um zum Löschen von jedem aufzufordern oder Abbrechen, um sie zu behalten.';
           end;
         end;
       else          //en = the default is english or other unknown language
       begin
           if (isDir = True) Then
           begin
-            sTxt:= 'One or more directories created by MyApp, the first of which is: ' +sFullFilePath+ '' +NL+ ' are still present but are longer needed by the program.' +NL+ 'Click Yes to delete them all, click No to prompt for deletion of each one or Cancel to keep them.';
+            sTxt:= 'One or more directories created by ' + ExpandConstant('{#MyAppName}') + ', the first of which is: ' +sFullFilePath+ '' +NL+ ' are still present but are longer needed by the program.' +NL+ 'Click Yes to delete them all, click No to prompt for deletion of each one or Cancel to keep them.';
           end
           else
           begin
-            sTxt:= 'One or more files or links created by MyApp, the first of which is: ' +sFullFilePath+ '' +NL+ ' are still present but are longer needed by the program.' +NL+ 'Click Yes to delete them all, click No to prompt for deletion of each one or Cancel to keep them.';
+            sTxt:= 'One or more files or links created by ' + ExpandConstant('{#MyAppName}') + ', the first of which is: ' +sFullFilePath+ '' +NL+ ' are still present but are longer needed by the program.' +NL+ 'Click Yes to delete them all, click No to prompt for deletion of each one or Cancel to keep them.';
           end;
       end;
     end;  //case

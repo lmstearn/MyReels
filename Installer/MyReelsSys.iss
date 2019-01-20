@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #define MyAppName "MyReelsSys"
 #define MyParentAppName "MyReels"
-#define MyAppVersion "3.2.0"
+#define MyAppVersion "3.3.0"
 #define MyAppPublisher "Stearn & DisAssoc"
 #define MySetupDir "B:\games\"
 
