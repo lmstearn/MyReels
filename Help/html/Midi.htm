@@ -13,17 +13,17 @@
 <H4><A NAME="Midi"></A>Midi</H4>
 
 <P>The music of MyReels comes from midi playback via Windows Media function calls.</P>
-<P>If Coolsoft's <a class="externLink" href="http://coolsoft.altervista.org/en/virtualmidisynth">VirtualMIDISynth</a> along with the attendant <a class="externLink" href="http://coolsoft.altervista.org/en/forum/thread/427">CoolSoft MidiMapper</a> are not installed, only the default Roland GS Wavetable Sound fonts are used. The selected port <B>N</B> in the <A HREF="Sounds.htm">Sounds Tab</A> of the <A HREF="General Options.htm">General Options</A> Screen should correspond to the VirtualMIDSynth #<B>N</B> device, - for more details refer to this <A HREF="http://coolsoft.altervista.org/en/forum/thread/522">thread</A>. For improved stability also check "Enable hardware mixing" in the VirtualMidiSynth Options Tab.</P>
+<P>If Coolsoft's <a class="externLink" href="http://coolsoft.altervista.org/en/virtualmidisynth">VirtualMIDISynth</a> along with the attendant <a class="externLink" href="http://coolsoft.altervista.org/en/forum/thread/427">CoolSoft MidiMapper</a> are not installed, only the default Roland GS Wavetable Sound fonts are used. Otherwise, the selected port <B>N</B> in the <A HREF="Sounds.htm">Sounds Tab</A> of the <A HREF="General Options.htm">General Options</A> Screen should correspond to the VirtualMIDSynth #<B>N</B> device, - for more details refer to this <A HREF="http://coolsoft.altervista.org/en/forum/thread/522">thread</A>. For improved stability also check "Enable hardware mixing" in the VirtualMidiSynth Options Tab.</P>
 
 <H1 style="display:inline;">The following only applies to Systems prior to</H1> <H2 style="display:inline;">Windows XP</H2><H1 style="display:inline;">:</H1>
 
 <P>The MCI calls for the Midi interface do not take very kindly to file or directory names longer than 8 characters. This has been partially addressed with point-blank truncation, but outstanding issues remain in the case of:</P>
 <ul>
-<li>a) 2 or more file names in the same directory each containing more than 8 characters but the first six characters of each name are identical.</li>
-<li>b) 2 directory names branching off the same parent directory each containing more than 8 characters but the first six characters of each name are identical.</li>
+<li><B>a</B>: 2 or more file names in the same directory each containing more than 8 characters but the first six characters of each name are identical.</li>
+<li><B>b</B>: 2 directory names branching off the same parent directory each containing more than 8 characters but the first six characters of each name are identical.</li>
 </ul>
 
-<P>The first file in case a) or first directory in case b) that appears in alphabetical order will always be chosen irrespective of the selections made on the <U><A HREF="Sounds.htm">Sounds</A></U> Tab of the <A HREF="General Options.htm">General Options</A> Screen.</P>
+<P>The first file in case <B>a</B> or first directory in case <B>b</B> that appears in alphabetical order will always be chosen irrespective of the selections made on the <U><A HREF="Sounds.htm">Sounds</A></U> Tab of the <A HREF="General Options.htm">General Options</A> Screen.</P>
 
 <P>Using shorter <I>.mid</I> and <I>.wav</I> file &amp; directory names then might solve problems with their playback.</P>
 
