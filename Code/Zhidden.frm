@@ -1422,8 +1422,12 @@ Const PC_NOCOLLAPSE = &H4
 'icGoldenrod = &H20A5DA
 'icFirebrick = &H2222B2
 'End Enum
+Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hWnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
+Private Const BM_SETSTATE = &HF3
+Private Const deviceInfoTip = "Right Click for Graphical Device Info..."
+Private Const debugInfoTip = "Right Click for Graphical Debug Info..."
 Private maxrowz As Long, lblmax As Long, lblDoffset As Long, lblRoffset As Long, lastclicked As Long, lastcolour As Long
-Private zhiddenloading As Boolean, ct As Long, ct1 As Long, ct2 As Long, Titlez(14) As String
+Private zhiddenloadStat As Boolean, ct As Long, ct1 As Long, ct2 As Long, Titlez(14) As String
 Private Sub Form_Load()
 Dim f As Form
 ct = 0
@@ -1433,9 +1437,9 @@ Next
 If ct = 2 Then GoTo zerror
 
 
-Dim a$, B$, Coltextwidth As Long, realpicsel As Long
+Dim Coltextwidth As Long, realpicsel As Long, a$
 cmdok.Default = True
-zhiddenloading = True
+zhiddenloadStat = True
 
 
 
@@ -1504,6 +1508,7 @@ With cmdok
 .Width = 4185
 .Top = 7350
 .Left = 0
+.ToolTipText = deviceInfoTip
 End With
 Zhidden.Width = 4185
 Zhidden.Height = 8315
@@ -1511,17 +1516,12 @@ setformpos Me
 
 With Zhidden
 .HelpContextID = 4
-.Caption = "MyReels: Graphics Device Properties"         'Space(17)
 .Enabled = True
 .Show
 End With
 
-LoadInfo a$, Zhidden.hDC
-On Error GoTo Errnoprinter
-'Assume no printer if error
-LoadInfo B$, Printer.hDC
-HiddenTitle.Text = a$ & CStr(Chr$(13) + Chr$(10)) & B$
-
+cmdok.ToolTipText = debugInfoTip
+InfToText
 
 
 Case 2  'Hallfame
@@ -1876,15 +1876,11 @@ End Select
 
 
 
-zhiddenloading = False
+zhiddenloadStat = False
 Exit Sub
 zerror:
 ShowError
-zhiddenloading = False
-Exit Sub
-Errnoprinter:
-HiddenTitle.Text = a$ & CStr(Chr$(13) + Chr$(10)) & "No printer Installed"
-zhiddenloading = False
+zhiddenloadStat = False
 Exit Sub
 HallNotvalid:
 Zhidden.HelpContextID = 3
@@ -1892,7 +1888,7 @@ ShowError
 Spare.Visible = True
 Set Spare.Picture = Nothing
 lblzhidd(0).Caption = "Corrupted"
-zhiddenloading = False
+zhiddenloadStat = False
 zhiddnstatus = 0
 With Zhidden
 .HelpContextID = 3
@@ -2171,7 +2167,6 @@ Pokemach.imgprizethumb(zhiddnstatus - 10).Left = lblRoffset
 zhiddnstatus = 0
 End If
 End Sub
-
 Private Sub VScroll1_Change()
 If lastcolour > 0 Then
 lblCell(lastclicked).BackColor = lastcolour
@@ -2366,12 +2361,9 @@ Set Zhidden = Nothing
 zhiddnstatus = 0
 End If
 End Sub
-Private Sub HiddenTitle_Change()
-If zhiddenloading = False Then cmdOK_Click
-End Sub
 Public Sub Musicc_Click()
 ct = 0
-Select Case zhiddenloading
+Select Case zhiddenloadStat
 
 Case True
 If gt(185) = 0 Then
@@ -2399,7 +2391,7 @@ Pokemach.MidiPlay.Enabled = CBool(gt(185) > 0)
 End Sub
 Public Sub Soundd_Click()
 
-Select Case zhiddenloading
+Select Case zhiddenloadStat
 
 Case True
 If gt(186) < 2 Then
@@ -2418,7 +2410,7 @@ End If
 End Select
 End Sub
 Public Sub Thumbb_Click()
-Select Case zhiddenloading
+Select Case zhiddenloadStat
 
 Case True
 Select Case gt(186)
@@ -2538,7 +2530,7 @@ lblDoffset = gt(196) - 70
 If lblDoffset < 0 Then lblDoffset = 0
 
 'Populate sort array
-lblCell(0).Caption = Docaptions(0, zhiddenloading)
+lblCell(0).Caption = Docaptions(0, zhiddenloadStat)
 If Cellz.ToolTipText = "sorted" Then
 Cellz.ToolTipText = "unsorted"
 Else
@@ -2559,7 +2551,52 @@ Next
 Next
 End If
 End Sub
-Private Sub cmdOK_Click()
+Private Sub cmdOK_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+If zhiddnstatus = 1 Then
+  If Button = vbRightButton Then
+  SendMessage cmdok.hWnd, BM_SETSTATE, True, 0&
+  End If
+End If
+End Sub
+Private Sub InfToText(Optional bDebugInfo As Boolean)
+Dim a$, B$
+If bDebugInfo Then
+  On Error GoTo ErrDebug
+  LoadInfo a$, Zhidden.hDC, True
+  HiddenTitle.Text = a$ & CStr(Chr$(13) + Chr$(10))
+  Exit Sub
+Else
+  LoadInfo a$, Zhidden.hDC
+
+  On Error GoTo Errnoprinter
+'Assume no printer if error
+  LoadInfo B$, Printer.hDC
+  HiddenTitle.Text = a$ & CStr(Chr$(13) + Chr$(10)) & B$
+  Exit Sub
+End If
+
+Errnoprinter:
+HiddenTitle.Text = a$ & CStr(Chr$(13) + Chr$(10)) & "No printer configured!"
+Exit Sub
+ErrDebug:
+HiddenTitle.Text = a$ & CStr(Chr$(13) + Chr$(10)) & "Problem with the debug data!"
+End Sub
+Private Sub cmdOK_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
+If Button = vbRightButton Then
+ If zhiddnstatus = 1 Then
+  Dim pwScale As Long
+  With cmdok
+  SendMessage .hWnd, BM_SETSTATE, False, 0&
+  If .ToolTipText = debugInfoTip Then
+  InfToText True
+  .ToolTipText = deviceInfoTip
+  Else
+  InfToText
+  .ToolTipText = debugInfoTip
+  End If
+  End With
+ End If
+Else
 If zhiddnstatus > 9 Then
 'In case of Enter or Esc
 Pokemach.imgprizethumb(zhiddnstatus - 10).Left = lblRoffset
@@ -2593,13 +2630,14 @@ Zhidden.Enabled = False
 Unload Zhidden
 Set Zhidden = Nothing
 zhiddnstatus = 0
+End If
 End Sub
 Private Sub Cellcolour_Timer()
 lblCell(lastclicked).BackColor = lastcolour
 Cellcolour.Enabled = False
 End Sub
 Private Sub lblCell_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
-Dim dLHSpoz As Long, dimgselprevindex As Long, dwipeimgsel As Boolean, selString as String
+Dim dLHSpoz As Long, dimgselprevindex As Long, dwipeimgsel As Boolean, selString As String
 
 If zhiddnstatus < 0 Then
 zhiddnstatus = -(Index + lblDoffset + 1) 'TEMPORARY zhiddenstatus
@@ -2623,24 +2661,68 @@ If Button = 1 Then
   End If
 Else
  If zhiddnstatus < 0 Then
- selString=replace(lblCell(Index).Caption," ","")
+ selString = Replace(lblCell(Index).Caption, " ", "")
  BitmapDb 4, 0, 0, dLHSpoz, dimgselprevindex, dwipeimgsel, , selString
- End if
+ End If
 End If
 End Sub
-Private Sub LoadInfo(a$, usehDC&)
-    #If Win32 Then
-    Dim r As Long
-    Dim nhDC As Long
-    #Else
-    Dim r As Integer
-    Dim nhDC As Integer
-    #End If
-    nhDC = usehDC
-    Dim crlf$
-    
-    crlf$ = Chr$(13) + Chr$(10)
+Private Sub LoadInfo(a$, usehDC&, Optional debugInfo As Boolean = False)
+  'No comments within the directive!
+  #If Win32 Then
+  Dim r As Long
+  Dim nhDC As Long
+  #Else
+  Dim r As Integer
+  Dim nhDC As Integer
+  #End If
+  Dim crlf$, localAppName As String, adminUzer As Boolean
+  Const CSIDL_LOCAL_APPDATA = &H1C          '...{user name}\Local Settings\Application Data
+  nhDC = usehDC
+  crlf$ = Chr$(13) + Chr$(10)
+  Dim c As New cRegistry
+  a$ = ""
 
+  If debugInfo Then
+    c.hDC = usehDC&
+    localAppName = CreateObject("Shell.Application").NameSpace(CSIDL_LOCAL_APPDATA).Self.Path
+    adminUzer = c.IsUserAnAdministrator
+    Zhidden.Caption = "MyReels: Output for Debugging"
+
+    a$ = a$ + crlf$ + "Various Variables for Debugging Scaling Issues..." + crlf$ + crlf$
+    a$ = a$ + "Operating System Vista or Later: " + Str$(c.VistaorLater) + crlf$ + crlf$
+    a$ = a$ + "Are we Admin? " + Str$(adminUzer) + crlf$ + crlf$
+    If Dir$(localAppName & "\NVIDIA", vbDirectory) <> "" Then a$ = a$ + "NVIDIA graphical software present." + crlf$
+    For ct = 1 To 2
+    DoEvents
+    Sleep 20
+    Next ct
+    If Dir$(localAppName & "\AMD", vbDirectory) <> "" Then a$ = a$ + "AMD graphical software present." + crlf$
+    For ct = 1 To 2
+    DoEvents
+    Sleep 20
+    Next ct
+    If Dir$(localAppName & "\ATI", vbDirectory) <> "" Then a$ = a$ + "AMD or older ATI graphical software present." + crlf$ + crlf$
+    For ct = 1 To 2
+    DoEvents
+    Sleep 20
+    Next ct
+
+    If adminUzer = True Then a$ = a$ + "Processor Speed: " + Str$(c.RealMHZ) + crlf$ + crlf$
+    a$ = a$ + "resX: " + Str$(resX) + ", resY: " + Str$(resY) + crlf$ + crlf$
+    a$ = a$ + "DC width: " + Str$(c.DCWidth) + ", DC height: " + Str$(c.DCHeight) + crlf$ + crlf$
+    a$ = a$ + "WA width: " + Str$(c.WWidth) + ", WA height: " + Str$(c.WHeight) + crlf$ + crlf$
+    a$ = a$ + "Textwidth ratio of a Spin picture's default font" + crlf$ + "over its currently assigned game General Font, " + crlf$
+    a$ = a$ + CStr(Stringvars(10)) + ": " + Str$(textwidthratio) + crlf$ + crlf$
+    a$ = a$ + "Fontsize is: " + Str$(resY * Int(8 * textwidthratio)) + crlf$ + crlf$
+    a$ = a$ + "The following control dimensions are in Twips:" + crlf$ + crlf$
+    For ct = 1 To 3
+    a$ = a$ + "Position of Spin Picture in Frame: " + Str$(fixpw(ct - 1, Pokemach.pw)) + crlf$
+    a$ = a$ + "Width of Spin Picture in Frame: " + Str$(resX * Str$((Pokemach.pw - (gt(159) + 1) * 80))) + crlf$
+    Next
+
+
+  Else
+    Zhidden.Caption = "MyReels: Graphics Device Properties"         'Space(17)
     r = GetDeviceCaps(nhDC, TECHNOLOGY)
     If r And DT_RASPRINTER Then a$ = "Raster Printer"
     If r And DT_RASDISPLAY Then a$ = "Raster Display"
@@ -2666,4 +2748,5 @@ Private Sub LoadInfo(a$, usehDC&)
     If r And RC_SCALING Then a$ = a$ + "Scaling" + crlf$
     If r And RC_STRETCHBLT Then a$ = a$ + "StretchBlt" + crlf$
     If r And RC_STRETCHDIB Then a$ = a$ + "StretchDIB" + crlf$
+  End If
 End Sub

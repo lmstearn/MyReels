@@ -928,7 +928,6 @@ Public Function EightorLater() As Boolean
     #End If
 
 End Function
-
 Private Function GetCPUSpeed() As Long
 Dim hKey As Long, lClockSpeed As Long, e As Long, strKey As String
 
@@ -948,13 +947,16 @@ e = RegCloseKey(hKey)                                  ' Close Registry Key
 GetCPUSpeed = CLng(lClockSpeed)
 'CLng("&H" & lClockSpeed) doesn't parse the &H
 
-If e <> ERROR_SUCCESS Or GetCPUSpeed = 0 Then
-response = MsgBox("Problem with obtaining CPU Speed from Registry!", vbOKOnly)
-End If
+If e <> ERROR_SUCCESS Or GetCPUSpeed = 0 Then response = MsgBox("Problem with obtaining CPU Speed from Registry!", vbOKOnly)
+
+
 Else
 GetCPUSpeed = 4000 'assume super fast for new Win gen.
 End If
 End Function
+Public Property Get RealMHZ() As Long
+RealMHZ = GetCPUSpeed
+End Property
 Public Property Get MHZ() As Long
 Dim OSV As OSVERSIONINFO
 MHZ = GetCPUSpeed

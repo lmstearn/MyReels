@@ -1,6 +1,6 @@
 VERSION 5.00
-Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "Comdlg32.ocx"
-Object = "{6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.3#0"; "ComCtl32.ocx"
+Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
+Object = "{6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.4#0"; "comctl32.Ocx"
 Object = "{C3CBD80D-C8D1-11D2-9F8E-0080C7CE5CDC}#4.1#0"; "ActCndy2.ocx"
 Begin VB.Form Pokemach 
    Appearance      =   0  'Flat
@@ -2833,7 +2833,8 @@ Dim storit(4) As Long, trakker(4) As Long, movesize(4) As Long
 Dim ydisp(4, 4) As Long, medfastslowmove(4, 24) As Long, ydisp0(4) As Long, spinztemp(4) As Long, multiprize(2, 9, 3) As Long
 Dim wheelvec(5, 14) As Long, thumbs(14) As StdPicture
 Dim wheelorder(4, 24) As Long, oldlblprize(15) As Long
-Dim pw As Long, pwScale As Long, TOL As Long, prizetotal As Long, prizeaccum As Long, betqut As Long, aptot As Long, jackpotprize As Long, pzctcum As Long
+Dim pwScale As Long, TOL As Long, prizetotal As Long, prizeaccum As Long, betqut As Long, aptot As Long, jackpotprize As Long, pzctcum As Long
+Public pw As Long
 Dim intreel As Long, ct As Long, ct1 As Long, ct2 As Long, ct3 As Long
 'ct3: Jack & Monback flash
 Dim reelmin As Long, reelmax As Long, oldspecial As Long, special As Long, oldMidiNo As Long
@@ -2925,17 +2926,17 @@ End Select
 loaddirectory = CurDir$ & "\"
 'firstload, chdir or gametype cancel
 
-        If gamestartup < 3 Then
+  If gamestartup < 3 Then
 
-        firstgametypeload
+    firstgametypeload
 
-                If Inputvars = False Then
-                If runAdmin = False Then response = MsgBox("Input file not accepted! Cannot continue.", vbOKOnly)
-                Stopnoise
-                Unload frmSplsh
-                Exit Sub
-                End If
-        End If
+      If Inputvars = False Then
+      If runAdmin = False Then response = MsgBox("Input file not accepted! Cannot continue.", vbOKOnly)
+      Stopnoise
+      Unload frmSplsh
+      Exit Sub
+      End If
+  End If
 
 PokeResolution Me
 
@@ -2981,6 +2982,8 @@ For ct = 0 To 13
 With imgprizethumb(ct)
 .Left = resX * .Left
 .Top = resY * .Top
+.Height = .Height + resY * .Height
+.Width = .Width + resY * .Width
 .BorderStyle = 0
 .Visible = False
 End With
@@ -3009,7 +3012,7 @@ randomspinvec pw, medfastslowmove, special, spinzstart
 
 If gt(185) > 0 Then
 playsuccess = PlayMidiFile(Stringvars(39), True)
-MidiPlay.Enabled = playsuccess
+midiplay.Enabled = playsuccess
 If gt(187) > 0 Then medfastslowmove(0, 5) = 44
 Else
 playsuccess = False
@@ -3334,6 +3337,8 @@ With lblprize(ct * 14 + ct1)
 .FontStrikethru = 0
 .BackColor = gt(165 + ct)
 .ForeColor = gt(170 + ct)
+'.Height = .Height + resY * .Height
+'.Width = .Width + resY * .Width
 If ct < 2 Then
 .Caption = "X " & 5 - ct
 Else
@@ -3352,7 +3357,9 @@ With lblprizeamt(ct * 14 + ct1)
 .FontStrikethru = 0
 .BackStyle = 0
 .ForeColor = gt(170 + ct)
-If ct < 2 And resX > 1 Then .Width = 220 + .Width
+'.Height = resY * .Height
+'.Width = resY * .Width
+If ct < 2 And resX > 1 Then .Width = 180 + resY * .Width
 End With
 Next
 Next

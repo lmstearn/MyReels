@@ -766,7 +766,7 @@ Begin VB.Form frmAbout
       Width           =   1260
    End
    Begin VB.CommandButton cmdfrmabout 
-      Caption         =   "&Device info ..."
+      Caption         =   "&Device Info ..."
       Height          =   345
       Index           =   2
       Left            =   1680

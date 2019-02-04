@@ -445,7 +445,7 @@ Else
 res = resX
 End If
 
-If (Pokemach.frapicarea.Height / 3) > fixpw Then
+If (Pokemach.frapicarea.Height / 3) > pw Then
 ' NVIDIA
 fixpw = (Pokemach.frapicarea.Height / 3) - (7 * res)
 Else
@@ -1949,13 +1949,13 @@ End If
 
 End Sub
 Public Function Docaptions(numb As Long, Optional sortpicnamesnow As Boolean, Optional sortpicnames As Boolean) As String
-If sortpicnamesnow = True Then
+If sortpicnamesnow Then
     For ct = 1 To 500
     picnamesort(ct) = picnames(ct)
     Next
     c.InsertSortStringsStart picnamesort
 End If
-If sortpicnames - False Then
+If sortpicnames Then
     Docaptions = CStr(numb) & "     " & picnamesort(numb)
     Else
     Docaptions = CStr(numb) & "     " & picnames(numb)
@@ -2575,7 +2575,7 @@ If gt(189) = 1 Or selString <> "" Then
  On Error Resume Next
  Genopts.Cdlg.ShowOpen
  
- If Err.Number > 0 or Genopts.Cdlg.FileName = "" Then GoTo Quotezerr
+ If Err.Number > 0 Or Genopts.Cdlg.FileName = "" Then GoTo Quotezerr
  ' once used Not FileExists(Genopts.Cdlg.FileName)
 
  hfile = FreeFile()
