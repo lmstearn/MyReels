@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 ;See the wiki before packing!: https://github.com/lmstearn/MyReels/wiki
 #define MyAppName "MyReels"
-#define MyAppVersion "3.3.0"
+#define MyAppVersion "3.3.1"
 #define MyAppPublisher "Stearn & DisAssoc"
 #define MyAppURL "https://github.com/lmstearn/MyReels/wiki"
 #define MyHomePage "http://members.ozemail.com.au/~lmstearn/"
@@ -67,6 +67,7 @@ Source: "..\Quotes.s$t"; DestDir: "{app}"; Flags: touch ignoreversion replacesam
 ;Source: "Default\*.mid"; DestDir: "{app}"; Flags: touch; Components: midi\default
 ;Source: "Originals\*.mid"; DestDir: "{app}"; Flags: touch; Components: midi\original
 ;Source: "..\MyNewWavFile.wav"; DestDir: "{app}"; Flags: ignoreversion touch replacesameversion; Components: program
+Source: "..\painter.wav"; DestDir: "{app}"; Flags: ignoreversion touch replacesameversion; Components: program
 
 [Components]
 Name: "program"; Description: "Program Files"; Types: full compact custom; Flags: fixed
