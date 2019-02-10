@@ -12,17 +12,26 @@
 
 <H4><A NAME="Quotes"></A>Quotes</H4>
 
-<P>There is a facility on the <U><A HREF="Text.htm">Text</A></U> Tab of the <A HREF="General Options.htm">General Options</A> Screen to create a Quotes <A HREF="Database.htm">Database</A> with the option of <A HREF="Quote Thumbnails.htm">Quote Thumbnails</A>. The requirement is an ASCII coded file containing text separated by carriage returns.</P>
+<P>There is a facility on the <U><A HREF="Text.htm">Text</A></U> Tab of the <A HREF="General Options.htm">General Options</A> Screen to create a Quotes <A HREF="Database.htm">Database</A> with the option of <A HREF="Quote Thumbnails.htm">Quote Thumbnails</A>. The requirement is an ASCII encoded file containing text separated by carriage returns.</P>
 
-<P>Any lines of text longer than 172 characters, (longer text creates problems with display using different fonts) will be automatically truncated. No more than 32767 quotes allowed, according to scroll limitations in the <U><A HREF="Configure Thumbnails Screen.htm">Configure Thumbnails Screen</A></U>. The <A HREF="Database.htm">Database</A> stores records in alphabetic sequence based on the initial text of each quote.</P>
+<P>Any lines of text longer than 172 characters (on a Win 95 machine, longer text lines created clipping of certain fonts in the native <EM>800 X 600</EM> resolution), will be automatically truncated. No more than 32767 quotes allowed, according to scroll limitations in the <U><A HREF="Configure Thumbnails Screen.htm">Configure Thumbnails Screen</A></U>. The <A HREF="Database.htm">Database</A> stores its records in alphabetic sequence based on the initial character of each quote.</P>
 
 <P><A HREF="Filesizes.htm">Filesizes </A>and available space appear as a <A HREF="Tooltip.htm">Tooltip</A> on the "Select Quotes file" button.</P>
 
-<P>If there are issues with either the text file or <A HREF="Database.htm">Database</A> a notification invariably pops up indicating cause and the Quotes generation will fail.</P>
+<P>If there are issues with either the text file or <A HREF="Database.htm">Database</A> a notification duly pops up indicating cause of the Quotes generation failure.</P>
 
-<P>When a new <A HREF="Profile Configuration.htm">Profile Configuration</A> is created in a different directory to the install directory, a new <I>Quotes.s$t</I> is created,  <A HREF="Filesizes.htm">Filesizes</A> and available disk space appear as a <A HREF="Tooltip.htm">Tooltip</A> on the "Open/Create a new Save Directory" and "Allocate Pictures to ...." buttons on the <U><A HREF="Configure New Pictures Screen.htm">Configure New Pictures Screen</A></U>.</P>
-
-<P>The Quotes file bundled at <A HREF="Installation.htm">Installation</A> and offered as an optional component in the <A HREF="Updater.htm">Updater</A>, uses a diverse range of <A HREF="Sources.htm">Sources</A> on the WWW.</P>
-
+<P>When a new <A HREF="Profile Configuration.htm">Profile Configuration</A> is created in a different directory to the install directory, an empty <I>Quotes.s$t</I> is also created, <A HREF="Filesizes.htm">Filesizes</A> and available disk space appear as a <A HREF="Tooltip.htm">Tooltip</A> on the "Open/Create a new Save Directory" and "Allocate Pictures to ...." buttons on the <U><A HREF="Configure New Pictures Screen.htm">Configure New Pictures Screen</A></U>.</P>
+It is not recommended to have a custom Quote <A HREF="Database.htm">Database</A> in the Base Directory, as it is overwritten when MyReels is <A HREF="Updater.htm">updated</A>, re-installed or repaired.
+<dl>
+<dt><U>Notes for Quotes bundled at <A HREF="Installation.htm">Installation</A></U>:</dt>
+<dd>The Quotes file in the MyReels base directory is a shared resource.</dd>
+<dd>Direct modifications to the <A HREF="Database.htm">Database</A> are done through the <U><A HREF="Configure Thumbnails Screen.htm">Configure Thumbnails Screen</A></U> from any <A HREF="Profile Configuration.htm">Profile Configuration</A> that uses it.</dd>
+<dd>A new or different <A HREF="Profile Configuration.htm">Profile Configuration</A> can also access the file by checking the <A HREF="Text.htm#UseBaseDir">Use Base Dir.</A> option.</dd>
+<dd>This <A HREF="Profile Configuration.htm">Profile Configuration</A> also keeps a tally of the total number of records in the Quotes <A HREF="Database.htm">Database</A>.</dd>
+<dd href="#" id="ToggleUseBaseDir">To update this tally, any incremental changes to the Quotes file undertaken by external processes e.g. another <A HREF="Profile Configuration.htm">Profile Configuration</A> or <A HREF="Updater.htm">Updates</A>, require the disabling, and then re-enabling of the <A HREF="Text.htm#UseBaseDir">Use Base Dir.</A> check.</dd>
+<dd>The Quotes file uses a diverse range of <A HREF="Sources.htm">Sources</A> on the WWW.
+</dd>
+<dd>Disclaimer: The opinions expressed in this file are those of the authors. They do not purport to reflect the opinions or views of the file's creator.</dd>
+</dl>
 </BODY>
 </HTML>
