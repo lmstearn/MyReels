@@ -1219,6 +1219,8 @@ Case 450
 picnames(ct) = "sunflower"
 Case 451
 picnames(ct) = "wheel"
+Case 452
+picnames(ct) = "choice"
 End Select
 Next
 
@@ -1971,7 +1973,7 @@ Public Sub Getzhiddnstat()
 End Sub
 Public Sub BitmapDb(ByVal picsloadstatus As Long, ByVal RHSoffset As Long, ByVal RHSpoz As Long, LHSpoz As Long, imgselprevindex As Long, wipeimgsel As Boolean, Optional imgseljustchanged As Boolean = False, Optional selString As String = "")
 Dim i As Long
-
+i = 0
 
 On Error GoTo Quotezerr
 
@@ -1991,7 +1993,7 @@ With rectemp
 Select Case picsloadstatus
 
 
-Case -4  ' find real RHSoffset to match passed RHSoffset
+Case -5  ' find real RHSoffset to match passed RHSoffset
   zhiddnstatus = -zhiddnstatus
   .MoveFirst
   For ct = 0 To gt(191) - 1
@@ -2004,7 +2006,7 @@ Case -4  ' find real RHSoffset to match passed RHSoffset
   End If
   Next
 
-Case -3 ' get imgselprev
+Case -4 ' get imgselprev
 
 
 .MoveFirst
@@ -2017,7 +2019,7 @@ wipeimgsel = True
 End If
 
 
-Case -2 ' Fill quotetext
+Case -3, -2 ' Fill quotetext
 
 gt(196) = 0 ' zhidden picnames: init no of different DBpics
 
@@ -2027,19 +2029,25 @@ Quotebrs.quotelist.Clear
 gt(196) = 0 ' init no of different DBpics
 For ct = 0 To gt(191) - 1
 If ![Bmpindex] > gt(196) Then gt(196) = ![Bmpindex]
-' If ![Bmpindex] = 81 Then
 Quotebrs.quotetext.AddItem ![Quotestr]
 Quotebrs.quotelist.AddItem CStr(ct + 1)
-' End If
-
 .MoveNext
 Next
 
+If picsloadstatus = -3 Then
+.MoveFirst
+For ct = 0 To gt(191) - 1
+If 0 = ![Bmpindex] Then
+  If i = 0 Then i = ct + 1
+End If
+.MoveNext
+Next
+End If
 
 Quotebrs.quotetext.ListIndex = LHSpoz
 Quotebrs.quotetext.Text = Quotebrs.quotetext.List(LHSpoz)
 
-
+If i > 0 And gt(191) > 25500 Then MsgBox "Missing thumbnail assignment for item " & CStr(i) & ". Is this large D/B generic?", vbOKOnly
 
 
 Case -1 ' Delete quote
@@ -2565,7 +2573,7 @@ If gt(189) = 1 Or selString <> "" Then
  Genopts.Cdlg.FileName = "QuotesFor_" & selString & "_"
  End If
  Genopts.Cdlg.FilterIndex = 1
- Genopts.Cdlg.Filter = "text (*.,txt)|*.txt|All Files (*.*)|*.*"
+ Genopts.Cdlg.Filter = "text (*.txt)|*.txt|All Files (*.*)|*.*"
  ' Specify default filter
  Genopts.Cdlg.DialogTitle = " Write to Text File"
 
@@ -2753,37 +2761,36 @@ If Torek = True Then
 
 
 
-
-        FileLength = ![Bmpfile].FieldSize()
-
-
-        If FileLength = 0 Then GoTo Chunkerr
+    FileLength = ![Bmpfile].FieldSize()
 
 
-        ' Calculate no. of blocks to write, & leftover bytes.
-        NumBlocks = FileLength \ blocksize
-        LeftOver = FileLength Mod blocksize
-
-        hfile = FreeFile()
-        ' Remove any existing destination file.
-        Open loaddirectory & "q" & kt & ".bmp" For Binary As #hfile
-        Close #hfile
-
-        hfile = FreeFile()
-        Open loaddirectory & "q" & kt & ".bmp" For Binary As #hfile
+    If FileLength = 0 Then GoTo Chunkerr
 
 
-        ' Write leftover data to output file.
-        filedata = ![Bmpfile].GetChunk(0, LeftOver)
-        Put #hfile, , filedata
+    ' Calculate no. of blocks to write, & leftover bytes.
+    NumBlocks = FileLength \ blocksize
+    LeftOver = FileLength Mod blocksize
+
+    hfile = FreeFile()
+    ' Remove any existing destination file.
+    Open loaddirectory & "q" & kt & ".bmp" For Binary As #hfile
+    Close #hfile
+
+    hfile = FreeFile()
+    Open loaddirectory & "q" & kt & ".bmp" For Binary As #hfile
 
 
-        ' Write remaining blocks of data to output file.
-        For ct1 = 1 To NumBlocks ' Reads a chunk and writes it to output file.
-        filedata = ![Bmpfile].GetChunk((ct1 - 1) * blocksize + LeftOver, blocksize)
-        Put #hfile, , filedata
-        Next
-        Close #hfile
+    ' Write leftover data to output file.
+    filedata = ![Bmpfile].GetChunk(0, LeftOver)
+    Put #hfile, , filedata
+
+
+    ' Write remaining blocks of data to output file.
+    For ct1 = 1 To NumBlocks ' Reads a chunk and writes it to output file.
+    filedata = ![Bmpfile].GetChunk((ct1 - 1) * blocksize + LeftOver, blocksize)
+    Put #hfile, , filedata
+    Next
+    Close #hfile
 
 End If
 

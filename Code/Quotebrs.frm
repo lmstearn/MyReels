@@ -747,7 +747,7 @@ End With
 If Stringvars(3) = "" Or Dir(Stringvars(3) & "Quotes.s$t") = "" Then GoTo quoterror 'delete contents of quotes
 
 
-BitmapDb -2, RHSoffset, RHSpoz, LHSpoz, imgselprevindex, wipeimgsel
+BitmapDb -3, RHSoffset, RHSpoz, LHSpoz, imgselprevindex, wipeimgsel
 
 BitmapDb 1, RHSoffset, RHSpoz, LHSpoz, imgselprevindex, wipeimgsel 'load first picture in imagsel
 
@@ -813,7 +813,7 @@ End If
 Next
 If zhiddnstatus < 0 Then
 'previous code just called BitmapDB as in PicScroll_Change()
-BitmapDb -4, RHSoffset, RHSpoz, LHSpoz, imgselprevindex, wipeimgsel
+BitmapDb -5, RHSoffset, RHSpoz, LHSpoz, imgselprevindex, wipeimgsel
 PicScroll.Value = zhiddnstatus
 zhiddnstatus = 0
 End If
@@ -1015,7 +1015,7 @@ Spinimage_Click (Index)
 End Sub
 Private Sub Spinimage_Click(Index As Integer)
 RHSpoz = Index + RHSoffset
-BitmapDb -3, RHSoffset, RHSpoz, LHSpoz, imgselprevindex, wipeimgsel
+BitmapDb -4, RHSoffset, RHSpoz, LHSpoz, imgselprevindex, wipeimgsel
 Set imgsel.Picture = Spinimage(Index).Picture
 imgseljustchanged = True
 For ct = 0 To 8
