@@ -185,10 +185,10 @@ ct = 0
         TitleTmp = UCase(Left(TitleTmp, nRet))
         If InstallUpdate = True Then
           'Don't worry about partials
-                  If InStr(TitleTmp, UCase("SetupMyReels")) Or InStr(TitleTmp, UCase("UpdateMyReels")) Then
-                  FindWindowPartial = 1
-                  Exit Function
-                  End If
+          If InStr(TitleTmp, UCase("SetupMyReels")) Or InStr(TitleTmp, UCase("UpdateMyReels")) Then
+          FindWindowPartial = 1
+          Exit Function
+          End If
 
         ' Use appropriate method to determine if current window's caption either starts with or contains passed string.
 
