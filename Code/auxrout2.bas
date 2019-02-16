@@ -239,6 +239,7 @@ With objform
 If (c.VistaorLater() = True) Then
 resX = c.WWidth * Screen.TwipsPerPixelX / .Width
 resY = c.WHeight * Screen.TwipsPerPixelY / .Height
+if (resX/resY) > 20/9 then resX = 16/21 * resX 'XL Widescreen
 Else
 Select Case c.DCWidth
 Case Is < 1023
