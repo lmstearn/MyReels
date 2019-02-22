@@ -299,7 +299,7 @@ Begin VB.Form Quotebrs
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   630
-      Left            =   1650
+      Left            =   1400
       TabIndex        =   37
       Top             =   6840
       Width           =   2895
@@ -585,6 +585,9 @@ End Sub
 Private Sub Form_Load()
 procend = False
 
+Dim smRes As Single
+smRes = (resY - 1) / 2 + 1
+
 On Error GoTo quoterror
 
 If resX = 1 Then
@@ -598,7 +601,7 @@ With Me
 
 End With
 
-setformpos Me
+setformpos Me, True
 
 Prevue.Width = resX * Prevue.Width
 Prevue.Height = resY * Prevue.Height
@@ -622,17 +625,26 @@ With chkalwayssquare
 .Left = resX * .Left
 .Top = resY * .Top
 .Value = gt(44)
+.Width = resX * .Width
+.Height = smRes * .Height
+.Fontsize = resY * Int(8 * textwidthratio)
 End With
 
 With lblProcess
 .Left = resX * .Left
 .Top = resY * .Top
+.Width = resX * .Width
+.Height = smRes * .Height
+.Fontsize = resY * Int(14 * textwidthratio)
 End With
 
 With Writetofile
 .Left = resX * .Left
 .Top = resY * .Top
 .Value = gt(189)
+.Width = resX * .Width
+.Height = smRes * .Height
+.Fontsize = resY * Int(8 * textwidthratio)
 End With
 
 
@@ -641,6 +653,8 @@ With cmmd(ct)
 .Left = resX * .Left
 .Top = resY * .Top
 .Width = resX * .Width
+.Height = smRes * .Height
+.Fontsize = resY * Int(8 * textwidthratio)
 End With
 Next
 
@@ -792,6 +806,8 @@ quotelist.Visible = False
 
 imgsel.Enabled = False
 With lblProcess
+.Left = .Left - resY * 15
+.Height = resY * .Height
 .Width = 2 * .Width
 .Caption = "Inaccessible: Click ""Use Base Dir"" && retry."
 End With

@@ -180,6 +180,16 @@ Private Type MONITORINFO
     dwFlags As Long
 End Type
 
+Private Type tagINITCOMMONCONTROLSEX
+    dwSize  As Long
+    dwICC   As Long
+End Type
+
+
+Private Declare Function InitShell Lib "shell32" Alias "IsUserAnAdmin" () As Long
+Private Declare Sub InitCommonControls Lib "comctl32" ()
+Private Declare Function InitCommonControlsEx Lib "comctl32.dll" (iccex As Any) As Boolean
+
 Private Declare Function GetShortPathName Lib "kernel32" Alias "GetShortPathNameA" (ByVal lpszLongPath As String, ByVal lpszShortPath As String, ByVal cchBuffer As Long) As Long
 
 Private Declare Function HTMLHelp Lib "HHCtrl.ocx" Alias "HtmlHelpA" (ByVal hWndCaller As Long, ByVal pszFile As String, ByVal uCommand As Long, ByVal dwData As Long) As Long
@@ -202,14 +212,16 @@ Private Declare Function SetKernelObjectSecurity Lib "advapi32.dll" (ByVal Handl
 
 Private Declare Function GetMonitorInfo Lib "user32.dll" Alias "GetMonitorInfoA" (ByVal hMonitor As Long, ByRef lpmi As MONITORINFO) As Boolean
 Private Declare Function MonitorFromWindow Lib "user32.dll" (ByVal hWnd As Long, ByVal dwFlags As Long) As Long
-Const MONITOR_DEFAULTTONULL = &H0       'If the monitor is not found, return 0
-Const MONITOR_DEFAULTTOPRIMARY = &H1    'If the monitor is not found, return the primary monitor
-Const MONITOR_DEFAULTTONEAREST = &H2    'If the monitor is not found, return the nearest monitor
+
+Private Const ICC_STANDARD_CLASSES As Long = &H4000&
+Private Const MONITOR_DEFAULTTONULL = &H0       'If the monitor is not found, return 0
+Private Const MONITOR_DEFAULTTOPRIMARY = &H1    'If the monitor is not found, return the primary monitor
+Private Const MONITOR_DEFAULTTONEAREST = &H2    'If the monitor is not found, return the nearest monitor
 
 ' https://support.microsoft.com/en-us/kb/253940
 ' for GetDeviceCaps replacement of screen properties
-Const HORZRES = 8
-Const VERTRES = 10
+Private Const HORZRES = 8
+Private Const VERTRES = 10
 Private Declare Function GetDeviceCaps Lib "GDI32" (ByVal hDC As Long, ByVal nIndex As Long) As Long
 
 
@@ -1321,3 +1333,23 @@ Private Sub InsertSortStrings(ListArray() As String, ByVal lMin As Long, ByVal l
       ListArray(lCount2 + 1) = sValue
   Next
 End Sub
+Public Property Get InitCommonCtrls() As String
+    On Error Resume Next
+    Dim lr As Boolean
+    InitCommonCtrls = ""
+
+    Dim ICC As tagINITCOMMONCONTROLSEX
+
+    With ICC
+        .dwSize = Len(ICC)
+        .dwICC = ICC_STANDARD_CLASSES
+    End With
+
+    InitShell
+    IsUserAnAdmin 'dummy to GetProcAddress
+    lr = InitCommonControlsEx(ICC)
+    If lr = 0 Or Err.Number <> 0 Then
+      InitCommonControls ' 9x version
+      If Err.Number <> 0 Then InitCommonCtrls = "Critical error: InitCommonCtrls failed!"
+    End If
+End Property

@@ -2708,6 +2708,11 @@ Private Sub LoadInfo(a$, usehDC&, Optional debugInfo As Boolean = False)
     Next ct
 
     If adminUzer = True Then a$ = a$ + "Processor Speed: " + Str$(c.RealMHZ) + crlf$ + crlf$
+    If (c.DCWidthTwips = Screen.Width) Then
+    a$ = a$ + "No Virtualized DPI" + crlf$ + crlf$
+    Else
+    a$ = a$ + "Virtualized DPI" + crlf$ + crlf$
+    End If
     a$ = a$ + "resX: " + Str$(resX) + ", resY: " + Str$(resY) + crlf$ + crlf$
     a$ = a$ + "DC width: " + Str$(c.DCWidth) + ", DC height: " + Str$(c.DCHeight) + crlf$ + crlf$
     a$ = a$ + "WA width: " + Str$(c.WWidth) + ", WA height: " + Str$(c.WHeight) + crlf$ + crlf$
@@ -2715,11 +2720,14 @@ Private Sub LoadInfo(a$, usehDC&, Optional debugInfo As Boolean = False)
     a$ = a$ + CStr(Stringvars(10)) + ": " + Str$(textwidthratio) + crlf$ + crlf$
     a$ = a$ + "Fontsize is: " + Str$(resY * Int(8 * textwidthratio)) + crlf$ + crlf$
     a$ = a$ + "The following control dimensions are in Twips:" + crlf$ + crlf$
+    if gt(0) = -2 then
+    a$ = a$ + "The following information cannot be provided as the game screen is unloaded." + crlf$
+    else
     For ct = 1 To 3
     a$ = a$ + "Position of Spin Picture in Frame: " + Str$(fixpw(ct - 1, Pokemach.pw)) + crlf$
     a$ = a$ + "Width of Spin Picture in Frame: " + Str$(resX * Str$((Pokemach.pw - (gt(159) + 1) * 80))) + crlf$
     Next
-
+    End if
 
   Else
     Zhidden.Caption = "MyReels: Graphics Device Properties"         'Space(17)

@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.3#0"; "ComCtl32.ocx"
+Object = "{6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.4#0"; "comctl32.Ocx"
 Begin VB.Form cornfig 
    Appearance      =   0  'Flat
    AutoRedraw      =   -1  'True
@@ -1045,31 +1045,36 @@ With Me
 .Height = resY * .Height
 End With
 
-setformpos Me
+setformpos Me, True
+
 
 With Cancel
 .Left = resX * .Left
 .Top = resY * .Top
 .Width = resX * .Width
 .Height = resY * .Height
+.Fontsize = resY * Int(10 * textwidthratio)
 End With
 With Continue
 .Left = resX * .Left
 .Top = resY * .Top
 .Width = resX * .Width
 .Height = resY * .Height
+.Fontsize = resY * Int(10 * textwidthratio)
 End With
 With Chkordered
 .Left = resX * .Left
 .Top = resY * .Top
 .Width = resX * .Width
 .Height = resY * .Height
+.Fontsize = resY * Int(10 * textwidthratio)
 End With
 With Regenerate
 .Left = resX * .Left
 .Top = resY * .Top
 .Width = resX * .Width
 .Height = resY * .Height
+.Fontsize = resY * Int(8 * textwidthratio)
 End With
 With picspare
 .Width = resX * .Width

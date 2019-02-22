@@ -2833,7 +2833,7 @@ Dim storit(4) As Long, trakker(4) As Long, movesize(4) As Long
 Dim ydisp(4, 4) As Long, medfastslowmove(4, 24) As Long, ydisp0(4) As Long, spinztemp(4) As Long, multiprize(2, 9, 3) As Long
 Dim wheelvec(5, 14) As Long, thumbs(14) As StdPicture
 Dim wheelorder(4, 24) As Long, oldlblprize(15) As Long
-Dim pwScale As Long, TOL As Long, prizetotal As Long, prizeaccum As Long, betqut As Long, aptot As Long, jackpotprize As Long, pzctcum As Long
+Dim pwScale As Long, TOL As Long, prizetotal As Long, prizeaccum As Long, betqut As Long, aptot As Long, jackpotprize As Long, pzctcum As Long, smRes As Single
 Public pw As Long
 Dim intreel As Long, ct As Long, ct1 As Long, ct2 As Long, ct3 As Long
 'ct3: Jack & Monback flash
@@ -2846,7 +2846,7 @@ Dim spincount As Long, freegamecount As Long, kept1or2 As Long, gamespintot As L
 Dim gamenotspin As Boolean, response As Long, justrestored As Boolean, flashtoggle As Boolean, prizeflashon As Boolean, activatctrls As Boolean
 Dim gamesaved As Boolean, spinsaved As Boolean, featurereset As Boolean, EOGEF As Boolean, playsuccess As Boolean
 
-Const EOGTT = "End_of_Game. You will have to start a new one in the Configuration Panel."
+Const EOGTT = "End_of_Game. A new one can be started from the Configuration Panel."
 Const Betlim = "Bet Total limit"
 Const Sublim = "Substitute prize limit"
 Const Scatlim = "Scatter prize limit"
@@ -2939,7 +2939,7 @@ loaddirectory = CurDir$ & "\"
   End If
 
 PokeResolution Me
-
+smRes = (resY - 1) / 2 + 1
 
 If gt(0) = -1 And gt(185) > 0 Then SndMidInit
 
@@ -2965,13 +2965,13 @@ zeroscatter
 degreeoftitle = gt(3)
 
 If gt(200) = 0 And (gamestartup = 1 Or (gamestartup = 3 And gt(45) = 1)) Then
-    If seedchanged = False And genoptsgen = False Then
-    gt(55) = gt(55) + 1
-    Else
-    gt(56) = gt(56) + 1
-    End If
-    ElseIf gamestartup = 3 And genoptsgen = True Then
-    gt(56) = gt(56) + 1
+  If seedchanged = False And genoptsgen = False Then
+  gt(55) = gt(55) + 1
+  Else
+  gt(56) = gt(56) + 1
+  End If
+  ElseIf gamestartup = 3 And genoptsgen = True Then
+  gt(56) = gt(56) + 1
 End If
 
 If gt(55) = -1 Then gt(55) = 0   'fix for stats
@@ -2982,8 +2982,8 @@ For ct = 0 To 13
 With imgprizethumb(ct)
 .Left = resX * .Left
 .Top = resY * .Top
-.Height = .Height + resY * .Height
-.Width = .Width + resY * .Width
+.Width = smRes * .Width
+.Height = smRes * .Height
 .BorderStyle = 0
 .Visible = False
 End With
@@ -2995,11 +2995,11 @@ pw = 1560  'set sparepic width
 For intreel = 0 To 4
 For ct = 0 To 13
 imgprizethumb(ct).Move 70 * resX, resY * (80 + ct * 600)
-    If intreel < 3 Then
-    wid = 600 * (intreel + 1)
-    Else
-    wid = 1800 + 480 * (intreel - 2)
-    End If
+  If intreel < 3 Then
+  wid = 600 * (intreel + 1)
+  Else
+  wid = 1800 + 480 * (intreel - 2)
+  End If
 lblprize(14 * intreel + ct).Move resX * wid, resY * (60 + ct * 600)
 lblprizeamt(14 * intreel + ct).Move resX * wid, resY * (340 + ct * 600)
 Next
@@ -3012,7 +3012,7 @@ randomspinvec pw, medfastslowmove, special, spinzstart
 
 If gt(185) > 0 Then
 playsuccess = PlayMidiFile(Stringvars(39), True)
-midiplay.Enabled = playsuccess
+MidiPlay.Enabled = playsuccess
 If gt(187) > 0 Then medfastslowmove(0, 5) = 44
 Else
 playsuccess = False
@@ -3036,6 +3036,8 @@ End If
 If intscatternumber > 0 Then
 With lblmisc(5)
 .Visible = True
+.Width = smRes * .Width
+.Height = smRes * .Height
 If gt(159) = 1 Then
 .Left = resX * 960
 If intscatternumber = 2 Then
@@ -3086,19 +3088,19 @@ imgprizethumb(ct).Top = resY * (7520 + 550 * -CLng(CBool(ct = 13)))
 End If
 
 For intreel = 0 To 4
-    If intreel < 3 Then
-    wid = resX * 600 * (intreel + 1)
-    Else
-    wid = resX * (1800 + 480 * (intreel - 2))
-    End If
-    If gt(159) = 0 Then
+  If intreel < 3 Then
+  wid = resX * 600 * (intreel + 1)
+  Else
+  wid = resX * (1800 + 480 * (intreel - 2))
+  End If
+  If gt(159) = 0 Then
 
-    lblprize(14 * intreel + ct).Move wid, resY * 7040
-    lblprizeamt(14 * intreel + ct).Move wid, resY * 7520
-    Else
-    lblprize(14 * intreel + ct).Move wid, resY * (7500 + 550 * -CLng(CBool(ct = 13)))
-    lblprizeamt(14 * intreel + ct).Move wid, resY * (7780 + 550 * -CLng(CBool(ct = 13)))
-    End If
+  lblprize(14 * intreel + ct).Move wid, resY * 7040
+  lblprizeamt(14 * intreel + ct).Move wid, resY * 7520
+  Else
+  lblprize(14 * intreel + ct).Move wid, resY * (7500 + 550 * -CLng(CBool(ct = 13)))
+  lblprizeamt(14 * intreel + ct).Move wid, resY * (7780 + 550 * -CLng(CBool(ct = 13)))
+  End If
 Next
 End If
 
@@ -3195,18 +3197,18 @@ If gamestartup = 1 Or gt(45) = 1 Or genoptsgen = True Then
 For intreel = 0 To 4
 spinz(intreel) = Int(24 * Rnd + 1)
 Next
-    If Rnd < CSng(gt(6) / 4) Then
-    dirofspin = -1
-    Else
-    dirofspin = 1
-    End If
+  If Rnd < CSng(gt(6) / 4) Then
+  dirofspin = -1
+  Else
+  dirofspin = 1
+  End If
 
 Else
-    If prepspin = False Then
-    For intreel = 0 To 4
-    spinz(intreel) = Advanz(spinz(intreel), -dirspin(intreel))
-    Next
-    End If
+  If prepspin = False Then
+  For intreel = 0 To 4
+  spinz(intreel) = Advanz(spinz(intreel), -dirspin(intreel))
+  Next
+  End If
 End If
 
 prepspin = False
@@ -3232,20 +3234,20 @@ spinztemp(intreel) = Advanz(spinztemp(intreel), 2 * dirofspin)
 storit(intreel) = 0
 trakker(intreel) = 3
 For ct = 0 To 3
-    picnum(intreel, 3 - ct) = 4 * intreel + ct
-    With M(picnum(intreel, 3 - ct))
-    If dirofspin = -1 Then
-    pwScale = fixpw(3 - ct, pw)
-    .Top = pwScale
-    Set .Picture = Thumbslist(intreel).ListImages(Advanz(spinztemp(intreel), -dirofspin)).Picture
-    If intreel = 0 Then ydisp0(ct) = pwScale
-    Else
-    pwScale = fixpw(ct - 1, pw)
-    .Top = pwScale
-    Set .Picture = Thumbslist(intreel).ListImages(Advanz(spinztemp(intreel), -dirofspin)).Picture
-    If intreel = 0 Then ydisp0(ct) = pwScale
-    End If
-    End With
+  picnum(intreel, 3 - ct) = 4 * intreel + ct
+  With M(picnum(intreel, 3 - ct))
+  If dirofspin = -1 Then
+  pwScale = fixpw(3 - ct, pw)
+  .Top = pwScale
+  Set .Picture = Thumbslist(intreel).ListImages(Advanz(spinztemp(intreel), -dirofspin)).Picture
+  If intreel = 0 Then ydisp0(ct) = pwScale
+  Else
+  pwScale = fixpw(ct - 1, pw)
+  .Top = pwScale
+  Set .Picture = Thumbslist(intreel).ListImages(Advanz(spinztemp(intreel), -dirofspin)).Picture
+  If intreel = 0 Then ydisp0(ct) = pwScale
+  End If
+  End With
 Next
 Next
 
@@ -3337,8 +3339,8 @@ With lblprize(ct * 14 + ct1)
 .FontStrikethru = 0
 .BackColor = gt(165 + ct)
 .ForeColor = gt(170 + ct)
-'.Height = .Height + resY * .Height
-'.Width = .Width + resY * .Width
+.Height = smRes * .Height
+.Width = smRes * .Width
 If ct < 2 Then
 .Caption = "X " & 5 - ct
 Else
@@ -3357,9 +3359,12 @@ With lblprizeamt(ct * 14 + ct1)
 .FontStrikethru = 0
 .BackStyle = 0
 .ForeColor = gt(170 + ct)
-'.Height = resY * .Height
-'.Width = resY * .Width
-If ct < 2 And resX > 1 Then .Width = 180 + resY * .Width
+.Height = smRes * .Height
+If ct < 2 Then
+.Width = resY * .Width
+Else
+.Width = smRes * .Width
+End If
 End With
 Next
 Next
@@ -3388,6 +3393,10 @@ With lblmisc(0)
 If .Height < 330 * resY Then
 .Top = .Top + (330 * resY - .Height) / 2
 lblprizemeter(1).Top = lblprizemeter(1).Top + (330 * resY - .Height) / 2
+Else
+ If gt(159) = 0 Then
+ .Top = lblprizemeter(1).Top
+ End If
 End If
 .Caption = "BET " & betqut & "X"
 End With
@@ -3412,6 +3421,8 @@ If gt(10) > 0 Then
 lblmisc(1).Visible = True
 lblmisc(7).Visible = True
 lblmisc(7).Caption = gt(13)
+If gt(159) = 0 Then lblmisc(7).Left = lblrandom(0).Left + lblrandom(0).Width / 2
+
 For ct = 1 To gt(10)
 
 With lblmoneyback(ct - 1)
@@ -3538,6 +3549,7 @@ If gt(162) = -1 Then
   Unload frmSplsh
   waitimmarker = 5
   waitimer.Enabled = True
+  Me.Show
   Exit Sub
   Else
   If loadbackbitmap("Title", 2) = True Then paintitlearea
@@ -3556,6 +3568,7 @@ If waitimmarker = 0 Then
 waitimmarker = 6
 waitimer.Enabled = True
 End If
+Me.Show
 
 Exit Sub
 
@@ -3749,20 +3762,20 @@ Public Sub TA_Click()
 With TA
 If waitimer.Enabled = True Then Exit Sub
 If gt(162) = -1 Then
-        If Stringvars(1) = Stringvars(2) Then
-        .Visible = False
-        Pokemach.KeyPreview = False
-        For ct2 = 0 To 1
-        Candy(ct2).Enabled = False
-        Next
-        Pokemach.Show
-        activatctrls = True
-        waitimmarker = 5
-        waitimer.Interval = 2 * gt(194)
-        waitimer.Enabled = True
-        Else
-        paintitlearea
-        End If
+  If Stringvars(1) = Stringvars(2) Then
+  .Visible = False
+  Pokemach.KeyPreview = False
+  For ct2 = 0 To 1
+  Candy(ct2).Enabled = False
+  Next
+  Me.Show
+  activatctrls = True
+  waitimmarker = 5
+  waitimer.Interval = 2 * gt(194)
+  waitimer.Enabled = True
+  Else
+  paintitlearea
+  End If
 Else
 .Cls
 End If
@@ -3847,25 +3860,24 @@ ElseIf spinsaved = True Then lblmisc(4).Caption = "Spin(s) saved! "
 End If
 
 If freegamecount > 0 Then
-       
-        If freegamecount = 1 Then
 
-        arrangespins gendirchange
+  If freegamecount = 1 Then
+  arrangespins gendirchange
 
 
-        If justrestored = True Then
-        lblmisc(4).Caption = lblmisc(4).Caption & "Games restored!"
-        ElseIf featurereset = True Then
-        lblmisc(4).Caption = lblmisc(4).Caption & "Feature reset!"
-        End If
-            
-        lblmisc(8).Caption = "Feature multiplier : " & freegamesettings(kept1or2, 6) & "X"
-        lblmisc(8).ForeColor = gt(175)
-        
-        waitimmarker = 3
-        waitimer.Interval = gt(194) * 240
-        waitimer.Enabled = True
-        End If
+    If justrestored = True Then
+    lblmisc(4).Caption = lblmisc(4).Caption & "Games restored!"
+    ElseIf featurereset = True Then
+    lblmisc(4).Caption = lblmisc(4).Caption & "Feature reset!"
+    End If
+
+  lblmisc(8).Caption = "Feature multiplier : " & freegamesettings(kept1or2, 6) & "X"
+  lblmisc(8).ForeColor = gt(175)
+
+  waitimmarker = 3
+  waitimer.Interval = gt(194) * 240
+  waitimer.Enabled = True
+  End If
 
 lblmisc(4).Caption = lblmisc(4).Caption & " Game " & freegamecount & " of " & freegamesettings(kept1or2, 8)
 freegamecount = freegamecount + 1
@@ -3876,23 +3888,23 @@ If gt(49) > gt(47) Then GoTo ErrOverflowfrgam
 
 ElseIf spincount > 0 Then
 
-    If spincount = 1 Then
-    
-        arrangespins gendirchange
+  If spincount = 1 Then
 
-        If justrestored = True Then
-        lblmisc(4).Caption = lblmisc(4).Caption & "Spins restored!"
-        ElseIf featurereset = True Then
-        lblmisc(4).Caption = lblmisc(4).Caption & "Feature reset!"
-        End If
-        
-        lblmisc(8).Caption = "Feature multiplier : " & spinsettings(kept1or2, 12) & "X"
-        lblmisc(8).ForeColor = gt(178)
-        
-        waitimmarker = 3
-        waitimer.Interval = gt(194) * 240
-        waitimer.Enabled = True
-        End If
+  arrangespins gendirchange
+
+    If justrestored = True Then
+    lblmisc(4).Caption = lblmisc(4).Caption & "Spins restored!"
+    ElseIf featurereset = True Then
+    lblmisc(4).Caption = lblmisc(4).Caption & "Feature reset!"
+    End If
+
+  lblmisc(8).Caption = "Feature multiplier : " & spinsettings(kept1or2, 12) & "X"
+  lblmisc(8).ForeColor = gt(178)
+
+  waitimmarker = 3
+  waitimer.Interval = gt(194) * 240
+  waitimer.Enabled = True
+  End If
 
 
 lblmisc(4).Caption = lblmisc(4).Caption & " Spin " & spincount & " of " & spinsettings(kept1or2, 14)
@@ -4073,19 +4085,19 @@ gt(128) = gt(128) + 1
 RH = RH + gt(15) * lnbet
 End If  'chtr
 lblrandom(0).Caption = ""
-        If RH > 9 Then
-        On Error GoTo Erroverflowjackinc
-        LH = LH + Int(RH / 10)
-        If LH > gt(47) Then GoTo Erroverflowjackinc
-        RH = RH - 10 * Int(RH / 10)
-        End If
+  If RH > 9 Then
+  On Error GoTo Erroverflowjackinc
+  LH = LH + Int(RH / 10)
+  If LH > gt(47) Then GoTo Erroverflowjackinc
+  RH = RH - 10 * Int(RH / 10)
+  End If
 For ct1 = Len(CStr(LH)) To Len(CStr(gt(47))) - 1
 lblrandom(0).Caption = "0" & lblrandom(0).Caption
 Next
 lblrandom(0).Caption = lblrandom(0).Caption & CStr(LH)
 lblrandom(1).Caption = RH
-For ct1 = 0 To 1
 lblmisc(2).Caption = "Random Jackpot now at ..."
+For ct1 = 0 To 1
 lblmisc(ct1 + 2).ForeColor = gt(163)
 lblrandom(ct1).ForeColor = gt(175)
 Next
@@ -4257,16 +4269,16 @@ End With
 waitimmarker = 6
 Case 6
 If TA.ToolTipText = "" Then
-If gt(156) <> 1 And prizeaccum <> 0 Then Cachereels
-lblmisc(4) = Stringvars(13)     'Welcome
-TA.ToolTipText = "Click to Adjust"
-Pokemach.Show
-activatectrls
+  If gt(156) <> 1 And prizeaccum <> 0 Then Cachereels
+  lblmisc(4) = Stringvars(13)     'Welcome
+  TA.ToolTipText = "Click to Adjust"
+  Me.Show
+  activatectrls
 Else
-    If gt(156) = 1 Then
-    Pokemach.Refresh
-    activatectrls
-    End If
+  If gt(156) = 1 Then
+  Pokemach.Refresh
+  activatectrls
+  End If
 End If
 waitimmarker = 0
 End Select
@@ -5061,7 +5073,11 @@ If ct3 = 15 Then
 flashtoggle = False
 timoneyback.Enabled = False
 lblmisc(1).ForeColor = gt(163)
+If gt(159) = 0 Then
 lblmisc(1).Caption = "Money Back Status ....                POT ...."
+Else
+lblmisc(1).Caption = " Money Back POT ....                  Money Back Status   ==>"
+End If
 Prizemeter.Enabled = True
 End If
 End Sub
@@ -5149,7 +5165,9 @@ On Error GoTo Errsymbols
 
 Set thumbs(picno) = LoadPicture(CStr(picno) & ".bmp")
 Thumbslist(5).ListImages.Add (picno), , thumbs(picno)
-Spare.PaintPicture Thumbslist(5).ListImages(picno).Picture, 0, 0, 400, 400
+Spare.Width = smRes * 400
+Spare.Height = smRes * 400
+Spare.PaintPicture Thumbslist(5).ListImages(picno).Picture, 0, 0, smRes * 400, smRes * 400
 
 imgprizethumb(picplace).Visible = True
 imgprizethumb(picplace).Picture = Spare.Image
@@ -5571,9 +5589,10 @@ If gt(46) = 1 Then
 gt(0) = -2
 Load frmAbout
 frmAbout.Show
+Else
+c.CloseMutexhandle
 End If
 Stopnoise
-c.CloseMutexhandle
 End Sub
 Public Sub Changedir()
 If zhiddnstatus > 9 Then Exit Sub

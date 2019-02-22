@@ -514,7 +514,10 @@ Dim Hscrollvis As Boolean, Vscrollvis As Boolean, scrolltolH As Long, scrolltolV
 Dim bordN As Boolean, bordE As Boolean, bordS As Boolean, bordW As Boolean, DoingDragDrop As Boolean, dirused As Boolean
 Dim testtan As Single, tan1 As Single, tan3 As Single, tan5 As Single, tan7 As Single
 Private Sub Form_Load()
+
 procend = False
+Dim smRes As Single
+smRes = (resY - 1) / 2 + 1
 
 If resX = 1 Then
 setformpos Me
@@ -527,24 +530,50 @@ With Me
 
 End With
 
-setformpos Me
+setformpos Me, True
 
 Prevue.Width = resX * Prevue.Width
 Prevue.Height = resY * Prevue.Height
 Prevuechild.Width = resX * Prevuechild.Width
 Prevuechild.Height = resY * Prevuechild.Height
-Savepictures.Left = resX * Savepictures.Left
-Savepictures.Top = resY * Savepictures.Top
-Savenew.Left = resX * Savenew.Left
-Savenew.Top = resY * Savenew.Top
-Nextscreen.Left = resX * Nextscreen.Left
-Nextscreen.Top = resY * Nextscreen.Top
-Quit.Left = resX * Quit.Left
-Quit.Top = resY * Quit.Top
-chkalwayssquare.Left = resX * chkalwayssquare.Left
-chkalwayssquare.Top = resY * chkalwayssquare.Top
-Shortcutter.Left = resX * Shortcutter.Left
-Shortcutter.Top = resY * Shortcutter.Top
+With Savepictures
+.Left = resX * .Left
+.Top = resY * .Top
+.Width = smRes * .Width
+.Height = smRes * .Height
+.Fontsize = resY * Int(10 * textwidthratio)
+End With
+With Savenew
+.Left = resX * .Left
+.Top = resY * .Top
+.Width = smRes * .Width
+.Height = smRes * .Height
+.Fontsize = resY * Int(10 * textwidthratio)
+End With
+With Nextscreen
+.Left = resX * .Left
+.Top = resY * .Top
+.Width = smRes * .Width
+.Height = smRes * .Height
+.Fontsize = resY * Int(10 * textwidthratio)
+End With
+With Quit
+.Left = resX * .Left
+.Top = resY * .Top
+.Width = smRes * .Width
+.Height = smRes * .Height
+.Fontsize = resY * Int(10 * textwidthratio)
+End With
+With chkalwayssquare
+.Left = resX * .Left
+.Top = resY * .Top
+.Fontsize = resY * Int(8 * textwidthratio)
+End With
+With Shortcutter
+.Left = resX * .Left
+.Top = resY * .Top
+.Fontsize = resY * Int(8 * textwidthratio)
+End With
 For ct = 0 To 13
 With imgsel(ct)
 .Top = resY * .Top

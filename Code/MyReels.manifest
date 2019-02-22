@@ -1,11 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
   <assemblyIdentity
-    version="1.0.0.0"
+    version="3.3.1.0"
     processorArchitecture="X86"
-    name="test"
+    name="MyReels"
     type="win32"
     />
+    <dependency>
+        <dependentAssembly>
+			    <assemblyIdentity name="Microsoft.Windows.Common-Controls" version="6.0.0.0" type="win32" processorArchitecture="x86" publicKeyToken="6595b64144ccf1df" language="*"/>
+        </dependentAssembly>
+    </dependency>
   <description></description>
     <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
        <application>
@@ -22,7 +27,8 @@
        </application>
     </compatibility>
 <!-- Identify the application security requirements: Vista and above -->
-  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
+<!-- xmlns="urn:schemas-microsoft-com:asm.v2" -->
+  <trustInfo>
       <security>
         <requestedPrivileges>
           <requestedExecutionLevel
@@ -33,9 +39,14 @@
       </security>
   </trustInfo>
 <!-- Identify advanced options: Vista and above -->
-  <asmv3:application xmlns:asmv3="urn:schemas-microsoft-com:asm.v3">
+<!--  xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" -->
+  <asmv3:application>
       <asmv3:windowsSettings xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">
         <dpiAware>True/PM</dpiAware>
       </asmv3:windowsSettings>
+<!--  Overrides former where applicable -->
+    <asmv3:windowsSettings xmlns="https://schemas.microsoft.com/SMI/2016/WindowsSettings">
+      <dpiAwareness>PerMonitorV2, unaware</dpiAwareness>
+    </asmv3:windowsSettings>
   </asmv3:application>
 </assembly> 

@@ -1644,11 +1644,14 @@ cmdfrmabout(0).Caption = "Unavailable"
 End If
 cmdfrmabout(0).Enabled = False
 Case 1
+Dim c As New cRegistry
 Unload frmAbout
 Set frmAbout = Nothing
 If gt(0) > -2 Then
 Pokemach.Show
 Pokemach.Enabled = True
+else
+c.CloseMutexhandle
 End If
 Case 2
 zhiddnstatus = 1

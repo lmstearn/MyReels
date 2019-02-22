@@ -23,7 +23,7 @@ Begin VB.Form frmSplsh
    ScaleHeight     =   2850
    ScaleWidth      =   5235
    ShowInTaskbar   =   0   'False
-   Begin VB.Frame Frame1 
+   Begin VB.Frame FramSplsh 
       BorderStyle     =   0  'None
       Height          =   2850
       Left            =   0
@@ -138,7 +138,7 @@ Begin VB.Form frmSplsh
    End
    Begin VB.Label lblconfigload 
       AutoSize        =   -1  'True
-      Caption         =   " Loading Profile Configuration Mgr ...."
+      Caption         =   "Loading Profile Configuration Mgr ...."
       BeginProperty Font 
          Name            =   "Times New Roman"
          Size            =   15.75

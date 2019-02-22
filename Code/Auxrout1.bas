@@ -1100,22 +1100,32 @@ With frmSplsh
 
 If heightval <> 3000 Then
 .lblconfigload.Visible = True
-.Frame1.Visible = False
+.FramSplsh.Visible = False
+.Height = resY * heightval
+.Width = resY * .Width
 End If
-
+With .lblconfigload
+If resX > 0 Then
+.Left = 0
+.Alignment = 2
+.Height = resX * .Height
+.Width = frmSplsh.Width
+.Fontsize = resY * Int(14 * textwidthratio)
+End If
 Select Case heightval
 Case 430
-.lblconfigload.Caption = Space(10) & "Loading Thumbnail DB ......"
+.Caption = "Loading Thumbnail DB ......"
 Case 440
-.lblconfigload.Caption = Space(19) & "Loading Game ......"
+.Caption = "Loading Game ......"
 Case 450
-.lblconfigload.Caption = Space(20) & "Please Wait ......"
+.Caption = "Please Wait ......"
 Case 460
 Unload Zhidden
 Set Zhidden = Nothing
 End Select
 
-.Height = heightval
+End With
+
 
 .AutoRedraw = True
 .Show
@@ -1961,7 +1971,7 @@ Public Sub ShowError()
 Dim stmp As String
 
 If Err.Number = 0 Then Exit Sub
-if Err.Number <> &H7FF3 then 'cdlg cancel
+If Err.Number <> &H7FF3 Then 'cdlg cancel
 Screen.MousePointer = vbDefault
 stmp = "The following Error occurred:" & vbCrLf & vbCrLf
 'add the error string
@@ -1970,7 +1980,7 @@ stmp = stmp & Err.Description & vbCrLf
 stmp = stmp & "Number: " & Err
 Beep
 response = MsgBox(stmp, vbOKOnly)
-end if
+End If
 Err.Clear
 End Sub
 Public Sub Maketransparent(objframe As Frame)

@@ -207,7 +207,7 @@ ct = 0
     hWnd = GetWindow(hWnd, GW_HWNDNEXT)
   Loop
 End Function
-Public Sub setformpos(objform As Object, Optional ByVal noVert As Boolean = False)
+Public Sub setformpos(objform As Object, Optional ByVal showHide As Boolean = False, Optional ByVal noVert As Boolean = False)
 c.hDC = objform.hDC
 
 With objform
@@ -217,6 +217,8 @@ If (c.DCHeightTwips - .Height > 225 * resY) Then
  If noVert = False Then .Top = (c.DCHeightTwips - .Height) / 2
 ct = .Top
 End If
+
+If showHide = True Then Call HideShowWindow(objform.hWnd, True)
 
 End With
 
@@ -239,7 +241,7 @@ With objform
 If (c.VistaorLater() = True) Then
 resX = c.WWidth * Screen.TwipsPerPixelX / .Width
 resY = c.WHeight * Screen.TwipsPerPixelY / .Height
-if (resX/resY) > 20/9 then resX = 16/21 * resX 'XL Widescreen
+If (resX / resY) > 20 / 9 Then resX = 16 / 21 * resX 'XL Widescreen
 Else
 Select Case c.DCWidth
 Case Is < 1023
@@ -435,7 +437,7 @@ End If
 End If
 End With
 
-setformpos objform, c.VistaorLater
+setformpos objform, True, c.VistaorLater
 
 End Sub
 Public Function fixpw(intct As Long, pw As Long) As Long
@@ -507,6 +509,12 @@ Else
   Exit Sub
   End If
   End If
+End If
+
+oldsndfname = c.InitCommonCtrls
+If oldsndfname <> "" Then
+MsgBox oldsndfname
+Exit Sub
 End If
 
 ' Init quotes db pics
@@ -1252,7 +1260,6 @@ procend = False
   End If
  End If
 
-Pokemach.Show
 
 On Error Resume Next
 
@@ -2261,13 +2268,13 @@ End If
 
 
 For ct = 0 To gt(191) - 1
-    If Quotebrs.quotetext.Text = ![Quotestr] Then
-        If ct <> LHSpoz Then
-        MsgBox Msgdup, vbOKOnly
-        gt(191) = -gt(191)
-        GoTo Quotezerr
-        End If
+  If Quotebrs.quotetext.Text = ![Quotestr] Then
+    If ct <> LHSpoz Then
+    MsgBox Msgdup, vbOKOnly
+    gt(191) = -gt(191)
+    GoTo Quotezerr
     End If
+  End If
 .MoveNext
 Next
 
@@ -2356,10 +2363,10 @@ Next
 
     If ct1 = 0 Then
     response = MsgBox("Other assignments to the thumbnail just replaced will be erased. OK?", vbYesNo)
-        If response = vbNo Then
-        gt(191) = -gt(191)
-        GoTo Quotezerr
-        End If
+      If response = vbNo Then
+      gt(191) = -gt(191)
+      GoTo Quotezerr
+      End If
     End If
     ' Clear picture assignment from DB
     .Edit
@@ -2371,22 +2378,22 @@ Next
     If ct1 = 0 Then ' zero others if > 1 entry
     .MoveFirst
     For ct = 0 To gt(191) - 1
-        If ![Bmpindex] = i Then
-        .Edit
-        ![Bmpindex] = 0
-        .Update
-        End If
+      If ![Bmpindex] = i Then
+      .Edit
+      ![Bmpindex] = 0
+      .Update
+      End If
     .MoveNext
     Next
     End If
 
     .MoveFirst
     For ct = 0 To gt(191) - 1
-        If ![Bmpindex] > i Then
-        .Edit
-        ![Bmpindex] = ![Bmpindex] - 1
-        .Update
-        End If
+      If ![Bmpindex] > i Then
+      .Edit
+      ![Bmpindex] = ![Bmpindex] - 1
+      .Update
+      End If
     .MoveNext
     Next
 
@@ -2405,23 +2412,23 @@ Else    ' wipeimgsel false
 
     If ct1 > 0 Then ' ct1 should never be 0 anyway!
 
-        ' Don't replace root bmp with same
-        If imgselprevindex = ct1 Then GoTo Quotezerr ' Still need to update RHS
+      ' Don't replace root bmp with same
+      If imgselprevindex = ct1 Then GoTo Quotezerr ' Still need to update RHS
 
 
 
     'check for other assignments
     .MoveFirst
     For ct = 0 To gt(191) - 1
-        If ![Bmpindex] = ct1 And ct <> LHSpoz Then
-        response = MsgBox("Other assignments to the thumbnail that was here will point to the new picture. OK?", vbYesNo)
-        If response = vbNo Then
-        gt(191) = -gt(191)
-        GoTo Quotezerr
-        Else
-        Exit For
-        End If
-        End If
+      If ![Bmpindex] = ct1 And ct <> LHSpoz Then
+      response = MsgBox("Other assignments to the thumbnail that was here will point to the new picture. OK?", vbYesNo)
+      If response = vbNo Then
+      gt(191) = -gt(191)
+      GoTo Quotezerr
+      Else
+      Exit For
+      End If
+      End If
     .MoveNext
     Next
 
@@ -2431,65 +2438,64 @@ Else    ' wipeimgsel false
    .MoveFirst
    .Move LHSpoz
 
-        If imgselprevindex = 0 Then
-        If FileExists(loaddirectory & "q0.bmp") Then Kill (loaddirectory & "q0.bmp")
-        SavePicture Quotebrs.picTruesize.Image, loaddirectory & "q0.bmp"
+      If imgselprevindex = 0 Then
+      If FileExists(loaddirectory & "q0.bmp") Then Kill (loaddirectory & "q0.bmp")
+      SavePicture Quotebrs.picTruesize.Image, loaddirectory & "q0.bmp"
 
 
-        If Chunker(rectemp, True) = False Then GoTo Quotezerr
+      If Chunker(rectemp, True) = False Then GoTo Quotezerr
 
-        .Edit
-        ![Bmpindex] = ct1
-        .Update
-        Else
-        ' Point assignments to new picture, condense
+      .Edit
+      ![Bmpindex] = ct1
+      .Update
+      Else
+      ' Point assignments to new picture, condense
 
-        If imgselprevindex > ct1 Then imgselprevindex = imgselprevindex - 1
+      If imgselprevindex > ct1 Then imgselprevindex = imgselprevindex - 1
 
-        .MoveFirst
-        For ct = 0 To gt(191) - 1
-        If ![Bmpindex] > ct1 Then
-        .Edit
-        ![Bmpindex] = ![Bmpindex] - 1
-        .Update
-        ElseIf ![Bmpindex] = ct1 Then
-        .Edit
-        ![Bmpindex] = imgselprevindex
-        .Update
-        End If
-        .MoveNext
-        Next
+      .MoveFirst
+      For ct = 0 To gt(191) - 1
+      If ![Bmpindex] > ct1 Then
+      .Edit
+      ![Bmpindex] = ![Bmpindex] - 1
+      .Update
+      ElseIf ![Bmpindex] = ct1 Then
+      .Edit
+      ![Bmpindex] = imgselprevindex
+      .Update
+      End If
+      .MoveNext
+      Next
 
 
+      ' Must clear
+      .MoveFirst
+      .Move LHSpoz
+      .Edit
+      ![Bmpfile] = Null
+      .Update
 
-        ' Must clear
-        .MoveFirst
-        .Move LHSpoz
-        .Edit
-        ![Bmpfile] = Null
-        .Update
-
-        End If  ' imgselprev
+      End If  ' imgselprev
 
 
     Else    ' izempty true
-        If imgselprevindex = 0 Then
-        ' Need next available Bmpindex number for new bmp from scratch
-        .MoveFirst
-        For ct = 0 To gt(191) - 1
-        If ![Bmpindex] > ct1 Then ct1 = ![Bmpindex]
-        .MoveNext
-        Next
+      If imgselprevindex = 0 Then
+      ' Need next available Bmpindex number for new bmp from scratch
+      .MoveFirst
+      For ct = 0 To gt(191) - 1
+      If ![Bmpindex] > ct1 Then ct1 = ![Bmpindex]
+      .MoveNext
+      Next
 
-        .MoveFirst
-        .Move LHSpoz
-        .Edit
-        ![Bmpindex] = ct1 + 1
-        .Update
+      .MoveFirst
+      .Move LHSpoz
+      .Edit
+      ![Bmpindex] = ct1 + 1
+      .Update
 
 
-        If FileExists(loaddirectory & "q0.bmp") Then Kill (loaddirectory & "q0.bmp")
-        SavePicture Quotebrs.picTruesize.Image, loaddirectory & "q0.bmp"
+      If FileExists(loaddirectory & "q0.bmp") Then Kill (loaddirectory & "q0.bmp")
+      SavePicture Quotebrs.picTruesize.Image, loaddirectory & "q0.bmp"
 
 
         If Chunker(rectemp, True) = False Then GoTo Quotezerr
@@ -2662,18 +2668,18 @@ Public Sub stripMBstats(STRIPRH As Boolean)
 For ct = 89 To 103
 If ct - 88 <= gt(10) Then
 If STRIPRH = True Then  ' clear new
-      If gt(ct) > 30 Then
-      If Mid(CStr(gt(ct)), 3, 1) = "0" Then
-      gt(ct) = CLng(Left(CStr(gt(ct)), 2))
-      ElseIf Mid(CStr(gt(ct)), 2, 1) = "0" Then
-      gt(ct) = CLng(Left(CStr(gt(ct)), 1))
-      End If
-      End If
+  If gt(ct) > 30 Then
+  If Mid(CStr(gt(ct)), 3, 1) = "0" Then
+  gt(ct) = CLng(Left(CStr(gt(ct)), 2))
+  ElseIf Mid(CStr(gt(ct)), 2, 1) = "0" Then
+  gt(ct) = CLng(Left(CStr(gt(ct)), 1))
+  End If
+  End If
 Else
-      ct1 = CLng(Right(CStr(gt(ct)), 2))
-      gt(ct) = ct1
-      gt(88) = gt(88) + ct1 ' stats
-      gt(129) = gt(129) + 1
+  ct1 = CLng(Right(CStr(gt(ct)), 2))
+  gt(ct) = ct1
+  gt(88) = gt(88) + ct1 ' stats
+  gt(129) = gt(129) + 1
 End If
 ElseIf ct - 88 > gt(151) Then
 gt(ct) = 0
@@ -2722,76 +2728,75 @@ hfile = FreeFile()
 On Error GoTo Chunkerr
 With Rekordset
 If Torek = True Then
-    ' Open source file.
-    Open loaddirectory & "q" & kt & ".bmp" For Binary Access Read As hfile
+  ' Open source file.
+  Open loaddirectory & "q" & kt & ".bmp" For Binary Access Read As hfile
 
-    ' Get file length.
-    FileLength = LOF(hfile)
-
-
-    If FileLength = 0 Then GoTo Chunkerr
+  ' Get file length.
+  FileLength = LOF(hfile)
 
 
-    ' Calculate no. of blocks to read, & leftover bytes.
-    NumBlocks = FileLength \ blocksize
-    LeftOver = FileLength Mod blocksize
-    ' Put first record in edit mode.
+  If FileLength = 0 Then GoTo Chunkerr
 
 
-    ' Read leftover data, writing it to table.
-    filedata = String$(LeftOver, 32)
-    Get #hfile, , filedata
-    .Edit
-    ![Bmpfile].AppendChunk (filedata)
+  ' Calculate no. of blocks to read, & leftover bytes.
+  NumBlocks = FileLength \ blocksize
+  LeftOver = FileLength Mod blocksize
+  ' Put first record in edit mode.
 
 
-    ' Read remaining blocks of data, writing them to table.
-    filedata = String$(blocksize, 32)
-    For ct = 1 To NumBlocks
-    Get #hfile, , filedata
-    ![Bmpfile].AppendChunk (filedata)
-    Next
-    .Update
-    Close #hfile
-    ' Update record and terminate function.
+  ' Read leftover data, writing it to table.
+  filedata = String$(LeftOver, 32)
+  Get #hfile, , filedata
+  .Edit
+  ![Bmpfile].AppendChunk (filedata)
+
+
+  ' Read remaining blocks of data, writing them to table.
+  filedata = String$(blocksize, 32)
+  For ct = 1 To NumBlocks
+  Get #hfile, , filedata
+  ![Bmpfile].AppendChunk (filedata)
+  Next
+  .Update
+  Close #hfile
+  ' Update record and terminate function.
+
+
+  Else
+  ' Get size of the field.
 
 
 
-    Else
-        ' Get size of the field.
+  FileLength = ![Bmpfile].FieldSize()
 
 
-
-    FileLength = ![Bmpfile].FieldSize()
-
-
-    If FileLength = 0 Then GoTo Chunkerr
+  If FileLength = 0 Then GoTo Chunkerr
 
 
-    ' Calculate no. of blocks to write, & leftover bytes.
-    NumBlocks = FileLength \ blocksize
-    LeftOver = FileLength Mod blocksize
+  ' Calculate no. of blocks to write, & leftover bytes.
+  NumBlocks = FileLength \ blocksize
+  LeftOver = FileLength Mod blocksize
 
-    hfile = FreeFile()
-    ' Remove any existing destination file.
-    Open loaddirectory & "q" & kt & ".bmp" For Binary As #hfile
-    Close #hfile
+  hfile = FreeFile()
+  ' Remove any existing destination file.
+  Open loaddirectory & "q" & kt & ".bmp" For Binary As #hfile
+  Close #hfile
 
-    hfile = FreeFile()
-    Open loaddirectory & "q" & kt & ".bmp" For Binary As #hfile
-
-
-    ' Write leftover data to output file.
-    filedata = ![Bmpfile].GetChunk(0, LeftOver)
-    Put #hfile, , filedata
+  hfile = FreeFile()
+  Open loaddirectory & "q" & kt & ".bmp" For Binary As #hfile
 
 
-    ' Write remaining blocks of data to output file.
-    For ct1 = 1 To NumBlocks ' Reads a chunk and writes it to output file.
-    filedata = ![Bmpfile].GetChunk((ct1 - 1) * blocksize + LeftOver, blocksize)
-    Put #hfile, , filedata
-    Next
-    Close #hfile
+  ' Write leftover data to output file.
+  filedata = ![Bmpfile].GetChunk(0, LeftOver)
+  Put #hfile, , filedata
+
+
+  ' Write remaining blocks of data to output file.
+  For ct1 = 1 To NumBlocks ' Reads a chunk and writes it to output file.
+  filedata = ![Bmpfile].GetChunk((ct1 - 1) * blocksize + LeftOver, blocksize)
+  Put #hfile, , filedata
+  Next
+  Close #hfile
 
 End If
 
